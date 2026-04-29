@@ -120,6 +120,11 @@
     <string name="kbd_action_launch_desc">Will launch the selected application when triggered</string>
     <string name="kbd_app_carousel_action_title">Application carousel</string>
     <string name="kbd_app_carousel_action_desc">When triggered, will launch applications from the list in sequence</string>
+    <string name="kbd_navi_media_switch_title">Media / navigator switch</string>
+    <string name="kbd_navi_media_switch_desc">Switch between the last active media app and the last navigator</string>
+    <string name="kbd_title_navi_media_pick">Primary navigator</string>
+    <string name="kbd_desc_navi_media_pick">Choose your primary navigator to open</string>
+    <string name="kbd_navi_media_no_app">No supported navigator app is installed</string>
     <string name="kbd_title_app_carousel_pick">Application carousel</string>
     <string name="kbd_desc_app_carousel_pick">Choose the applications you want to launch</string>
     <string name="kbd_title_app_carousel_order">Launch order</string>

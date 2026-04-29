@@ -112,6 +112,11 @@
     <string name="kbd_action_launch_desc">При срабатывании будет запускать указанное приложение</string>
     <string name="kbd_app_carousel_action_title">Карусель приложений</string>
     <string name="kbd_app_carousel_action_desc">При срабатывании будет последовательно запускать приложения из списка</string>
+    <string name="kbd_navi_media_switch_title">Смена медиа/навигатор</string>
+    <string name="kbd_navi_media_switch_desc">Переключение между последним активным медиаприложением и последним навигатором</string>
+    <string name="kbd_title_navi_media_pick">Основной навигатор</string>
+    <string name="kbd_desc_navi_media_pick">Выберите свой основной навигатор, который будет открываться первым</string>
+    <string name="kbd_navi_media_no_app">Нет установленного навигатора из поддерживаемого списка</string>
     <string name="kbd_title_app_carousel_pick">Карусель приложений</string>
     <string name="kbd_desc_app_carousel_pick">Выберите приложения, которые вы хотите запускать</string>
     <string name="kbd_title_app_carousel_order">Порядок запуска</string>

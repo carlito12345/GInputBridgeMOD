@@ -146,6 +146,17 @@ internal fun RenderKeyBinds(
                             }
                         }
 
+                        DisplayKeyAction.NAVI_MEDIA_SWITCH -> Row(
+                            modifier = Modifier.weight(1f),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = stringResource(R.string.kbd_navi_media_switch_title),
+                                style = AppTheme.typography.cardFormatTitle,
+                                color = AppTheme.colors.contentPrimary
+                            )
+                        }
+
                         DisplayKeyAction.LAUNCH_LINK -> Row(
                             modifier = Modifier
                                 .weight(1f),

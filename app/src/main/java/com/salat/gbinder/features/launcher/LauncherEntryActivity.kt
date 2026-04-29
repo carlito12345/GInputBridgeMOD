@@ -404,7 +404,7 @@ class LauncherEntryActivity : ComponentActivity() {
                                 onConfirm(state.packageName, state.launchActivity)
                             }
                             .padding(horizontal = 12.dp, vertical = 8.dp),
-                        color = AppTheme.colors.deleteButton.copy(alpha = .9f),
+                        color = AppTheme.colors.contentAccent,
                         style = AppTheme.typography.alertDialogButton
                     )
                 }

@@ -2492,6 +2492,7 @@ class MainActivity : ComponentActivity() {
     private fun KeyBindAction.toDisplayKeyAction() = when (this) {
         KeyBindAction.LAUNCH_APP -> DisplayKeyAction.LAUNCH_APP
         KeyBindAction.APP_CAROUSEL -> DisplayKeyAction.APP_CAROUSEL
+        KeyBindAction.NAVI_MEDIA_SWITCH -> DisplayKeyAction.NAVI_MEDIA_SWITCH
         KeyBindAction.LAUNCH_LINK -> DisplayKeyAction.LAUNCH_LINK
         KeyBindAction.APP_LAUNCHER -> DisplayKeyAction.APP_LAUNCHER
         KeyBindAction.TOGGLE_DM -> DisplayKeyAction.TOGGLE_DM

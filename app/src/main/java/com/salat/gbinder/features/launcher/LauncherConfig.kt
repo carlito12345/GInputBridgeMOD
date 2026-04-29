@@ -31,3 +31,34 @@ val OVERLAY_RESTRICTED_PKGS by lazy {
         // "com.android.systemui",
     )
 }
+
+val NAVI_PKGS by lazy {
+    setOf(
+        "ru.yandex.yandexnavi",
+        "ru.yandex.yandexmaps",
+        "ru.dublgis.dgismobile",
+        "com.navitel",
+        "com.mapswithme.maps.pro",
+        "com.cityguide.probki.net",
+        "ru.probki.net",
+        "com.garmin.android.apps.gmobilext",
+        "com.shturmann.navigator",
+        "com.locator.navitel",
+        "com.google.android.apps.maps",
+        "com.waze",
+        "com.here.app.maps",
+        "com.sygic.aura",
+        "com.tomtom.gplay.navapp",
+        "net.osmand",
+        "com.mapquest.android.ace",
+        "com.telenav.app.android",
+        "com.glympse.android.glympse",
+        "com.tripit",
+        "com.sygic.truck",
+        "com.here.wego.enterprise",
+        "com.mapfactor.navigator",
+        "com.karta.gps.navigation",
+        "com.polestar.navigation",
+        "com.magiclane.navigation"
+    )
+}

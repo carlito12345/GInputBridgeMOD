@@ -89,6 +89,7 @@ import com.salat.gbinder.entity.DraggableLampItem
 import com.salat.gbinder.entity.KeyBindAction
 import com.salat.gbinder.entity.KeyBindConfig
 import com.salat.gbinder.entity.KeyBindPattern
+import com.salat.gbinder.features.launcher.NAVI_PKGS
 import com.salat.gbinder.mappers.keyCodeMap
 import com.salat.gbinder.mappers.toAllDisplay
 import com.salat.gbinder.ui.reordable.ReorderableItem
@@ -115,11 +116,13 @@ private enum class KeyBindingDialogStep {
     SET_CAROUSEL_CAR_LAMP,
     SET_APP_CAROUSEL_PICK,
     SET_APP_CAROUSEL_ORDER,
+    SET_NAVI_MEDIA_PICK,
 }
 
 private enum class KeyBindingDialogActions {
     APP_LAUNCH,
     APP_CAROUSEL,
+    NAVI_MEDIA_SWITCH,
     LINK_LAUNCH,
     APP_LAUNCHER,
     DRIVE_MODE_CHOOSE,
@@ -172,6 +175,7 @@ fun KeyBindingDialog(
             KeyBindingDialogActions.LINK_LAUNCH,
             KeyBindingDialogActions.APP_LAUNCHER,
             KeyBindingDialogActions.APP_CAROUSEL,
+            KeyBindingDialogActions.NAVI_MEDIA_SWITCH,
             KeyBindingDialogActions.DRIVE_MODE_CHOOSE,
             KeyBindingDialogActions.AUDIO_SOURCE_CHOOSE,
             KeyBindingDialogActions.CAR_LAMP,
@@ -251,6 +255,36 @@ fun KeyBindingDialog(
         }
     }
 
+    suspend fun handleNaviMediaSwitch(appList: List<DeviceAppInfo>): Boolean {
+        val candidates = appList.filter { it.packageName in NAVI_PKGS }
+
+        return when (candidates.size) {
+            0 -> {
+                context.inMainToast(context.getString(R.string.kbd_navi_media_no_app))
+                true
+            }
+
+            1 -> {
+                withContext(Dispatchers.IO) {
+                    val name = bind?.bind?.let { keyBindStorage.getBindName(it) }
+                        ?: ""
+
+                    keyBindStorage.saveBinds(
+                        name,
+                        KeyBindConfig(
+                            action = KeyBindAction.NAVI_MEDIA_SWITCH,
+                            value = candidates.single().packageName
+                        )
+                    )
+                }
+                onDismiss()
+                true
+            }
+
+            else -> false
+        }
+    }
+
     LaunchedEffect(true) {
         withContext(Dispatchers.IO) {
             val installedApps = systemApps.getAllApps(APP_ICON_ROUND, false, APP_ICON_QUALITY)
@@ -264,6 +298,13 @@ fun KeyBindingDialog(
                 keyTitles = mapOf(1456 to "Any key")
             )
         }
+    }
+
+    LaunchedEffect(step, apps, bind) {
+        if (step != KeyBindingDialogStep.SET_NAVI_MEDIA_PICK) return@LaunchedEffect
+        val list = apps ?: return@LaunchedEffect
+        if (list.isEmpty()) return@LaunchedEffect
+        handleNaviMediaSwitch(list)
     }
 
     Column(modifier = Modifier.padding(top = 22.dp)) {
@@ -282,6 +323,7 @@ fun KeyBindingDialog(
                 KeyBindingDialogStep.SET_CAROUSEL_CAR_LAMP -> stringResource(R.string.headlight_mode)
                 KeyBindingDialogStep.SET_APP_CAROUSEL_PICK -> stringResource(R.string.kbd_title_app_carousel_pick)
                 KeyBindingDialogStep.SET_APP_CAROUSEL_ORDER -> stringResource(R.string.kbd_title_app_carousel_order)
+                KeyBindingDialogStep.SET_NAVI_MEDIA_PICK -> stringResource(R.string.kbd_title_navi_media_pick)
             },
             modifier = Modifier.padding(horizontal = 24.dp),
             color = AppTheme.colors.contentPrimary,
@@ -312,6 +354,7 @@ fun KeyBindingDialog(
                     KeyBindingDialogStep.SET_CAROUSEL_CAR_LAMP -> stringResource(R.string.drag_modes_to_switch)
                     KeyBindingDialogStep.SET_APP_CAROUSEL_PICK -> stringResource(R.string.kbd_desc_app_carousel_pick)
                     KeyBindingDialogStep.SET_APP_CAROUSEL_ORDER -> stringResource(R.string.kbd_desc_app_carousel_order)
+                    KeyBindingDialogStep.SET_NAVI_MEDIA_PICK -> stringResource(R.string.kbd_desc_navi_media_pick)
                 },
                 modifier = Modifier.padding(horizontal = 23.dp),
                 color = AppTheme.colors.contentPrimary.copy(.4f),
@@ -472,6 +515,20 @@ fun KeyBindingDialog(
                                         step = KeyBindingDialogStep.SET_APP_CAROUSEL_PICK
                                     }
 
+                                    KeyBindingDialogActions.NAVI_MEDIA_SWITCH -> {
+                                        val appList = apps
+                                        if (appList == null) {
+                                            step = KeyBindingDialogStep.SET_NAVI_MEDIA_PICK
+                                        } else {
+                                            scope.launch {
+                                                if (!handleNaviMediaSwitch(appList)) {
+                                                    apps = appList.map { it.copy(isSelected = false) }
+                                                    step = KeyBindingDialogStep.SET_NAVI_MEDIA_PICK
+                                                }
+                                            }
+                                        }
+                                    }
+
                                     KeyBindingDialogActions.LINK_LAUNCH -> runCatching {
                                         val intent = Intent(Intent.ACTION_CREATE_SHORTCUT)
                                         pickShortcut.launch(intent)
@@ -593,6 +650,8 @@ fun KeyBindingDialog(
 
                                     KeyBindingDialogActions.APP_CAROUSEL -> stringResource(R.string.kbd_app_carousel_action_title)
 
+                                    KeyBindingDialogActions.NAVI_MEDIA_SWITCH -> stringResource(R.string.kbd_navi_media_switch_title)
+
                                     KeyBindingDialogActions.LINK_LAUNCH -> stringResource(R.string.launch_shortcut)
 
                                     KeyBindingDialogActions.APP_LAUNCHER -> stringResource(R.string.launcher_name)
@@ -626,6 +685,8 @@ fun KeyBindingDialog(
                                     KeyBindingDialogActions.APP_LAUNCH -> stringResource(R.string.kbd_action_launch_desc)
 
                                     KeyBindingDialogActions.APP_CAROUSEL -> stringResource(R.string.kbd_app_carousel_action_desc)
+
+                                    KeyBindingDialogActions.NAVI_MEDIA_SWITCH -> stringResource(R.string.kbd_navi_media_switch_desc)
 
                                     KeyBindingDialogActions.LINK_LAUNCH -> stringResource(R.string.launch_shortcut_desc)
 
@@ -760,6 +821,114 @@ fun KeyBindingDialog(
                             )
 
                             Spacer(Modifier.width(12.dp))
+                        }
+                    }
+                }
+            }
+
+            KeyBindingDialogStep.SET_NAVI_MEDIA_PICK -> {
+                val naviApps = remember(apps) {
+                    apps?.filter { it.packageName in NAVI_PKGS }
+                        ?.sortedBy { it.appName.lowercase() }
+                        ?: emptyList()
+                }
+                if (apps == null || apps?.isEmpty() == true) {
+                    RenderScan()
+                } else {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                    ) {
+                        item(key = -1) {
+                            Spacer(
+                                Modifier
+                                    .height(.8.dp)
+                            )
+                        }
+                        itemsIndexed(
+                            items = naviApps,
+                            key = { _, item -> item.packageName }
+                        ) { _, item ->
+
+                            fun selectSelect() {
+                                apps = (apps as List<DeviceAppInfo>).map {
+                                    if (item.packageName == it.packageName) {
+                                        it.copy(isSelected = true)
+                                    } else it.copy(isSelected = false)
+                                }
+                            }
+
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        scope.launch {
+                                            withContext(Dispatchers.Default) {
+                                                selectSelect()
+                                            }
+                                        }
+                                    }
+                                    .padding(vertical = 8.dp)
+                                    .padding(end = 6.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Spacer(Modifier.width(16.dp))
+
+                                item.icon.let { icon ->
+                                    DrawableImage(
+                                        icon = icon,
+                                        modifier = Modifier
+                                            .size(32.dp)
+                                            .clip(RoundedCornerShape(6.dp))
+                                    )
+                                    Spacer(Modifier.width(10.dp))
+                                }
+
+                                Column {
+                                    Text(
+                                        text = item.appName,
+                                        style = AppTheme.typography.dialogListTitle,
+                                        overflow = TextOverflow.Ellipsis,
+                                        maxLines = 1,
+                                        color = AppTheme.colors.contentPrimary
+                                    )
+                                    Text(
+                                        text = item.packageName,
+                                        style = AppTheme.typography.dialogSubtitle,
+                                        overflow = TextOverflow.Ellipsis,
+                                        maxLines = 1,
+                                        color = AppTheme.colors.contentPrimary.copy(.5f)
+                                    )
+                                }
+
+                                Spacer(Modifier.weight(1f))
+
+                                RadioButton(
+                                    selected = (item.isSelected),
+                                    onClick = {
+                                        scope.launch {
+                                            withContext(Dispatchers.Default) {
+                                                selectSelect()
+                                            }
+                                        }
+                                    },
+                                    colors = RadioButtonColors(
+                                        selectedColor = AppTheme.colors.contentAccent.copy(.8f),
+                                        unselectedColor = AppTheme.colors.contentPrimary.copy(
+                                            .3f
+                                        ),
+                                        disabledSelectedColor = AppTheme.colors.contentPrimary.copy(
+                                            .3f
+                                        ),
+                                        disabledUnselectedColor = AppTheme.colors.contentPrimary.copy(
+                                            .3f
+                                        )
+                                    )
+                                )
+
+                                Spacer(Modifier.width(12.dp))
+                            }
                         }
                     }
                 }
@@ -1198,7 +1367,7 @@ fun KeyBindingDialog(
                                 ReorderableItem(
                                     state = reorderableLazyListState,
                                     key = -1
-                                ) { isDragging ->
+                                ) { _ ->
                                     LaunchedEffect(index) {
                                         dividerIndex = index
                                     }
@@ -1240,7 +1409,7 @@ fun KeyBindingDialog(
                             is DraggableDMItem.DriveMode -> ReorderableItem(
                                 state = reorderableLazyListState,
                                 key = item.item.id
-                            ) { isDragging ->
+                            ) { _ ->
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -1584,7 +1753,7 @@ fun KeyBindingDialog(
                                 ReorderableItem(
                                     state = reorderableLazyListState,
                                     key = -1
-                                ) { isDragging ->
+                                ) { _ ->
                                     LaunchedEffect(index) {
                                         dividerIndex = index
                                     }
@@ -1626,7 +1795,7 @@ fun KeyBindingDialog(
                             is DraggableLampItem.LampMode -> ReorderableItem(
                                 state = reorderableLazyListState,
                                 key = item.item.id
-                            ) { isDragging ->
+                            ) { _ ->
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -1708,6 +1877,8 @@ fun KeyBindingDialog(
                                 KeyBindingDialogStep.SET_KEY_BIND
 
                             KeyBindingDialogStep.SET_APP -> step = KeyBindingDialogStep.SET_ACTION
+                            KeyBindingDialogStep.SET_NAVI_MEDIA_PICK -> step =
+                                KeyBindingDialogStep.SET_ACTION
                             KeyBindingDialogStep.SET_APP_CAROUSEL_PICK -> step =
                                 KeyBindingDialogStep.SET_ACTION
 
@@ -1744,6 +1915,7 @@ fun KeyBindingDialog(
                         KeyBindingDialogStep.SET_KEY_BIND -> android.R.string.cancel
                         KeyBindingDialogStep.SET_ACTION -> R.string.back
                         KeyBindingDialogStep.SET_APP -> R.string.back
+                        KeyBindingDialogStep.SET_NAVI_MEDIA_PICK -> R.string.back
                         KeyBindingDialogStep.SET_APP_CAROUSEL_PICK -> R.string.back
                         KeyBindingDialogStep.SET_APP_CAROUSEL_ORDER -> R.string.back
                         KeyBindingDialogStep.SET_LINK -> R.string.back
@@ -1765,6 +1937,8 @@ fun KeyBindingDialog(
                         KeyBindingDialogStep.SET_KEY_BIND -> bind != null
                         KeyBindingDialogStep.SET_ACTION -> true
                         KeyBindingDialogStep.SET_APP -> apps?.any { it.isSelected } == true
+                        KeyBindingDialogStep.SET_NAVI_MEDIA_PICK ->
+                            apps?.any { it.packageName in NAVI_PKGS && it.isSelected } == true
                         KeyBindingDialogStep.SET_APP_CAROUSEL_PICK -> carouselPickSelected.size >= 2
                         KeyBindingDialogStep.SET_APP_CAROUSEL_ORDER -> carouselOrderedPackages.size >= 2
                         KeyBindingDialogStep.SET_LINK -> link != null
@@ -1808,6 +1982,29 @@ fun KeyBindingDialog(
                                                     action = KeyBindAction.LAUNCH_APP,
                                                     value = apps?.find { it.isSelected }?.packageName
                                                         ?: ""
+                                                )
+                                            )
+                                            onDismiss()
+                                        } catch (_: Exception) {
+                                        }
+                                    }
+                                }
+
+                                KeyBindingDialogStep.SET_NAVI_MEDIA_PICK -> {
+                                    scope.launch(Dispatchers.IO) {
+                                        try {
+                                            val name =
+                                                bind?.bind?.let { keyBindStorage.getBindName(it) }
+                                                    ?: ""
+                                            val pkg = apps?.find {
+                                                it.packageName in NAVI_PKGS && it.isSelected
+                                            }?.packageName ?: ""
+
+                                            keyBindStorage.saveBinds(
+                                                name,
+                                                KeyBindConfig(
+                                                    action = KeyBindAction.NAVI_MEDIA_SWITCH,
+                                                    value = pkg
                                                 )
                                             )
                                             onDismiss()
@@ -2016,6 +2213,7 @@ fun KeyBindingDialog(
                             KeyBindingDialogStep.SET_KEY_BIND -> R.string.next
                             KeyBindingDialogStep.SET_ACTION -> R.string.next
                             KeyBindingDialogStep.SET_APP -> android.R.string.ok
+                            KeyBindingDialogStep.SET_NAVI_MEDIA_PICK -> android.R.string.ok
                             KeyBindingDialogStep.SET_APP_CAROUSEL_PICK -> R.string.next
                             KeyBindingDialogStep.SET_APP_CAROUSEL_ORDER -> android.R.string.ok
                             KeyBindingDialogStep.SET_LINK -> android.R.string.ok
