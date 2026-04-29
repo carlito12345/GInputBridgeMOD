@@ -320,6 +320,7 @@ class App : Application(), ImageLoaderFactory {
     private var geelyACIsOpened = false
     private var controlMediaApps = emptyList<String>()
     private var currentMediaAppPackage = ""
+    private var previousMediaAppPackage = ""
     private var lastVisibleNavi = ""
     private var lastNaviMediaVisibleWasNavi: Boolean? = null
 
@@ -1299,6 +1300,12 @@ class App : Application(), ImageLoaderFactory {
 
             // If it's a new media app, save it
             if (isControlApp && targetName != currentMediaAppPackage) {
+                if (currentMediaAppPackage.isNotEmpty() &&
+                    currentMediaAppPackage in controlMediaApps &&
+                    currentMediaAppPackage !in NAVI_PKGS
+                ) {
+                    previousMediaAppPackage = currentMediaAppPackage
+                }
                 currentMediaAppPackage = targetName
                 debugLog("[MEDIA_CONTROL]: $currentMediaAppPackage")
             }
@@ -2237,11 +2244,11 @@ class App : Application(), ImageLoaderFactory {
         runCatching {
             val visible = currentVisibleApp.trim()
             val targetMedia = when {
-                visible in NAVI_PKGS -> true
-                visible in controlMediaApps -> false
                 lastNaviMediaVisibleWasNavi == true -> true
                 lastNaviMediaVisibleWasNavi == false -> false
-                else -> false
+                visible in NAVI_PKGS -> true
+                visible in controlMediaApps -> false
+                else -> true // first opening media if true, or navi if false
             }
 
             val target = if (targetMedia) {
@@ -2260,6 +2267,7 @@ class App : Application(), ImageLoaderFactory {
                 return@runCatching
             }
 
+            lastNaviMediaVisibleWasNavi = target in NAVI_PKGS
             if (targetMedia && target in controlMediaApps) currentMediaAppPackage = target
             launchApp(target)
             debugDeepLog("[KEY_BIND] navi media switch: visible=$visible target=$target")
@@ -2274,26 +2282,42 @@ class App : Application(), ImageLoaderFactory {
     }
 
     private fun naviMediaSwitchMediaTarget(): String {
-        globalMediaControllers
-            ?.firstOrNull { it.playbackState?.state == PlaybackState.STATE_PLAYING }
-            ?.packageName
-            ?.takeIf { it.isNotEmpty() }
-            ?.let { return it }
+        val isOnlineSource = mMediaCenterManager
+            ?.takeIf { it.isAlive }
+            ?.currentAudioSource == AUDIO_SOURCE
+
+        if (isOnlineSource) {
+            globalMediaControllers
+                ?.firstOrNull {
+                    it.playbackState?.state == PlaybackState.STATE_PLAYING &&
+                            it.packageName in controlMediaApps &&
+                            it.packageName !in NAVI_PKGS
+                }
+                ?.packageName
+                ?.takeIf { it.isNotEmpty() }
+                ?.let { return it }
+        }
 
         currentMediaAppPackage
-            .takeIf { it.isNotEmpty() && it in controlMediaApps }
+            .takeIf { it.isNotEmpty() && it in controlMediaApps && it !in NAVI_PKGS }
             ?.let { return it }
 
-        globalActiveMediaController
-            ?.packageName
-            ?.takeIf { it in controlMediaApps }
+        if (isOnlineSource) {
+            globalActiveMediaController
+                ?.packageName
+                ?.takeIf { it.isNotEmpty() && it in controlMediaApps && it !in NAVI_PKGS }
+                ?.let { return it }
+        }
+
+        previousMediaAppPackage
+            .takeIf { it.isNotEmpty() && it in controlMediaApps && it !in NAVI_PKGS }
             ?.let { return it }
 
         defaultMediaApps
-            .takeIf { it.isNotEmpty() && it in controlMediaApps }
+            .takeIf { it.isNotEmpty() && it in controlMediaApps && it !in NAVI_PKGS }
             ?.let { return it }
 
-        return controlMediaApps.firstOrNull().orEmpty()
+        return controlMediaApps.firstOrNull { it !in NAVI_PKGS }.orEmpty()
     }
 
     private fun KeyBindConfig.carouselLampMode() = appScope.launch(Dispatchers.IO) {
