@@ -544,6 +544,16 @@ class MainActivity : ComponentActivity() {
         val context = LocalContext.current
         val scope = rememberCoroutineScope()
 
+        suspend fun disableAltButtons() {
+            dataStore.saveValue(GeneralPrefs.ALT_MENU, false)
+            dataStore.saveValue(GeneralPrefs.ALT_MUTE, false)
+        }
+
+        suspend fun enableAltButtonsSupport() {
+            dataStore.saveValue(GeneralPrefs.CUSTOM_LONG_PRESS_ENABLED, true)
+            dataStore.saveValue(GeneralPrefs.CUSTOM_SHORT_CLICK_ENABLED, true)
+        }
+
         Spacer(Modifier.height(26.dp))
 
         Text(
@@ -601,29 +611,13 @@ class MainActivity : ComponentActivity() {
             enable = true,
             groupDivider = false,
             onChange = { enable ->
-                updateMainScreenState(
-                    mainScreenState.copy(
-                        enableCustomLongClick = enable,
-                        altMenu = if (enable) mainScreenState.altMenu else false,
-                        altMute = if (enable) mainScreenState.altMute else false
-                    )
-                )
+                updateMainScreenState(mainScreenState.copy(enableCustomLongClick = enable))
                 scope.launch(Dispatchers.IO) {
                     dataStore.saveValue(
                         GeneralPrefs.CUSTOM_LONG_PRESS_ENABLED,
                         enable
                     )
-
-                    if (!enable) {
-                        dataStore.saveValue(
-                            GeneralPrefs.ALT_MENU,
-                            false
-                        )
-                        dataStore.saveValue(
-                            GeneralPrefs.ALT_MUTE,
-                            false
-                        )
-                    }
+                    if (!enable) disableAltButtons()
                 }
             }
         )
@@ -671,13 +665,14 @@ class MainActivity : ComponentActivity() {
             value = mainScreenState.enabledCustomShortClick,
             enable = true,
             groupDivider = false,
-            onChange = {
-                updateMainScreenState(mainScreenState.copy(enabledCustomShortClick = it))
+            onChange = { enable ->
+                updateMainScreenState(mainScreenState.copy(enabledCustomShortClick = enable))
                 scope.launch(Dispatchers.IO) {
                     dataStore.saveValue(
                         GeneralPrefs.CUSTOM_SHORT_CLICK_ENABLED,
-                        it
+                        enable
                     )
+                    if (!enable) disableAltButtons()
                 }
             }
         )
@@ -786,23 +781,13 @@ class MainActivity : ComponentActivity() {
             enable = true,
             groupDivider = false,
             onChange = { enable ->
-                updateMainScreenState(
-                    mainScreenState.copy(
-                        altMenu = enable,
-                        enableCustomLongClick = if (enable) true else mainScreenState.enableCustomLongClick
-                    )
-                )
+                updateMainScreenState(mainScreenState.copy(altMenu = enable))
                 scope.launch(Dispatchers.IO) {
                     dataStore.saveValue(
                         GeneralPrefs.ALT_MENU,
                         enable
                     )
-                    if (enable) {
-                        dataStore.saveValue(
-                            GeneralPrefs.CUSTOM_LONG_PRESS_ENABLED,
-                            true
-                        )
-                    }
+                    if (enable) enableAltButtonsSupport()
                 }
             }
         )
@@ -818,23 +803,13 @@ class MainActivity : ComponentActivity() {
             enable = true,
             groupDivider = false,
             onChange = { enable ->
-                updateMainScreenState(
-                    mainScreenState.copy(
-                        altMute = enable,
-                        enableCustomLongClick = if (enable) true else mainScreenState.enableCustomLongClick
-                    )
-                )
+                updateMainScreenState(mainScreenState.copy(altMute = enable))
                 scope.launch(Dispatchers.IO) {
                     dataStore.saveValue(
                         GeneralPrefs.ALT_MUTE,
                         enable
                     )
-                    if (enable) {
-                        dataStore.saveValue(
-                            GeneralPrefs.CUSTOM_LONG_PRESS_ENABLED,
-                            true
-                        )
-                    }
+                    if (enable) enableAltButtonsSupport()
                 }
             }
         )

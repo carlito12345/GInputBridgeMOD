@@ -755,7 +755,7 @@ class App : Application(), ImageLoaderFactory {
         }
         launch {
             dataStore.getValueFlow(GeneralPrefs.CUSTOM_LONG_PRESS_ENABLED).collect {
-                customLongPressEnabled = it ?: false
+                customLongPressEnabled = it ?: true
             }
         }
         launch {
@@ -775,7 +775,7 @@ class App : Application(), ImageLoaderFactory {
         }
         launch {
             dataStore.getValueFlow(GeneralPrefs.CUSTOM_SHORT_CLICK_ENABLED).collect {
-                customShortPressEnabled = it ?: false
+                customShortPressEnabled = it ?: true
             }
         }
         launch {
@@ -1352,6 +1352,8 @@ class App : Application(), ImageLoaderFactory {
 
     // Getting initial values, otherwise race conditions with true defaults
     private suspend fun initialRuntimePrefsState() = withContext(Dispatchers.IO) {
+        customLongPressEnabled = dataStore.getValueFlow(GeneralPrefs.CUSTOM_LONG_PRESS_ENABLED).first() ?: true
+        customShortPressEnabled = dataStore.getValueFlow(GeneralPrefs.CUSTOM_SHORT_CLICK_ENABLED).first() ?: true
         sourceManagement = dataStore.getValueFlow(GeneralPrefs.LEGACY_SOURCE_MANAGEMENT).first() ?: false
         radioBtControl = dataStore.getValueFlow(GeneralPrefs.RADIO_BT_CONTROL).first() ?: true
         altMute = dataStore.getValueFlow(GeneralPrefs.ALT_MUTE).first() ?: true
