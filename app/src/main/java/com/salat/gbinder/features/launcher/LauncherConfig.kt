@@ -36,6 +36,7 @@ val NAVI_PKGS by lazy {
     setOf(
         "ru.yandex.yandexnavi",
         "ru.yandex.yandexmaps",
+        "ru.yandex.yandexnavi.auto",
         "ru.dublgis.dgismobile",
         "com.navitel",
         "com.mapswithme.maps.pro",

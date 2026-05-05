@@ -334,12 +334,16 @@ class App : Application(), ImageLoaderFactory {
     private var currentMediaAppInForeground = false
     private var geelyACIsOpened = false
     private var controlMediaApps = emptyList<String>()
+
     @Volatile
     private var currentMediaAppPackage = ""
+
     @Volatile
     private var previousMediaAppPackage = ""
+
     @Volatile
     private var lastVisibleNavi = ""
+
     @Volatile
     private var lastNaviMediaVisibleWasNavi: Boolean? = null
 
@@ -391,6 +395,17 @@ class App : Application(), ImageLoaderFactory {
 
         FirebaseApp.initializeApp(this)
         Timber.d("[APP] CREATED")
+
+        // Keybind test
+        /* if (BuildConfig.DEBUG) {
+            appScope.launch {
+                onOneOSApiConnected()
+                repeat(1000) {
+                    delay(5000L)
+                    handleShortClick(DebugKeyBindHarness.STUB_KEY_CODE, 0, "")
+                }
+            }
+        } */
     }
 
     private fun onOneOSApiConnected() = appScope.launch {
@@ -1342,6 +1357,11 @@ class App : Application(), ImageLoaderFactory {
     private fun normalizeVisiblePackage(pkg: String): String = when (pkg.trim()) {
         HAV_YM_UMA_PACKAGE -> HAV_YM_PACKAGE
         else -> pkg.trim()
+    }
+
+    private fun normalizeTargetPackage(pkg: String): String = when (pkg) {
+        HAV_YM_PACKAGE -> HAV_YM_UMA_PACKAGE
+        else -> pkg
     }
 
     private fun CoroutineScope.initAppScalesCollector() = launch(Dispatchers.IO) {
@@ -2298,7 +2318,7 @@ class App : Application(), ImageLoaderFactory {
             if (targetMedia && target in controlMediaApps && target !in NAVI_PKGS) {
                 currentMediaAppPackage = target
             }
-            launchApp(target)
+            launchApp(normalizeTargetPackage(target))
             debugDeepLog("[KEY_BIND] navi media switch: visible=$visible target=$target")
         }.onFailure { Timber.e(it) }
     }
@@ -2435,7 +2455,7 @@ class App : Application(), ImageLoaderFactory {
                     .map { parseAppCarouselValueSegment(it) }
                     .filter { it.first.isNotEmpty() }
                 if (entries.isEmpty()) return@withLock
-                val packages = entries.map { it.first }
+                val packages = entries.map { normalizeVisiblePackage(it.first) }
                 val visible = currentVisibleApp.trim().takeIf { it.isNotBlank() }
                 val target = if (visible != null && visible in packages) {
                     val idx = packages.indexOf(visible)
@@ -2445,7 +2465,7 @@ class App : Application(), ImageLoaderFactory {
                 appCarouselAutoPlayJob?.cancel()
 
                 // Start app
-                launchApp(target)
+                launchApp(normalizeTargetPackage(target))
 
                 // Autoplay event
                 if (entries.find { it.first == target }?.second == true) {

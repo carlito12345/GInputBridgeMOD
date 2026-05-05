@@ -66,6 +66,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.salat.gbinder.DebugKeyBindHarness
 import com.salat.gbinder.APP_ICON_QUALITY
 import com.salat.gbinder.APP_ICON_ROUND
 import com.salat.gbinder.BuildConfig
@@ -300,8 +301,8 @@ fun KeyBindingDialog(
         if (BuildConfig.DEBUG) {
             bind = PickedKeyBind(
                 title = "test",
-                bind = KeyBindPattern.ShortClick(1456),
-                keyTitles = mapOf(1456 to "Any key")
+                bind = DebugKeyBindHarness.shortClickTestPattern,
+                keyTitles = mapOf(DebugKeyBindHarness.STUB_KEY_CODE to "Any key")
             )
         }
     }
