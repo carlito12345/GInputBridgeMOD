@@ -121,6 +121,9 @@ private fun ColumnScope.RenderConfiguratorPresetsContent(
     onAdbDimAutoStopChanged: (Boolean) -> Unit,
     viewModel: ConfiguratorPresetsViewModel
 ) {
+    val canRearWiperAuto by viewModel.canRearWiperAuto.collectAsStateWithLifecycle()
+    val rearWiperAuto by viewModel.rearWiperAuto.collectAsStateWithLifecycle()
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -151,6 +154,13 @@ private fun ColumnScope.RenderConfiguratorPresetsContent(
                     adbDimAutoStop = adbDimAutoStop,
                     onAdbDimAutoStopChanged = onAdbDimAutoStopChanged
                 )
+
+                if (canRearWiperAuto) {
+                    RearWiperAutoSwitcher(
+                        value = rearWiperAuto == true,
+                        onChange = { viewModel.setrearWiperAuto(it) }
+                    )
+                }
 
                 Spacer(Modifier.height(90.dp))
             }
@@ -251,5 +261,21 @@ private fun RenderAdbDimAutoStopSwitcher(
         value = adbDimAutoStop,
         groupDivider = false,
         onChange = { onAdbDimAutoStopChanged(it) }
+    )
+}
+
+@Composable
+private fun RearWiperAutoSwitcher(
+    value: Boolean,
+    onChange: (Boolean) -> Unit
+) {
+    RenderSwitcher(
+        modifier = Modifier.padding(horizontal = 20.dp),
+        title = stringResource(R.string.rear_wiper_auto_mode_title),
+        subtitle = stringResource(R.string.rear_wiper_auto_mode_desc),
+        enable = true,
+        value = value,
+        groupDivider = false,
+        onChange = onChange
     )
 }

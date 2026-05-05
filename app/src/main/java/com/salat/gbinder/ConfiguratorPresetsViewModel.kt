@@ -27,6 +27,10 @@ class ConfiguratorPresetsViewModel @Inject constructor(
 
     private val _warningVolume = MutableStateFlow(if (BuildConfig.DEBUG) 538771713 else null)
     val warningVolume = _warningVolume.asStateFlow()
+    private val _canRearWiperAuto = MutableStateFlow(false)
+    val canRearWiperAuto = _canRearWiperAuto.asStateFlow()
+    private val _rearWiperAuto = MutableStateFlow<Boolean?>(null)
+    val rearWiperAuto = _rearWiperAuto.asStateFlow()
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -39,21 +43,22 @@ class ConfiguratorPresetsViewModel @Inject constructor(
     }
 
     private suspend fun shouldRunAtlasAdbStep(): Boolean {
-        val adbEnabled = dataStore.getValueFlow(GeneralPrefs.ENABLE_ADB_HELPER, false).first()
         val adbPort = dataStore.getValueFlow(GeneralPrefs.ADB_HELPER_PORT, 5555).first()
-        return adbEnabled && adbPort == 5555
+        return adbPort == 5555
     }
 
     fun warmUpAdbSessionIfNeeded() = viewModelScope.launch(Dispatchers.IO) {
-        if (shouldRunAtlasAdbStep()) {
-            // Warm up session early when entering system params.
-            adbRepository.execute(":")
+        val canUseAtlasAdb = shouldRunAtlasAdbStep()
+        _canRearWiperAuto.update { canUseAtlasAdb }
+        if (canUseAtlasAdb) {
+            adbRepository.executeAtlas(":")
+            refreshRearWiperAutoState()
         }
     }
 
     fun atlasWheelSettings() = viewModelScope.launch(Dispatchers.IO) {
         if (shouldRunAtlasAdbStep()) {
-            adbRepository.execute("""settings put system wheel_settings "1"""")
+            adbRepository.executeAtlas("""settings put system wheel_settings "1"""")
         }
     }
 
@@ -68,5 +73,29 @@ class ConfiguratorPresetsViewModel @Inject constructor(
             value
         )
         _warningVolume.update { value }
+    }
+
+    fun setrearWiperAuto(enabled: Boolean) = viewModelScope.launch(Dispatchers.IO) {
+        if (!canRearWiperAuto.value) return@launch
+        val value = if (enabled) 1 else 0
+        val ok = car.setPropertyIntValue(
+            CarPropertyKey.SETTING_FUNC_AUTO_REAR_WIPING,
+            Integer.MIN_VALUE,
+            value
+        )
+        if (ok) {
+            _rearWiperAuto.update { enabled }
+        }
+    }
+
+    private suspend fun refreshRearWiperAutoState() {
+        val value = car.getIntProperty(CarPropertyKey.SETTING_FUNC_AUTO_REAR_WIPING)
+        _rearWiperAuto.update {
+            when (value) {
+                0 -> false
+                1 -> true
+                else -> null
+            }
+        }
     }
 }

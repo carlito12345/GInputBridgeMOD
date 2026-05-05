@@ -305,6 +305,43 @@ class AdbRepositoryImpl(private val dataStore: DataStoreRepository) : AdbReposit
         }
     }
 
+    override suspend fun executeAtlas(command: String): String = withContext(Dispatchers.IO) {
+        val port = dataStore.getValueFlow(GeneralPrefs.ADB_HELPER_PORT, 5555).first()
+        if (port != 5555) return@withContext "Atlas ADB port is not 5555"
+
+        if (isManuallyDisconnected || _connectionState.value is AdbConnectionState.Disconnected) {
+            return@withContext "ADB disconnected"
+        }
+
+        if (!isConnectedUnsafe()) {
+            val ok = connect(host, port)
+            if (!ok) return@withContext "ADB connect failed"
+        }
+
+        if (command.isEmpty()) return@withContext "empty command"
+
+        try {
+            executeLocked(command)
+        } catch (t: CommandFailedException) {
+            Timber.w(
+                t,
+                "[ADB] atlas command failed (exit=%d), output=%s",
+                t.exitCode,
+                t.output.trim().takeLast(300)
+            )
+            t.message ?: "ADB atlas command failed"
+        } catch (t: Throwable) {
+            if (isManuallyDisconnected || _connectionState.value is AdbConnectionState.Disconnected) {
+                return@withContext "ADB disconnected"
+            }
+
+            Timber.w(t, "[ADB] atlas execute failed")
+            dropConnectionForRetry(t)
+            scheduleReconnect(host, port, "atlas execute error")
+            t.message ?: "ADB atlas execute error"
+        }
+    }
+
     override suspend fun isAppInFreeform(packageName: String): Boolean? {
         val pkg = packageName.trim()
         if (pkg.isEmpty() || pkg.equals("unknown", ignoreCase = true) || !isValidPackageName(pkg)) {
