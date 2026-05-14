@@ -36,8 +36,9 @@ class BackgroundTaskReceiver() : BroadcastReceiver() {
             "$BASE_PATH.SET_AUDIO_SOURCE" -> {
                 val target = intent.getStringExtra("target")?.uppercase().orEmpty()
                 val source = intent.getStringExtra("source")?.uppercase().orEmpty()
+                val autoplay = intent.getSafeInt("autoplay")
                 scope.launch {
-                    GlobalState.setAudioSourceFlow.emit(target to source)
+                    GlobalState.setAudioSourceFlow.emit(Triple(target, source, autoplay == 1))
                 }
             }
 

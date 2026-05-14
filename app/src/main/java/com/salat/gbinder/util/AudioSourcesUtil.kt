@@ -31,13 +31,11 @@ internal fun Context.getAudioSourceDisplayLabel(source: MediaCenterConstant.Audi
 
 internal fun requestCarouselAudioSourceForTarget(
     manager: MediaCenterManager,
-    target: MediaCenterConstant.AudioSource
+    target: MediaCenterConstant.AudioSource,
+    app: MediaCenterConstant.AppSource? = null
 ) {
     if (target == MediaCenterConstant.AudioSource.AUDIO_SOURCE_ONLINE) {
-        manager.requestAudioSource(
-            target,
-            MediaCenterConstant.AppSource.WECARFLOW
-        )
+        manager.requestAudioSource(target, app ?: MediaCenterConstant.AppSource.WECARFLOW)
     } else manager.requestAudioSource(target)
 }
 

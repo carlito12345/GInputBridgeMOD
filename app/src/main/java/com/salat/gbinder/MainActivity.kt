@@ -128,6 +128,7 @@ import com.salat.gbinder.ui.HugeSegmentToggler
 import com.salat.gbinder.ui.KeyBindingDialog
 import com.salat.gbinder.ui.NotifPickerDialog
 import com.salat.gbinder.ui.RenderListButton
+import com.salat.gbinder.ui.RenderIgnoreMediaAppsPickerDialog
 import com.salat.gbinder.ui.RenderMediaAppsPickerDialog
 import com.salat.gbinder.ui.RenderSwitcher
 import com.salat.gbinder.ui.StatusLamp
@@ -574,6 +575,18 @@ class MainActivity : ComponentActivity() {
             }
         )
 
+        val gmpIntegration by GlobalState.isGMPInstalled.collectAsStateWithLifecycle()
+        if (gmpIntegration) {
+            Spacer(Modifier.height(6.dp))
+
+            Text(
+                modifier = Modifier,
+                text = stringResource(R.string.gmediaproxy_found),
+                style = AppTheme.typography.surfaceSubtitle,
+                color = AppTheme.colors.contentPrimary.copy(.9f)
+            )
+        }
+
         Spacer(Modifier.height(48.dp))
 
         // App update ui
@@ -977,7 +990,7 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 42.dp),
-                text = "Тип управления",
+                text = stringResource(R.string.control_type),
                 style = AppTheme.typography.screenTitle,
                 color = AppTheme.colors.contentPrimary
             )
@@ -1080,6 +1093,28 @@ class MainActivity : ComponentActivity() {
                 }
             }
         )
+
+        Spacer(Modifier.height(12.dp))
+
+        // Ignore media control apps
+        var showIgnoreAppsDialog by remember { mutableStateOf(false) }
+        if (showIgnoreAppsDialog) {
+            RenderIgnoreMediaAppsPickerDialog(
+                uiScaleState = uiScale,
+                systemApps = remember { systemApps },
+                dataStore = remember { dataStore },
+                onDismiss = { showIgnoreAppsDialog = false }
+            )
+        }
+
+        RenderListButton(
+            modifier = Modifier.padding(horizontal = 20.dp),
+            title = stringResource(R.string.exceptions),
+            subtitle = stringResource(R.string.audio_control_exceptions_desc),
+            enable = mainScreenState.mediaControlEnabled
+        ) {
+            showIgnoreAppsDialog = true
+        }
 
         Spacer(Modifier.height(12.dp))
 

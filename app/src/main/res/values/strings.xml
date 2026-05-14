@@ -26,6 +26,7 @@
     <string name="filter">Filter</string>
     <string name="sort_by_recent_changes">Sort by recent changes</string>
     <string name="show_the_unknowns">Show the unknowns</string>
+    <string name="gmediaproxy_found">GMediaProxy found</string>
 
     <string name="enable_accessibility">To use the app, enable accessibility features</string>
     <string name="grant_notification_access">For proper operation, grant the app \"notification access\"</string>
@@ -432,6 +433,7 @@
     <string name="light_theme_schedule">Light theme from %1$s to %2$s</string>
     <string name="auto">Auto</string>
     <string name="interface_scale">Interface scale</string>
+    <string name="control_type">Control Type</string>
 
     <string name="connection_port">Connection port</string>
     <string name="enter_your_port">Enter your port number</string>
@@ -464,6 +466,8 @@
     <string name="media_control_mode_full_subtitle">Controls all sources: Android, radio, and Bluetooth. Everything is handled through the app</string>
     <string name="media_control_mode_session_title">Media session</string>
     <string name="media_control_mode_session_subtitle">Controls only the active Android media session. Radio and Bluetooth are handled by the firmware</string>
+    <string name="exceptions">Exceptions</string>
+    <string name="audio_control_exceptions_desc">Choose apps where media control should be automatically disabled while they are in the foreground</string>
 
     <string name="api_text_launcher"><![CDATA[<strong>Launcher Control</strong>
 <br>
@@ -516,7 +520,8 @@ In MacroDroid: Actions -> Send Intent
 <strong>Action</strong>: com.salat.gbinder.SET_AUDIO_SOURCE<br>
 <strong>Package</strong>: com.salat.gbinder<br>
 <strong>Additional 1</strong>: target=[USB|BT|RADIO|CPAA|ONLINE|OTHER|YUNTING|UNKNOWN]<br>
-<strong>Additional 2</strong>: optional source=[UNKNOWN|WECARFLOW|KUWO|KUGOU|NETEASE_CLOUD|SOHU|JINRI|QYS|OTHER|FANDENG|TENCENT_VIDEO|XMLY|GC|HUOSHAN|BILIBILI|THUNDER_VOICE|CMVIDEO_VOICE]
+<strong>Additional 2</strong>: optional source=[UNKNOWN|WECARFLOW|KUWO|KUGOU|NETEASE_CLOUD|SOHU|JINRI|QYS|OTHER|FANDENG|TENCENT_VIDEO|XMLY|GC|HUOSHAN|BILIBILI|THUNDER_VOICE|CMVIDEO_VOICE]<br>
+<strong>Additional 3</strong>: optional autoplay=[1|0]
 ]]></string>
     <string name="api_text3"><![CDATA[<strong>Media Control</strong>
 <br>

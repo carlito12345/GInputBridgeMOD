@@ -17,6 +17,7 @@
     <string name="filter">Фильтры</string>
     <string name="sort_by_recent_changes">Сортировать по последним изменениям</string>
     <string name="show_the_unknowns">Показвать неизвестные</string>
+    <string name="gmediaproxy_found">Интеграция с GMediaProxy</string>
 
     <string name="enable_accessibility">Для работы приложения активируйте специальные возможности</string>
     <string name="grant_notification_access">Для корректной работы предоставьте приложению «доступ к уведомлениям»</string>
@@ -423,6 +424,7 @@
     <string name="light_theme_schedule">Светлая тема с %1$s до %2$s</string>
     <string name="auto">Авто</string>
     <string name="interface_scale">Масштаб интерфейса</string>
+    <string name="control_type">Тип управления</string>
 
     <string name="connection_port">Порт подключения</string>
     <string name="enter_your_port">Введите свой номер порта</string>
@@ -455,6 +457,8 @@
     <string name="media_control_mode_full_subtitle">Управляет всеми источниками: Android, Радио/USB/Bluetooth. Всё через приложение</string>
     <string name="media_control_mode_session_title">Медиасессия</string>
     <string name="media_control_mode_session_subtitle">Управляет только активной Android-медиасессией. Радио/USB/Bluetooth управляет прошивка</string>
+    <string name="exceptions">Исключения</string>
+    <string name="audio_control_exceptions_desc">Выберите приложения, для которых будет отключаться управление аудио, когда они находятся на экране</string>
 
     <string name="api_text_launcher"><![CDATA[<strong>Управление лаунчером</strong>
 <br>
@@ -508,7 +512,8 @@
 <strong>Действие</strong>: com.salat.gbinder.SET_AUDIO_SOURCE<br>
 <strong>Пакет</strong>: com.salat.gbinder<br>
 <strong>Дополнение 1</strong>: target=[USB|BT|RADIO|CPAA|ONLINE|OTHER|YUNTING|UNKNOWN]<br>
-<strong>Дополнение 2</strong>: опционально source=[UNKNOWN|WECARFLOW|KUWO|KUGOU|NETEASE_CLOUD|SOHU|JINRI|QYS|OTHER|FANDENG|TENCENT_VIDEO|XMLY|GC|HUOSHAN|BILIBILI|THUNDER_VOICE|CMVIDEO_VOICE]
+<strong>Дополнение 2</strong>: опционально source=[UNKNOWN|WECARFLOW|KUWO|KUGOU|NETEASE_CLOUD|SOHU|JINRI|QYS|OTHER|FANDENG|TENCENT_VIDEO|XMLY|GC|HUOSHAN|BILIBILI|THUNDER_VOICE|CMVIDEO_VOICE]<br>
+<strong>Дополнение 3</strong>: опционально autoplay=[1|0]
 ]]></string>
 
     <string name="api_text3"><![CDATA[<strong>Управление медиа</strong>

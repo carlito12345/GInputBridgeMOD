@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 object GlobalState {
     val logState = MutableStateFlow<List<Pair<Long, String>>>(emptyList())
 
-    val setAudioSourceFlow = MutableSharedFlow<Pair<String, String>>()
+    val setAudioSourceFlow = MutableSharedFlow<Triple<String, String, Boolean>>()
     val toggleMediaControlFlow = MutableSharedFlow<ToggleMediaControl>()
     val devicePackagesChangedFlow = MutableSharedFlow<PackagesChangedEvent>()
     val requestPlaybackInfoFlow = MutableSharedFlow<Boolean>()
@@ -25,4 +25,6 @@ object GlobalState {
 
     val keyBindingMode = MutableStateFlow(false)
     val keyBindingFlow = MutableSharedFlow<KeyBindPattern>()
+
+    val isGMPInstalled = MutableStateFlow(false)
 }

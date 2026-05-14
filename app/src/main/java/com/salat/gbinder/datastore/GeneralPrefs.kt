@@ -42,6 +42,7 @@ object GeneralPrefs {
     val ALT_MUTE = booleanPreferencesKey("ALT_MUTE")
     val ALT_MENU = booleanPreferencesKey("ALT_MENU")
     val ALT_LONG_TIME = intPreferencesKey("ALT_LONG_TIME")
+    val IGNORE_MEDIA_APPS = stringPreferencesKey("IGNORE_MEDIA_APPS")
 
     val ALL_KEYS
         get() = listOf(
@@ -81,6 +82,7 @@ object GeneralPrefs {
             ALT_MUTE,
             ALT_MENU,
             ALT_LONG_TIME,
+            IGNORE_MEDIA_APPS,
         )
 
     val DYNAMIC_PREFIX_KEYS

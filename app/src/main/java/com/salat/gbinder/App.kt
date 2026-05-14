@@ -82,6 +82,7 @@ import com.salat.gbinder.statekeeper.domain.repository.StateKeeperRepository
 import com.salat.gbinder.util.HeadrestNotifier
 import com.salat.gbinder.util.SimpleTimer
 import com.salat.gbinder.util.SystemAppsLightRepository
+import com.salat.gbinder.util.SystemAppsLightRepositoryImpl.Companion.GMP_PACKAGE
 import com.salat.gbinder.util.activeMediaControllerFlow
 import com.salat.gbinder.util.activeMediaSessionControllerFlow
 import com.salat.gbinder.util.driveModeNotifStore
@@ -154,14 +155,6 @@ class App : Application(), ImageLoaderFactory {
             "com.android.bluetooth",
             "com.geely.usbservice",
             "com.geely.radio.service"
-        )
-        private val BT_RADIO_SOURCES = setOf(
-            MediaCenterConstant.AudioSource.AUDIO_SOURCE_BT,
-            MediaCenterConstant.AudioSource.AUDIO_SOURCE_RADIO,
-            MediaCenterConstant.AudioSource.AUDIO_SOURCE_USB
-        )
-        private val ONLINE_SWITCH_SOURCES = BT_RADIO_SOURCES + setOf(
-            MediaCenterConstant.AudioSource.AUDIO_SOURCE_CPAA
         )
 
         private const val RESTORE_DRIVE_MODE_TIMEOUT = 9_000L
@@ -332,8 +325,9 @@ class App : Application(), ImageLoaderFactory {
     @Volatile
     private var currentVisibleApp = ""
     private var currentMediaAppInForeground = false
-    private var geelyACIsOpened = false
+    private var audioControlLock = false // Media control disable flag
     private var controlMediaApps = emptyList<String>()
+    private var disableMediaControlApps = emptySet<String>()
 
     @Volatile
     private var currentMediaAppPackage = ""
@@ -379,6 +373,8 @@ class App : Application(), ImageLoaderFactory {
 
         appScope.launch {
             initialLoggerState()
+            detectGMPApp().join() // Detect GMP contract
+
             initLogCollector()
             initAppScalesCollector()
             initVisibleAppCollector() // Accessibility event bridge
@@ -831,6 +827,11 @@ class App : Application(), ImageLoaderFactory {
             }
         }
         launch {
+            dataStore.getValueFlow(GeneralPrefs.IGNORE_MEDIA_APPS).collect { serialized ->
+                updateDisableMediaControlApps(serialized)
+            }
+        }
+        launch {
             dataStore.getValueFlow(NoBackupPrefs.DEFAULT_MEDIA_APP).collect {
                 defaultMediaApps = it ?: ""
             }
@@ -1084,22 +1085,19 @@ class App : Application(), ImageLoaderFactory {
     }
 
     private fun CoroutineScope.initSetAudioSourceCollector() = launch {
-        GlobalState.setAudioSourceFlow.collect { (target, appSource) ->
+        GlobalState.setAudioSourceFlow.collect { (target, appSource, autoplay) ->
             val inputSource = target.asAudioSource()
             val inputAppSource = appSource.asAppSource()
 
             inputSource?.let { source ->
                 try {
-                    if (radioBtControl && source in BT_RADIO_SOURCES && !karaokeFocusBoot) {
+                    if (radioBtControl && source.isKaraokeControl && !karaokeFocusBoot) {
                         mMediaCenterManager?.takeIf { it.isAlive } ?: return@let
                         sendKaraokeFocus(true)
                         karaokeFocusBoot = true
                     }
-                    if (inputAppSource == null) {
-                        mMediaCenterManager?.requestAudioSource(source)
-                    } else {
-                        mMediaCenterManager?.requestAudioSource(source, inputAppSource)
-                    }
+
+                    source.toggle(inputAppSource, autoplay)
                     debugDeepLog("[MediaCenterManager] new source by intent: $source")
                 } catch (e: Exception) {
                     Timber.e(e)
@@ -1312,7 +1310,7 @@ class App : Application(), ImageLoaderFactory {
 
     private fun CoroutineScope.initVisibleAppCollector() = launch {
         stateKeeper.visibleAppState.collect { pkg ->
-            geelyACIsOpened = false
+            audioControlLock = false
 
             // Reroute multi-packages
             val targetName = normalizeVisiblePackage(pkg)
@@ -1322,8 +1320,11 @@ class App : Application(), ImageLoaderFactory {
             switchOnlineForFgPlayback(targetName)
 
             // Detect AC is opened
-            if (targetName == GEELY_AC_PACKAGE) {
-                geelyACIsOpened = true
+            if (disableOnClimate && targetName == GEELY_AC_PACKAGE) {
+                audioControlLock = true
+            }
+            if (targetName in disableMediaControlApps) {
+                audioControlLock = true
             }
 
             // Check if the package is in our list of media apps
@@ -1573,7 +1574,7 @@ class App : Application(), ImageLoaderFactory {
             if (isOnlineBootSwitch()) {
                 val sourceBeforeSwitch = mMediaCenterManager?.currentAudioSource
                 resetIfOtherAudioSource()
-                if (radioBtControl && sourceBeforeSwitch in BT_RADIO_SOURCES) {
+                if (radioBtControl && sourceBeforeSwitch.isKaraokeControl) {
                     applyKaraokeFocusOnBootIfNeeded()
                     karaokeRetry()
                 }
@@ -2413,36 +2414,50 @@ class App : Application(), ImageLoaderFactory {
 
     private fun KeyBindConfig.carouselAudioSource() = appScope.launch(Dispatchers.IO) {
         runCatching {
+            val manager = mMediaCenterManager?.takeIf { it.isAlive }
+            if (manager == null) return@launch
+            val sources = value
+                .split('|')
+                .map { it.trim() }
+                .mapNotNull { it.asAudioSource() }
+                .distinct()
+            if (sources.isEmpty()) return@launch
+            val current = manager.currentAudioSource ?: return@launch
+            val target = nextCarouselAudioSource(sources, current)
+
+            target.toggle()?.let { result ->
+                if (result) inMainToast(this@App.getAudioSourceDisplayLabel(target))
+            }
+        }.onFailure { Timber.e(it) }
+    }
+
+    private suspend fun MediaCenterConstant.AudioSource.toggle(
+        app: MediaCenterConstant.AppSource? = null,
+        autoplay: Boolean = true
+    ): Boolean {
+        try {
             carouselAudioSourceMutex.withLock {
                 val manager = mMediaCenterManager?.takeIf { it.isAlive }
-                if (manager == null) {
-                    inMainToast(getString(R.string.error))
-                    return@withLock
-                }
-                val sources = value
-                    .split('|')
-                    .map { it.trim() }
-                    .mapNotNull { it.asAudioSource() }
-                    .distinct()
-                if (sources.isEmpty()) return@withLock
-                val current = manager.currentAudioSource ?: return@withLock
-                val target = nextCarouselAudioSource(sources, current)
-                if (target == current) {
-                    debugDeepLog("[KEY_BIND] carousel audio: already on $target")
-                    return@withLock
-                }
-                inMainToast(this@App.getAudioSourceDisplayLabel(target))
+                if (manager == null) return false
+                val current = manager.currentAudioSource ?: return false
+                if (this == current) return false
 
                 runCatching { carouselPauseOldSourceBeforeSwitch(current) }
                     .onFailure { Timber.e(it) }
-                runCatching { requestCarouselAudioSourceForTarget(manager, target) }
+                runCatching { requestCarouselAudioSourceForTarget(manager, this, app) }
                     .onFailure { Timber.e(it) }
-                val settled = waitForCarouselAudioSourceToSettle(manager, target)
-                runCatching { carouselPlayNewSourceAfterSwitch(target, settled) }
-                    .onFailure { Timber.e(it) }
-                debugDeepLog("[KEY_BIND] carousel audio: $current -> $target (settled=$settled)")
+                val settled = waitForCarouselAudioSourceToSettle(manager, this)
+                if (autoplay) {
+                    runCatching { carouselPlayNewSourceAfterSwitch(this, settled) }
+                        .onFailure { Timber.e(it) }
+                }
+                debugDeepLog("[AUDIO_SOURCE] $current -> $this (settled=$settled)")
+                return true
             }
-        }.onFailure { Timber.e(it) }
+        } catch (e: Exception) {
+            Timber.e(e)
+            return false
+        }
     }
 
     private fun KeyBindConfig.appCarousel() = appScope.launch(Dispatchers.Default) {
@@ -2533,23 +2548,18 @@ class App : Application(), ImageLoaderFactory {
     }
 
     private fun carouselPauseOldSourceBeforeSwitch(oldSource: MediaCenterConstant.AudioSource) {
-        when (oldSource) {
-            MediaCenterConstant.AudioSource.AUDIO_SOURCE_RADIO -> {
-                mMediaCenterManager?.radioManager?.pause()
-                debugDeepLog("[KEY_BIND] carousel audio: pause old RADIO (radioManager)")
-                return
-            }
-
-            MediaCenterConstant.AudioSource.AUDIO_SOURCE_BT,
-            MediaCenterConstant.AudioSource.AUDIO_SOURCE_USB,
-            MediaCenterConstant.AudioSource.AUDIO_SOURCE_CPAA -> {
-                runCatching { mMediaCenterManager?.musicAdapterManager?.pause() == 1 }.onFailure { Timber.e(it) }
-                debugDeepLog("[KEY_BIND] carousel audio: pause old BT/USB/CPAA (musicAdapterManager)")
-                return
-            }
-
-            else -> Unit
+        if (oldSource == MediaCenterConstant.AudioSource.AUDIO_SOURCE_RADIO) {
+            mMediaCenterManager?.radioManager?.pause()
+            debugDeepLog("[KEY_BIND] carousel audio: pause old RADIO (radioManager)")
+            return
         }
+
+        if (oldSource.isMusicAdapterFullControl) {
+            runCatching { mMediaCenterManager?.musicAdapterManager?.pause() == 1 }.onFailure { Timber.e(it) }
+            debugDeepLog("[KEY_BIND] carousel audio: pause old native (musicAdapterManager)")
+            return
+        }
+
         val controller = resolvePreferredControllerForPlayPause()
             ?: globalMediaControllers?.find { isAllowedMediaSessionPackage(it.packageName) }
         if (controller?.playbackState?.state == PlaybackState.STATE_PLAYING) {
@@ -2573,17 +2583,14 @@ class App : Application(), ImageLoaderFactory {
             return
         }
 
-        if (target == MediaCenterConstant.AudioSource.AUDIO_SOURCE_BT ||
-            target == MediaCenterConstant.AudioSource.AUDIO_SOURCE_USB ||
-            target == MediaCenterConstant.AudioSource.AUDIO_SOURCE_CPAA
-        ) {
+        if (target.isMusicAdapterFullControl) {
             val mediaCenter = mMediaCenterManager?.takeIf { it.isAlive } ?: return
             if (!sourceSettled && mediaCenter.currentAudioSource != target) {
-                debugDeepLog("[KEY_BIND] carousel audio: skip BT/USB/CPAA play, source=${mediaCenter.currentAudioSource} target=$target")
+                debugDeepLog("[KEY_BIND] carousel audio: skip native play, source=${mediaCenter.currentAudioSource} target=$target")
                 return
             }
             runCatching { mediaCenter.musicAdapterManager?.play() == 1 }.onFailure { Timber.e(it) }
-            debugDeepLog("[KEY_BIND] carousel audio: play new BT/USB/CPAA (musicAdapterManager)")
+            debugDeepLog("[KEY_BIND] carousel audio: play new native (musicAdapterManager)")
             return
         }
 
@@ -2734,8 +2741,8 @@ class App : Application(), ImageLoaderFactory {
                 currentVisibleApp !in controlMediaApps
             ) return
 
-            // AC opened
-            if (disableOnClimate && geelyACIsOpened) return
+            // AC is open or the application is from the ignore list.
+            if (audioControlLock) return
 
             // During phone call
             // if (disableDuringCall && isCallActive()) return
@@ -2950,17 +2957,16 @@ class App : Application(), ImageLoaderFactory {
     private suspend fun handleBtRadioByMediaCenter(keyCode: Int, func: Int): Boolean {
         val mediaCenter = mMediaCenterManager?.takeIf { it.isAlive } ?: return false
         val source = mediaCenter.currentAudioSource
-        if (source !in BT_RADIO_SOURCES) return false
+        if (!source.isKaraokeControl) return false
 
         return runCatching {
             val handled = when (keyCode) {
                 KeyCode.KEYCODE_R_MEDIA_PREVIOUS -> {
-                    when (source) {
-                        MediaCenterConstant.AudioSource.AUDIO_SOURCE_RADIO ->
+                    when  {
+                        source.isRadio ->
                             mediaCenter.radioManager?.seekAsync(1) == true
 
-                        MediaCenterConstant.AudioSource.AUDIO_SOURCE_BT,
-                        MediaCenterConstant.AudioSource.AUDIO_SOURCE_USB -> {
+                        source.isMusicAdapterBaseControl -> {
                             runCatching { mediaCenter.musicAdapterManager?.prev() }
                             true
                         }
@@ -2970,12 +2976,11 @@ class App : Application(), ImageLoaderFactory {
                 }
 
                 KeyCode.KEYCODE_R_MEDIA_NEXT -> {
-                    when (source) {
-                        MediaCenterConstant.AudioSource.AUDIO_SOURCE_RADIO ->
+                    when {
+                        source.isRadio ->
                             mediaCenter.radioManager?.seekAsync(0) == true
 
-                        MediaCenterConstant.AudioSource.AUDIO_SOURCE_BT,
-                        MediaCenterConstant.AudioSource.AUDIO_SOURCE_USB -> {
+                        source.isMusicAdapterBaseControl -> {
                             runCatching { mediaCenter.musicAdapterManager?.next() }
                             true
                         }
@@ -2996,8 +3001,8 @@ class App : Application(), ImageLoaderFactory {
                         return@runCatching false
                     }
 
-                    when (source) {
-                        MediaCenterConstant.AudioSource.AUDIO_SOURCE_RADIO -> {
+                    when {
+                        source.isRadio -> {
                             val radioStatus = mediaCenter.radioManager?.radioStatus ?: 0
                             if (radioStatus == MEDIA_CODE_PAUSE) {
                                 mediaCenter.radioManager?.pause() == true
@@ -3010,8 +3015,7 @@ class App : Application(), ImageLoaderFactory {
                             }
                         }
 
-                        MediaCenterConstant.AudioSource.AUDIO_SOURCE_BT,
-                        MediaCenterConstant.AudioSource.AUDIO_SOURCE_USB -> {
+                        source.isMusicAdapterBaseControl -> {
                             when {
                                 forcePause -> {
                                     runCatching { mediaCenter.musicAdapterManager?.pause() }
@@ -3429,7 +3433,7 @@ class App : Application(), ImageLoaderFactory {
         val activePkg = globalActiveMediaController?.packageName.orEmpty()
         if (activePkg in NATIVE_SOURCE_SESSION_PACKAGES) return false
         val currentSource = mMediaCenterManager?.currentAudioSource ?: return false
-        if (currentSource !in ONLINE_SWITCH_SOURCES) return false
+        if (!currentSource.isKaraokeControl && !currentSource.isCPAA) return false
 
         val now = System.currentTimeMillis()
         if (now - lastOnlineSwitchAttemptAt < ONLINE_SWITCH_RETRY_INTERVAL_MS) return false
@@ -3448,7 +3452,7 @@ class App : Application(), ImageLoaderFactory {
         if (!isPlaying) return
 
         val currentSource = mMediaCenterManager?.currentAudioSource ?: return
-        if (currentSource !in ONLINE_SWITCH_SOURCES) return
+        if (!currentSource.isKaraokeControl && !currentSource.isCPAA)  return
 
         val now = System.currentTimeMillis()
         if (now - lastOnlineSwitchAttemptAt < ONLINE_SWITCH_RETRY_INTERVAL_MS) return
@@ -3495,6 +3499,15 @@ class App : Application(), ImageLoaderFactory {
         }
     }
 
+    private suspend fun updateDisableMediaControlApps(pkgs: String? = null) {
+        disableMediaControlApps =
+            (pkgs ?: (dataStore.getValueFlow(GeneralPrefs.IGNORE_MEDIA_APPS).first() ?: ""))
+                .split('|')
+                .map { it.trim() }
+                .filter { it.isNotEmpty() }
+                .toSet()
+    }
+
     private fun debugLog(msg: String) {
         Timber.d(msg)
         if (!debugMode) return
@@ -3514,6 +3527,50 @@ class App : Application(), ImageLoaderFactory {
             Timber.e(e)
         }
     }
+
+    // -----------------------------------
+    // Audio source type checks
+    // -----------------------------------
+
+    private val MediaCenterConstant.AudioSource.isRadio
+        get() = this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_RADIO
+
+    private val MediaCenterConstant.AudioSource.isCPAA
+        get() = this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_CPAA
+
+    private val MediaCenterConstant.AudioSource.isMusicAdapterBaseControl
+        get() = if (GlobalState.isGMPInstalled.value) {
+            this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_ONLINE ||
+                    this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_BT ||
+                    this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_USB
+        } else {
+            this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_BT ||
+                    this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_USB
+        }
+
+    private val MediaCenterConstant.AudioSource.isMusicAdapterFullControl
+        get() = if (GlobalState.isGMPInstalled.value) {
+            this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_ONLINE ||
+                    this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_BT ||
+                    this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_USB ||
+                    this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_CPAA
+        } else {
+            this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_BT ||
+                    this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_USB ||
+                    this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_CPAA
+        }
+
+    private val MediaCenterConstant.AudioSource?.isKaraokeControl
+        get() = if (GlobalState.isGMPInstalled.value) {
+            this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_ONLINE ||
+                    this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_BT ||
+                    this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_RADIO ||
+                    this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_USB
+        } else {
+            this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_BT ||
+                    this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_RADIO ||
+                    this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_USB
+        }
 
     // -----------------------------------
     // Classes
@@ -3669,6 +3726,7 @@ class App : Application(), ImageLoaderFactory {
                             )
                         }
                         detectVnpApp(packageName)
+                        detectGMPApp(packageName)
                     }
                 }
 
@@ -3681,6 +3739,7 @@ class App : Application(), ImageLoaderFactory {
                                 PackagesChangedEvent.Removed(packageName)
                             )
                         }
+                        detectGMPApp(packageName)
                     }
                 }
 
@@ -3702,6 +3761,7 @@ class App : Application(), ImageLoaderFactory {
                     user: android.os.UserHandle?,
                     replacing: Boolean
                 ) {
+                    detectGMPApp(packageName)
                 }
 
                 // Optional: when packages become unavailable
@@ -3710,6 +3770,7 @@ class App : Application(), ImageLoaderFactory {
                     user: android.os.UserHandle?,
                     replacing: Boolean
                 ) {
+                    detectGMPApp(packageName)
                 }
             }
 
@@ -3730,6 +3791,13 @@ class App : Application(), ImageLoaderFactory {
             .onFailure {
                 Timber.e(it, "[ADB] allowActivateVpnAppOp failed for %s", packageName)
             }
+    }
+
+    private fun detectGMPApp(packageName: String? = null) = appScope.launch(Dispatchers.IO) {
+        if (GMP_PACKAGE != packageName && packageName != null) return@launch
+        val isGMPInstalled = systemApps.isGMPInstalled()
+        GlobalState.isGMPInstalled.value = isGMPInstalled
+        debugLog("GMP " + if (isGMPInstalled) "detected" else "not detected")
     }
 
     override fun newImageLoader(): ImageLoader {

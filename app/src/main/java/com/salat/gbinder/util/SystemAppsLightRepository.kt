@@ -29,5 +29,7 @@ interface SystemAppsLightRepository {
 
     fun isMConfigInstalled(): Boolean
 
+    fun isGMPInstalled(): Boolean
+
     fun packageDeclaresVpnService(packageName: String): Boolean
 }

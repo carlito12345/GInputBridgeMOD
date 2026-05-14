@@ -22,6 +22,11 @@ class SystemAppsLightRepositoryImpl(private val context: Context) : SystemAppsLi
         private const val DEBUG_M_PACKAGE = "debug.monjaro"
         private const val M_CONFIG_PACKAGE = "ru.monjaro.mconfig"
         private const val LAUNCHER3_PACKAGE = "com.android.launcher3"
+
+        const val GMP_PACKAGE = "com.geely.online.service"
+        private val TRUSTED_GMP_CERT_SHA256 = setOf(
+            "3C:3B:A7:FC:9F:A7:FD:C2:6D:5C:4B:D7:36:8E:E1:EF:30:6B:C9:D8:5F:A3:CF:53:97:7F:49:FE:3F:2A:59:75"
+        )
     }
 
     // private val excludedPackages = emptySet<String>()
@@ -96,6 +101,9 @@ class SystemAppsLightRepositoryImpl(private val context: Context) : SystemAppsLi
     override fun isDebugMInstalled(): Boolean = isPackageInstalled(DEBUG_M_PACKAGE)
 
     override fun isMConfigInstalled(): Boolean = isPackageInstalled(M_CONFIG_PACKAGE)
+
+    override fun isGMPInstalled() =
+        isTrustedByCertificate(GMP_PACKAGE, TRUSTED_GMP_CERT_SHA256, context)
 
     override fun packageDeclaresVpnService(packageName: String): Boolean {
         val pkg = packageName.trim()
@@ -341,7 +349,11 @@ class SystemAppsLightRepositoryImpl(private val context: Context) : SystemAppsLi
                     iconRef = IconRef(pkgName, finalResId, density, vc),
                     isMedia = isMedia,
                     launcherActivity = activityName,
-                    availableActivity = pm.listLaunchableActivities(pkgName, actBlock, activityName),
+                    availableActivity = pm.listLaunchableActivities(
+                        pkgName,
+                        actBlock,
+                        activityName
+                    ),
                     isSystem = isSystem
                 )
             } catch (_: Exception) {
