@@ -1223,7 +1223,6 @@ class App : Application(), ImageLoaderFactory {
                     mediaPlayStateJob = launch {
                         isMediaPlayingFlow().collect { isPlaying ->
 
-                            // Set online audio source for any foreground external "play"
                             if (shouldSwitchOnline(isPlaying)) {
                                 resetIfOtherAudioSource()
                             }
@@ -1317,7 +1316,6 @@ class App : Application(), ImageLoaderFactory {
 
             // Set current visible app
             currentVisibleApp = targetName
-            switchOnlineForFgPlayback(targetName)
 
             // Detect AC is opened
             if (disableOnClimate && targetName == GEELY_AC_PACKAGE) {
@@ -2812,7 +2810,7 @@ class App : Application(), ImageLoaderFactory {
                         debugDeepLog("[MEDIA_EVENT]: Send pause to active MediaSession")
                         activeController.transportControls?.pause()
                     } else {
-                        if (isLegacySourceManagement()) resetIfOtherAudioSource()
+                        if (shouldResetSourceOnPlay()) resetIfOtherAudioSource()
                         debugDeepLog("[MEDIA_EVENT]: Send play to active MediaSession")
                         activeController.transportControls?.play()
                     }
@@ -2828,7 +2826,7 @@ class App : Application(), ImageLoaderFactory {
                             findController.transportControls.pause()
                         } else {
                             // Switching the audio source if required
-                            if (isLegacySourceManagement()) resetIfOtherAudioSource()
+                            if (shouldResetSourceOnPlay()) resetIfOtherAudioSource()
                             debugDeepLog("[MEDIA_EVENT]: Found MediaSession and send play")
                             findController.transportControls.play()
                         }
@@ -2844,14 +2842,14 @@ class App : Application(), ImageLoaderFactory {
                                 controller.transportControls.pause()
                             } else {
                                 // Switching the audio source if required
-                                if (isLegacySourceManagement()) resetIfOtherAudioSource()
+                                if (shouldResetSourceOnPlay()) resetIfOtherAudioSource()
                                 debugDeepLog("[MEDIA_EVENT]: Found MediaSession by default player and send play")
                                 controller.transportControls.play()
                             }
                             currentMediaAppPackage = defaultMediaApps
                         } ?: run {
                             // Switching the audio source if required
-                            if (isLegacySourceManagement()) resetIfOtherAudioSource()
+                            if (shouldResetSourceOnPlay()) resetIfOtherAudioSource()
                             debugDeepLog("[MEDIA_EVENT]: Send default open app and play $defaultMediaApps")
                             // launch and play default player
                             if (defaultMediaApps == YAM_PACKAGE) {
@@ -2886,13 +2884,13 @@ class App : Application(), ImageLoaderFactory {
                             controller.transportControls.pause()
                         } else {
                             // Switching the audio source if required
-                            if (isLegacySourceManagement()) resetIfOtherAudioSource()
+                            if (shouldResetSourceOnPlay()) resetIfOtherAudioSource()
                             debugDeepLog("[MEDIA_EVENT]: Find last MediaSession by current player and send play")
                             controller.transportControls.play()
                         }
                     } ?: run {
                         // Switching the audio source if required
-                        if (isLegacySourceManagement()) resetIfOtherAudioSource()
+                        if (shouldResetSourceOnPlay()) resetIfOtherAudioSource()
                         debugDeepLog("[MEDIA_EVENT]: Sending 'Play' via intent to current player $currentMediaAppPackage")
                         // Sending a command via the intent
                         sendMediaActionToApp(
@@ -2956,7 +2954,16 @@ class App : Application(), ImageLoaderFactory {
 
     private suspend fun handleBtRadioByMediaCenter(keyCode: Int, func: Int): Boolean {
         val mediaCenter = mMediaCenterManager?.takeIf { it.isAlive } ?: return false
-        val source = mediaCenter.currentAudioSource
+        val source = mediaCenter.currentAudioSource ?: return false
+
+        if (keyCode == KeyCode.KEYCODE_R_MEDIA_PLAY_PAUSE) {
+            val fgPackage = currentVisibleApp
+            if (shouldFgExternal(source, fgPackage)) {
+                ensureOnlineAudioSource()
+                return false
+            }
+        }
+
         if (!source.isKaraokeControl) return false
 
         return runCatching {
@@ -2992,14 +2999,6 @@ class App : Application(), ImageLoaderFactory {
                 KeyCode.KEYCODE_R_MEDIA_PLAY_PAUSE -> {
                     val forcePause = func == MEDIA_CODE_PAUSE
                     val forcePlay = func == MEDIA_CODE_PLAY
-
-                    val fgPackage = currentVisibleApp
-                    if (source == MediaCenterConstant.AudioSource.AUDIO_SOURCE_RADIO &&
-                        fgPackage.isNotEmpty() && fgPackage in controlMediaApps
-                    ) {
-                        ensureOnlineAudioSource()
-                        return@runCatching false
-                    }
 
                     when {
                         source.isRadio -> {
@@ -3419,21 +3418,31 @@ class App : Application(), ImageLoaderFactory {
 
     private fun shouldSwitchToOnlineOnExternal(isPlaying: Boolean): Boolean {
         val fgPackage = currentVisibleApp
-        val allowedExternalPlayerInForeground = fgPackage.isNotEmpty() && fgPackage in controlMediaApps
+        val allowedExternalPlayerInForeground =
+            fgPackage.isNotEmpty() && fgPackage in controlMediaApps
         val currentExternalPlaying = isPlaying && allowedExternalPlayerInForeground
         val isPlayEdge = !lastExternalPlayingState && currentExternalPlaying
         lastExternalPlayingState = currentExternalPlaying
         return isPlayEdge
     }
 
+    private fun shouldSwitchOnlineForFgMediaPlay(): Boolean {
+        if (!isOnlineBootSwitch()) return false
+        val currentSource = mMediaCenterManager?.currentAudioSource ?: return false
+        return shouldFgExternal(currentSource, currentVisibleApp)
+    }
+
+    private fun shouldFgExternal(
+        source: MediaCenterConstant.AudioSource,
+        fgPackage: String,
+    ): Boolean {
+        if (fgPackage.isEmpty() || fgPackage !in controlMediaApps) return false
+        return source != AUDIO_SOURCE
+    }
+
     private fun shouldSwitchOnline(isPlaying: Boolean): Boolean {
         if (!shouldSwitchToOnlineOnExternal(isPlaying)) return false
-
-        if (!isOnlineBootSwitch() || !isPlaying) return false
-        val activePkg = globalActiveMediaController?.packageName.orEmpty()
-        if (activePkg in NATIVE_SOURCE_SESSION_PACKAGES) return false
-        val currentSource = mMediaCenterManager?.currentAudioSource ?: return false
-        if (!currentSource.isKaraokeControl && !currentSource.isCPAA) return false
+        if (!isPlaying || !shouldSwitchOnlineForFgMediaPlay()) return false
 
         val now = System.currentTimeMillis()
         if (now - lastOnlineSwitchAttemptAt < ONLINE_SWITCH_RETRY_INTERVAL_MS) return false
@@ -3441,24 +3450,7 @@ class App : Application(), ImageLoaderFactory {
         return true
     }
 
-    private fun switchOnlineForFgPlayback(fgPackage: String) {
-        if (!isOnlineBootSwitch()) return
-        if (fgPackage.isEmpty() || fgPackage !in controlMediaApps) return
-
-        val isPlaying = globalMediaControllers
-            ?.firstOrNull { it.packageName == fgPackage }
-            ?.playbackState
-            ?.state == PlaybackState.STATE_PLAYING
-        if (!isPlaying) return
-
-        val currentSource = mMediaCenterManager?.currentAudioSource ?: return
-        if (!currentSource.isKaraokeControl && !currentSource.isCPAA)  return
-
-        val now = System.currentTimeMillis()
-        if (now - lastOnlineSwitchAttemptAt < ONLINE_SWITCH_RETRY_INTERVAL_MS) return
-        lastOnlineSwitchAttemptAt = now
-        resetIfOtherAudioSource()
-    }
+    private fun shouldResetSourceOnPlay(): Boolean = isLegacySourceManagement()
 
     private fun resetAudioSource() = runCatching {
         mMediaCenterManager?.requestAudioSource(AUDIO_SOURCE, MediaCenterConstant.AppSource.WECARFLOW)

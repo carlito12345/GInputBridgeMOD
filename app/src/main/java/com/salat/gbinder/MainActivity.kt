@@ -1415,8 +1415,10 @@ class MainActivity : ComponentActivity() {
                     }
                     .weight(1f)
                     .padding(
-                        horizontal = 4.dp,
-                        vertical = 14.dp
+                        start = 40.dp,
+                        end = 4.dp,
+                        top = 14.dp,
+                        bottom = 14.dp,
                     ),
                 text = stringResource(R.string.configurator),
                 color = AppTheme.colors.contentPrimary,
