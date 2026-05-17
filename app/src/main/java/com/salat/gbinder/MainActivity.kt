@@ -107,6 +107,7 @@ import com.salat.gbinder.entity.parseAppCarouselValueSegment
 import com.salat.gbinder.entity.UiDownloadState
 import com.salat.gbinder.features.configurator.RenderConfigurator
 import com.salat.gbinder.features.configurator.RenderSystemParams
+import com.salat.gbinder.features.geelyLauncher.RenderGeelyLauncherSettings
 import com.salat.gbinder.features.launcher.BACKUP_DIVIDER
 import com.salat.gbinder.features.launcher.backupIconsToString
 import com.salat.gbinder.features.launcher.restoreIconsFromString
@@ -238,6 +239,7 @@ class MainActivity : ComponentActivity() {
 
             var showConfigurator by rememberSaveable { mutableStateOf(Pair(false, false)) }
             var showSystemParams by remember { mutableStateOf(false) }
+            var showGeelyLauncherSettings by remember { mutableStateOf(false) }
 
             var mainScreenState by rememberSaveable(
                 stateSaver = MainScreenState.saver
@@ -478,6 +480,11 @@ class MainActivity : ComponentActivity() {
                                 favoriteStorage = remember { favoriteStorage },
                                 onClose = { showConfigurator = false to false }
                             )
+                        } else if (showGeelyLauncherSettings) {
+                            RenderGeelyLauncherSettings(
+                                uiScaleState = uiScale,
+                                onClose = { showGeelyLauncherSettings = false }
+                            )
                         } else if (showSystemParams) {
                             RenderSystemParams(
                                 uiScaleState = uiScale,
@@ -488,6 +495,9 @@ class MainActivity : ComponentActivity() {
                                     scope.launch {
                                         dataStore.saveValue(GeneralPrefs.ADB_DIM_AUTO_STOP, it)
                                     }
+                                },
+                                onNavigateToGeelyLauncherSettings = {
+                                    showGeelyLauncherSettings = true
                                 },
                                 onClose = { showSystemParams = false }
                             )
@@ -1400,7 +1410,7 @@ class MainActivity : ComponentActivity() {
         RenderGroupDivider()
         Spacer(Modifier.height(24.dp))
 
-        Row(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(IntrinsicSize.Min)
@@ -1410,15 +1420,10 @@ class MainActivity : ComponentActivity() {
         ) {
             Text(
                 modifier = Modifier
-                    .clickable {
-                        openConfigurator(false)
-                    }
-                    .weight(1f)
+                    .align(Alignment.Center)
                     .padding(
-                        start = 40.dp,
-                        end = 4.dp,
-                        top = 14.dp,
-                        bottom = 14.dp,
+                        vertical = 14.dp,
+                        horizontal = 64.dp
                     ),
                 text = stringResource(R.string.configurator),
                 color = AppTheme.colors.contentPrimary,
@@ -1426,28 +1431,44 @@ class MainActivity : ComponentActivity() {
                 textAlign = TextAlign.Center
             )
 
-            Spacer(
-                Modifier
-                    .fillMaxHeight()
-                    .width(1.dp)
-                    .padding(vertical = 10.dp)
-                    .background(AppTheme.colors.contentPrimary.copy(.2f))
-            )
+            Row(Modifier.fillMaxWidth()) {
 
-            Box(
-                modifier = Modifier
-                    .clickable {
-                        openConfigurator(true)
-                    }
-                    .padding(horizontal = 32.dp)
-                    .fillMaxHeight(),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Favorite,
-                    tint = AppTheme.colors.contentPrimary,
-                    contentDescription = stringResource(R.string.back)
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .clickable { openConfigurator(false) }
+                        .weight(1f)
+                        .padding(
+                            start = 4.dp,
+                            end = 4.dp,
+                            top = 14.dp,
+                            bottom = 14.dp,
+                        )
                 )
+
+                Spacer(
+                    Modifier
+                        .fillMaxHeight()
+                        .width(1.dp)
+                        .padding(vertical = 10.dp)
+                        .background(AppTheme.colors.contentPrimary.copy(.2f))
+                )
+
+                Box(
+                    modifier = Modifier
+                        .clickable {
+                            openConfigurator(true)
+                        }
+                        .padding(horizontal = 32.dp)
+                        .fillMaxHeight(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Favorite,
+                        tint = AppTheme.colors.contentPrimary,
+                        contentDescription = stringResource(R.string.back)
+                    )
+                }
             }
         }
 

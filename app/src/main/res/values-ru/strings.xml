@@ -460,6 +460,13 @@
     <string name="exceptions">Исключения</string>
     <string name="audio_control_exceptions_desc">Выберите приложения, для которых будет отключаться управление аудио, когда они находятся на экране</string>
 
+    <string name="stock_launcher_title">Штатный лаунчер</string>
+    <string name="stock_launcher_subtitle">Добавление и удаление программ внутри штатного лаунчера. Выберите что должно отображаться и в каком порядке.</string>
+    <string name="install_gappstorage_first">Сперва установите GAppStorage</string>
+    <string name="launcher_order_unavailable">1) Порядок приложений в лаунчере нельзя задать, поскольку оригинальный лаунчер перед отображением ломает последовательность через HashMap.\n2) При удалении всех приложений из лаунчера необходимо перезагрузить головное устройство, чтобы изменения вступили в силу.</string>
+    <string name="stock_launcher_restart_warning">Штатный лаунчер не предназначен для использования в том же режиме, что и на обычных телефонах.\nПри обновлении приложений (которые отображаются в лаунчере, а также в ряде других случаев), он может работать некорректно — часть приложений может исчезнуть из списка. Проблема решается перезапуском лаунчера или перезагрузкой устройства.\n\nВы уверены, что хотите перезапустить штатный лаунчер?</string>
+    <string name="restart_launcher">Перезапуск лаунчера</string>
+
     <string name="api_text_launcher"><![CDATA[<strong>Управление лаунчером</strong>
 <br>
 <br>
@@ -665,4 +672,11 @@
 <strong>Дополнение1</strong>: id = идентификатор параметра<br>
 <strong>Дополнение2</strong>: value = текущее значение
 ]]></string>
+    <string name="apply">Применить</string>
+    <string name="geely_launcher_empty_grid">Нажмите + чтобы добавить</string>
+    <string name="geely_launcher_add_apps">Приложения лаунчера</string>
+    <string name="geely_launcher_add_apps_desc">Выберите приложения, которые должны отображаться в сетке штатного лаунчера.</string>
+    <string name="geely_launcher_applying">Применение...</string>
+    <string name="geely_launcher_apply_success">Приложения лаунчера успешно обновлены</string>
+    <string name="geely_launcher_apply_error">Не удалось обновить приложения лаунчера</string>
 </resources>

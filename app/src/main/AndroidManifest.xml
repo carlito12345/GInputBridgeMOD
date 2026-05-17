@@ -16,6 +16,7 @@
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
+    <uses-permission android:name="com.geely.appstore.APPSTORE_PROVIDER" />
 
     <uses-permission android:name="com.geely.settings.permission.LDSDK_MESSAGE" />
     <uses-permission android:name="com.geely.settings.permission.QDAS_MESSAGE" />
@@ -81,19 +82,19 @@
             android:taskAffinity=""
             android:theme="@style/Theme.TransparentInvisible" />
 
-        <activity-alias
-            android:name=".AppLauncher"
-            android:enabled="true"
-            android:exported="true"
-            android:icon="@mipmap/ic_app_launcher"
-            android:label="@string/launcher_name"
-            android:roundIcon="@mipmap/ic_app_launcher_round"
-            android:targetActivity=".features.launcher.LauncherEntryActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity-alias>
+        <!--        <activity-alias-->
+        <!--            android:name=".AppLauncher"-->
+        <!--            android:enabled="true"-->
+        <!--            android:exported="true"-->
+        <!--            android:icon="@mipmap/ic_app_launcher"-->
+        <!--            android:label="@string/launcher_name"-->
+        <!--            android:roundIcon="@mipmap/ic_app_launcher_round"-->
+        <!--            android:targetActivity=".features.launcher.LauncherEntryActivity">-->
+        <!--            <intent-filter>-->
+        <!--                <action android:name="android.intent.action.MAIN" />-->
+        <!--                <category android:name="android.intent.category.LAUNCHER" />-->
+        <!--            </intent-filter>-->
+        <!--        </activity-alias>-->
 
         <activity
             android:name=".PhoneCallActivity"

@@ -53,6 +53,7 @@ fun RenderSystemParams(
     enableAdbHelper: Boolean,
     adbDimAutoStop: Boolean,
     onAdbDimAutoStopChanged: (Boolean) -> Unit,
+    onNavigateToGeelyLauncherSettings: () -> Unit,
     onClose: () -> Unit
 ) {
     val viewModel: ConfiguratorPresetsViewModel = hiltViewModel()
@@ -72,6 +73,7 @@ fun RenderSystemParams(
             enableAdbHelper = enableAdbHelper,
             adbDimAutoStop = adbDimAutoStop,
             onAdbDimAutoStopChanged = onAdbDimAutoStopChanged,
+            onNavigateToGeelyLauncherSettings = onNavigateToGeelyLauncherSettings,
             viewModel = viewModel
         )
     }
@@ -84,7 +86,7 @@ private fun RenderConfiguratorPresetsToolbar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(56.dp),
+            .height(64.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(
@@ -119,6 +121,7 @@ private fun ColumnScope.RenderConfiguratorPresetsContent(
     enableAdbHelper: Boolean,
     adbDimAutoStop: Boolean,
     onAdbDimAutoStopChanged: (Boolean) -> Unit,
+    onNavigateToGeelyLauncherSettings: () -> Unit,
     viewModel: ConfiguratorPresetsViewModel
 ) {
     val canRearWiperAuto by viewModel.canRearWiperAuto.collectAsStateWithLifecycle()
@@ -138,7 +141,17 @@ private fun ColumnScope.RenderConfiguratorPresetsContent(
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
             ) {
-                Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(18.dp))
+
+                RenderListButton(
+                    modifier = Modifier.padding(horizontal = 20.dp),
+                    enable = enableAdbHelper,
+                    title = "[ADB] ${stringResource(R.string.stock_launcher_title)}",
+                    subtitle = stringResource(R.string.stock_launcher_subtitle),
+                    onClick = onNavigateToGeelyLauncherSettings
+                )
+
+                Spacer(Modifier.height(12.dp))
 
                 RenderBindCustomSection(
                     uiScaleState = uiScaleState,

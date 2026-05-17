@@ -98,6 +98,11 @@ data class AppTypography internal constructor(
         fontSize = 14.sp,
         lineHeight = 17.sp
     ),
+    val toolbarButton: TextStyle = TextStyle(
+        fontWeight = FontWeight.Medium,
+        fontSize = 13.sp,
+        lineHeight = 16.sp
+    ),
     val surfaceSubtitle: TextStyle = TextStyle(
         fontWeight = FontWeight.Normal,
         fontSize = 13.sp,

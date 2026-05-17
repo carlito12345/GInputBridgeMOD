@@ -469,6 +469,13 @@
     <string name="exceptions">Exceptions</string>
     <string name="audio_control_exceptions_desc">Choose apps where media control should be automatically disabled while they are in the foreground</string>
 
+    <string name="stock_launcher_title">Stock Launcher</string>
+    <string name="stock_launcher_subtitle">Manage applications in the default system launcher. Select which apps to show and their display order.</string>
+    <string name="install_gappstorage_first">GAppStorage is required. Please install it first.</string>
+    <string name="launcher_order_unavailable">1) The order of apps in the launcher cannot be set because the stock launcher disrupts the sequence using HashMap before displaying them.\n2) After removing all apps from the launcher, you need to reboot the head unit for the changes to take effect.</string>
+    <string name="stock_launcher_restart_warning">The stock launcher is not designed to be used in the same way as on regular devices. When updating apps displayed in the launcher (and in some other cases), it may work incorrectly — some apps may disappear from the list. The issue is usually resolved by restarting the launcher or rebooting the device. Are you sure you want to restart the stock launcher?</string>
+    <string name="restart_launcher">Restart launcher</string>
+
     <string name="api_text_launcher"><![CDATA[<strong>Launcher Control</strong>
 <br>
 <br>
@@ -664,4 +671,11 @@ In response to GET_*_INFO, the action com.salat.gbinder.INFO_VALUE_RESULT is rec
 <strong>Additional1</strong>: id = parameter identifier<br>
 <strong>Additional2</strong>: value = current value
 ]]></string>
+    <string name="apply">Apply</string>
+    <string name="geely_launcher_empty_grid">Press + to add</string>
+    <string name="geely_launcher_add_apps">Launcher apps</string>
+    <string name="geely_launcher_add_apps_desc">Select the applications that should be shown in the stock launcher grid.</string>
+    <string name="geely_launcher_applying">Applying...</string>
+    <string name="geely_launcher_apply_success">Launcher applications have been updated successfully</string>
+    <string name="geely_launcher_apply_error">Failed to update launcher applications</string>
 </resources>
