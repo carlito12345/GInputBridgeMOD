@@ -71,6 +71,7 @@ import com.salat.gbinder.entity.ToggleMediaControl
 import com.salat.gbinder.entity.parseAppCarouselValueSegment
 import com.salat.gbinder.features.launcher.LauncherDataRepository
 import com.salat.gbinder.features.launcher.LauncherEntryActivity
+import com.salat.gbinder.features.launcher.LauncherIconPrewarmer
 import com.salat.gbinder.features.launcher.NAVI_PKGS
 import com.salat.gbinder.features.launcher.OVERLAY_RESTRICTED_PKGS
 import com.salat.gbinder.logs.ExecTraceTree
@@ -119,6 +120,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
@@ -207,6 +209,10 @@ class App : Application(), ImageLoaderFactory {
     @Inject
     lateinit var launcherData: LauncherDataRepository
 
+    // Ping for init
+    @Inject
+    lateinit var launcherIconPrewarmer: LauncherIconPrewarmer
+
     private val runtimeTimer = SimpleTimer()
 
     private var mKeyInputManager: KeyInputManager? = null
@@ -243,6 +249,8 @@ class App : Application(), ImageLoaderFactory {
     private var multiLongPressEnabled = false
     private var suppressionMode = false
     private var mediaControlEnabled = false
+
+    @Volatile
     private var defaultMediaApps = ""
     private var disableOnClimate = false
     private var disableDuringCall = false
@@ -269,14 +277,13 @@ class App : Application(), ImageLoaderFactory {
     private val carouselAudioSourceMutex = Mutex()
     private val appCarouselMutex = Mutex()
 
-    // App carouse launch history
-    private val appCarouselLastByCarouselId = ConcurrentHashMap<Int, String>()
-
     // Notify by drive mode changed
     private var canNotify = false
 
     // one-shot gate for enabling notifications after init
     private var startupNotifGateJob: Job? = null
+
+    private var oneOsConnectedJob: Job? = null
 
     private var keyInputInitJob: Job? = null
     private var phoneInitJob: Job? = null
@@ -303,7 +310,10 @@ class App : Application(), ImageLoaderFactory {
     private var karaokeFocusBoot = false
     private var karaokeRetryJob: Job? = null
 
+    @Volatile
     private var globalActiveMediaController: MediaController? = null
+
+    @Volatile
     private var globalMediaControllers: List<MediaController>? = null
 
     // Meta data collecting
@@ -324,9 +334,16 @@ class App : Application(), ImageLoaderFactory {
 
     @Volatile
     private var currentVisibleApp = ""
+    @Volatile
     private var currentMediaAppInForeground = false
+
+    @Volatile
     private var audioControlLock = false // Media control disable flag
+
+    @Volatile
     private var controlMediaApps = emptyList<String>()
+
+    @Volatile
     private var disableMediaControlApps = emptySet<String>()
 
     @Volatile
@@ -343,6 +360,8 @@ class App : Application(), ImageLoaderFactory {
 
     // Temporary lock management
     private var taskMediaControlTimeLock: Job? = null
+
+    @Volatile
     private var mediaControlTimeLock = false
 
     lateinit var logActor: SendChannel<String>
@@ -404,35 +423,40 @@ class App : Application(), ImageLoaderFactory {
         } */
     }
 
-    private fun onOneOSApiConnected() = appScope.launch {
-        initialRuntimePrefsState()
-        initPlaybackMetadataCollector()
-        initPrefsCollector()
-        initSetAudioSourceCollector()
-        initMediaControlToggleCollector()
-        initRequestPlaybackInfoCollector()
-        initDevicePackagesChangedCollector()
-        initRequestPhoneCollector()
-        initAccessibilityStateCollector()
-        initMediaSessionsStateCollector()
-        backupVisiblePackageCollector()
-        initLauncherManagerWatchDog()
-        handleKeyBindMode()
-        collectDriveModeChanged()
-        collectIgnitionState()
-        handleNotifPlayTest()
+    private fun onOneOSApiConnected() {
+        val prev = oneOsConnectedJob
+        oneOsConnectedJob = appScope.launch {
+            prev?.cancelAndJoin()
 
-        // TODO Test delay
-        delay(250L)
-        // KeyInputManager and mediaManager binding
-        bindKeyInputAndMediaManagers()
+            initialRuntimePrefsState()
+            initPlaybackMetadataCollector()
+            initPrefsCollector()
+            initSetAudioSourceCollector()
+            initMediaControlToggleCollector()
+            initRequestPlaybackInfoCollector()
+            initDevicePackagesChangedCollector()
+            initRequestPhoneCollector()
+            initAccessibilityStateCollector()
+            initMediaSessionsStateCollector()
+            backupVisiblePackageCollector()
+            initLauncherManagerWatchDog()
+            handleKeyBindMode()
+            collectDriveModeChanged()
+            collectIgnitionState()
+            handleNotifPlayTest()
 
-        // Launcher manager binding flag
-        stateKeeper.setLauncherManagerState(
-            stateKeeper.launcherManagerState.value.copy(
-                isOneOsApiReady = true
+            // TODO Test delay
+            delay(250L)
+            // KeyInputManager and mediaManager binding
+            bindKeyInputAndMediaManagers()
+
+            // Launcher manager binding flag
+            stateKeeper.setLauncherManagerState(
+                stateKeeper.launcherManagerState.value.copy(
+                    isOneOsApiReady = true
+                )
             )
-        )
+        }
     }
 
     private fun timberInit() {
@@ -627,7 +651,7 @@ class App : Application(), ImageLoaderFactory {
                     // Reset pressed state
                     pressedKeys.forEach { (key, _) ->
                         keyStates[key]?.pressState = PressState.RELEASED
-                        keyStates[keyCode]?.reinitSelfDestroy(keyCode)
+                        keyStates[key]?.reinitSelfDestroy(key)
                         keyStates[key]?.longPosted = false
                         keyStates[key]?.singleTimer?.cancel()
                         keyStates[key]?.singleTimer = null
@@ -675,7 +699,7 @@ class App : Application(), ImageLoaderFactory {
             // No any other events = no state in list
             if (!keyStates.containsKey(keyCode)) {
                 // Direct long press event
-                handleOnLongPress(keyCode, softKeyFunction, "DC")
+                handleOnLongPress(keyCode, softKeyFunction, "HL")
                 return
             } else if (keyStates[keyCode]?.pressState == PressState.RELEASED) { // TODO TEST ZONE
                 // Remove state if already released and hardware long triggered
@@ -758,6 +782,10 @@ class App : Application(), ImageLoaderFactory {
     // -----------------------------------
 
     private fun CoroutineScope.initPrefsCollector() = launch {
+        supervisorScope { launchPrefsCollectors() }
+    }
+
+    private fun CoroutineScope.launchPrefsCollectors() {
         launch {
             dataStore.getValueFlow(GeneralPrefs.DEBUG_MODE).collect {
                 debugMode = it ?: false
@@ -865,7 +893,9 @@ class App : Application(), ImageLoaderFactory {
                     runCatching { sendKaraokeFocus(true) }.onFailure { Timber.e(it) }
                     karaokeRetry()
                 } else if (previous == true && !newValue) {
-                    sendKaraokeFocus(false)
+                    karaokeRetryJob?.cancel()
+                    karaokeRetryJob = null
+                    runCatching { sendKaraokeFocus(false) }.onFailure { Timber.e(it) }
                     karaokeFocusBoot = false
                 }
                 lastRadioBtControlState = newValue
@@ -2474,7 +2504,6 @@ class App : Application(), ImageLoaderFactory {
                     val idx = packages.indexOf(visible)
                     packages[(idx + 1) % packages.size]
                 } else packages.first()
-                appCarouselLastByCarouselId[carouselId] = target
                 appCarouselAutoPlayJob?.cancel()
 
                 // Start app
@@ -2869,7 +2898,7 @@ class App : Application(), ImageLoaderFactory {
                                 if (defaultMediaApps == VKX_PACKAGE) {
                                     delay(PLAYER_COMPAT_ACTION_DELAY)
                                     sendVkxAutoPlayCompat()
-                                } else Unit
+                                }
                             }
                         }
                     }
@@ -3005,9 +3034,6 @@ class App : Application(), ImageLoaderFactory {
                             val radioStatus = mediaCenter.radioManager?.radioStatus ?: 0
                             if (radioStatus == MEDIA_CODE_PAUSE) {
                                 mediaCenter.radioManager?.pause() == true
-                            } else if (radioStatus == MEDIA_CODE_PLAY) {
-                                mediaCenter.radioManager?.requestAudioSource()
-                                mediaCenter.radioManager?.play() == true
                             } else {
                                 mediaCenter.radioManager?.requestAudioSource()
                                 mediaCenter.radioManager?.play() == true
@@ -3232,7 +3258,7 @@ class App : Application(), ImageLoaderFactory {
         appScope.launch(Dispatchers.IO) { sendBroadcast(intent) }
     }
 
-    private fun sendAudioSourceChanged(source: String) = appScope.launch {
+    private fun sendAudioSourceChanged(source: String) = appScope.launch(Dispatchers.IO) {
         val intent = Intent().apply {
             action = "$BASE_PATH.AUDIO_SOURCE_CHANGED"
             if (!fullBroadcast) {
@@ -3240,7 +3266,7 @@ class App : Application(), ImageLoaderFactory {
             }
             putExtra("source", source)
         }
-        appScope.launch(Dispatchers.IO) { sendBroadcast(intent) }
+        sendBroadcast(intent)
 
         // Send GMH
         runCatching {
@@ -3252,7 +3278,7 @@ class App : Application(), ImageLoaderFactory {
         }
     }
 
-    private fun sendPlayState(isPlaying: Boolean) = appScope.launch {
+    private fun sendPlayState(isPlaying: Boolean) = appScope.launch(Dispatchers.IO) {
         val intent = Intent().apply {
             action = "$BASE_PATH.PLAYBACK_STATE"
             if (!fullBroadcast) {
@@ -3261,10 +3287,10 @@ class App : Application(), ImageLoaderFactory {
             putExtra("isPlaying", if (isPlaying) "1" else "0")
         }
         debugDeepLog("[PLAYBACK_STATE] isPlaying: $isPlaying")
-        appScope.launch(Dispatchers.IO) { sendBroadcast(intent) }
+        sendBroadcast(intent)
     }
 
-    private fun sendPlaybackMetadata(data: PlaybackMetadata) = appScope.launch {
+    private fun sendPlaybackMetadata(data: PlaybackMetadata) = appScope.launch(Dispatchers.IO) {
         val intent = Intent().apply {
             action = "$BASE_PATH.PLAYBACK_METADATA"
             if (!fullBroadcast) {
@@ -3280,7 +3306,7 @@ class App : Application(), ImageLoaderFactory {
             putExtra("coverUri", data.coverUri)
         }
         debugDeepLog("[PLAYBACK_METADATA] changed (${data})")
-        appScope.launch(Dispatchers.IO) { sendBroadcast(intent) }
+        sendBroadcast(intent)
     }
 
     // -----------------------------------
@@ -3479,7 +3505,7 @@ class App : Application(), ImageLoaderFactory {
 
             // Set default
             if (defaultMediaApps.isEmpty() || defaultMediaApps !in controlMediaApps) {
-                defaultMediaApps = availableApps.first()
+                defaultMediaApps = availableApps.firstOrNull() ?: ""
             }
             // Reset current media app
             if (currentMediaAppPackage !in controlMediaApps) {
@@ -3717,7 +3743,7 @@ class App : Application(), ImageLoaderFactory {
                                 PackagesChangedEvent.Added(packageName)
                             )
                         }
-                        detectVnpApp(packageName)
+                        detectVpnApp(packageName)
                         detectGMPApp(packageName)
                     }
                 }
@@ -3753,7 +3779,7 @@ class App : Application(), ImageLoaderFactory {
                     user: android.os.UserHandle?,
                     replacing: Boolean
                 ) {
-                    detectGMPApp(packageName)
+                    packageNames?.forEach { detectGMPApp(it) }
                 }
 
                 // Optional: when packages become unavailable
@@ -3762,7 +3788,7 @@ class App : Application(), ImageLoaderFactory {
                     user: android.os.UserHandle?,
                     replacing: Boolean
                 ) {
-                    detectGMPApp(packageName)
+                    packageNames?.forEach { detectGMPApp(it) }
                 }
             }
 
@@ -3771,7 +3797,7 @@ class App : Application(), ImageLoaderFactory {
         }.onFailure { Timber.e(it) }
     }
 
-    private fun detectVnpApp(packageName: String) = appScope.launch(Dispatchers.IO) {
+    private fun detectVpnApp(packageName: String) = appScope.launch(Dispatchers.IO) {
         if (!systemApps.packageDeclaresVpnService(packageName)) return@launch
         if (!adbIsEnabled) return@launch
         if (adb.connectionState.value !is AdbConnectionState.Connected) return@launch

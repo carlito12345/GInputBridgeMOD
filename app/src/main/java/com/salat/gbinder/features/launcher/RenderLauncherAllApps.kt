@@ -57,8 +57,8 @@ fun ColumnScope.RenderLauncherAllApps(
                 textPadding = config.iconTextPadding,
                 enableMultiline = config.iconTextMultiline,
                 frozenIconColorFilter = frozenIconColorFilter,
-                onClick = { onClick(app) },
-                onLongClick = { offset -> onLongClick(app, offset) }
+                onClick = onClick,
+                onLongClick = onLongClick
             )
         }
     }

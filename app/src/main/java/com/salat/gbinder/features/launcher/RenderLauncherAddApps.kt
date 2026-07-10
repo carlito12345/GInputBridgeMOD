@@ -39,7 +39,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.salat.gbinder.R
 import com.salat.gbinder.entity.AddListItem
 import com.salat.gbinder.entity.DisplayLauncherApp
@@ -294,17 +293,8 @@ fun ColumnScope.RenderLauncherAddApps(
                     ) {
                         val iconSize = 46
                         val pxSize = with(LocalDensity.current) { iconSize.dp.roundToPx() }
-                        val model = remember(item.iconRef, item.customIcon) {
-                            val builder = ImageRequest.Builder(context)
-                                .size(pxSize, pxSize)
-                                .allowHardware(false)
-                                .dispatcher(Dispatchers.IO)
-
-                            if (item.customIcon != null) {
-                                builder.data(item.customIcon)
-                            } else builder.data(item.iconRef)
-
-                            builder.build()
+                        val model = remember(item.iconRef, item.customIcon, pxSize) {
+                            launcherIconRequest(context, item.iconRef, item.customIcon, pxSize)
                         }
                         AsyncImage(
                             model = model,

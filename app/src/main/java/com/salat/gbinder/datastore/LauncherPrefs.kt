@@ -8,7 +8,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 object LauncherPrefs {
     val LAUNCHER_DATA = stringPreferencesKey("LAUNCHER_DATA")
     val LAUNCHER_SCALE = floatPreferencesKey("LAUNCHER_SCALE")
-    val LAUNCHER_ICON_QUALITY = intPreferencesKey("LAUNCHER_ICON_QUALITY")
+    val LAUNCHER_ICON_QUALITY = intPreferencesKey("LAUNCHER_ICON_QUALITY2")
     val LAUNCHER_ICON_OUT_SPACE = intPreferencesKey("LAUNCHER_ICON_OUT_SPACE")
     val LAUNCHER_ICON_INNER_SPACE = intPreferencesKey("LAUNCHER_ICON_INNER_SPACE")
     val LAUNCHER_ICON_SIZE = intPreferencesKey("LAUNCHER_ICON_SIZE")

@@ -12,7 +12,11 @@ interface KeyBindStorageRepository {
 
     suspend fun saveBinds(key: String, config: KeyBindConfig)
 
+    suspend fun renameBind(oldName: String, newName: String, config: KeyBindConfig)
+
     suspend fun deleteBind(bindName: String)
 
     fun getBindName(bind: KeyBindPattern): String
+
+    fun parseBindName(bindName: String): KeyBindPattern?
 }

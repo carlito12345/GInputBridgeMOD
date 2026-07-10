@@ -2,6 +2,7 @@ package com.salat.gbinder.ui
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -61,6 +62,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -87,9 +89,12 @@ import com.salat.gbinder.entity.DisplayDriveMode
 import com.salat.gbinder.entity.DraggableAudioSourceItem
 import com.salat.gbinder.entity.DraggableDMItem
 import com.salat.gbinder.entity.DraggableLampItem
+import com.salat.gbinder.entity.EditKeyBindParams
+import com.salat.gbinder.entity.EditKeyBindSection
 import com.salat.gbinder.entity.KeyBindAction
 import com.salat.gbinder.entity.KeyBindConfig
 import com.salat.gbinder.entity.KeyBindPattern
+import com.salat.gbinder.entity.parseAppCarouselValueSegment
 import com.salat.gbinder.features.launcher.NAVI_PKGS
 import com.salat.gbinder.mappers.keyCodeMap
 import com.salat.gbinder.mappers.toAllDisplay
@@ -104,6 +109,7 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 private enum class KeyBindingDialogStep {
+    EDIT_CHOOSE,
     SET_KEY_BIND,
     SET_ACTION,
     SET_APP,
@@ -145,6 +151,12 @@ private enum class DriveModeAction {
     CAROUSEL
 }
 
+private enum class EditOption {
+    KEYS,
+    ACTION,
+    PARAMS
+}
+
 private data class PickedKeyBind(
     val title: String,
     val bind: KeyBindPattern,
@@ -166,13 +178,29 @@ fun KeyBindingDialog(
     uiScaleState: Float? = null,
     systemApps: SystemAppsLightRepository,
     keyBindStorage: KeyBindStorageRepository,
+    editBind: EditKeyBindParams? = null,
     onDismiss: () -> Unit = {}
 ) = BaseDialog(uiScaleState = uiScaleState, onDismiss = onDismiss) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
-    var step: KeyBindingDialogStep by remember { mutableStateOf(KeyBindingDialogStep.SET_KEY_BIND) }
-    var bind: PickedKeyBind? by remember { mutableStateOf(null) }
+    var step: KeyBindingDialogStep by remember {
+        mutableStateOf(
+            when {
+                editBind == null -> KeyBindingDialogStep.SET_KEY_BIND
+                // Keys area tap on the list - open the key capture step directly
+                editBind.initialSection == EditKeyBindSection.KEYS -> KeyBindingDialogStep.SET_KEY_BIND
+                else -> KeyBindingDialogStep.EDIT_CHOOSE
+            }
+        )
+    }
+    var bind: PickedKeyBind? by remember {
+        mutableStateOf(editBind?.pattern?.toPickedKeyBind(context))
+    }
+    // Step opened directly from EDIT_CHOOSE params option - back returns to the chooser
+    var paramsEntryStep by remember { mutableStateOf<KeyBindingDialogStep?>(null) }
+    // Carousel id of the edited APP_CAROUSEL bind, preserved on save
+    var editAppCarouselId by remember { mutableStateOf<Int?>(null) }
     val actions = remember {
         listOf(
             KeyBindingDialogActions.APP_LAUNCH,
@@ -262,6 +290,156 @@ fun KeyBindingDialog(
         }
     }
 
+    // Prefill state for the stored action and open its params step
+    fun openParamsEdit(edit: EditKeyBindParams) {
+        when (edit.config.action) {
+            KeyBindAction.LAUNCH_APP -> {
+                paramsEntryStep = KeyBindingDialogStep.SET_APP
+                step = KeyBindingDialogStep.SET_APP
+            }
+
+            KeyBindAction.NAVI_MEDIA_SWITCH -> {
+                paramsEntryStep = KeyBindingDialogStep.SET_NAVI_MEDIA_PICK
+                step = KeyBindingDialogStep.SET_NAVI_MEDIA_PICK
+            }
+
+            // Re-pick the shortcut, result lands on SET_LINK
+            KeyBindAction.LAUNCH_LINK -> runCatching {
+                paramsEntryStep = KeyBindingDialogStep.SET_LINK
+                pickShortcut.launch(
+                    Intent(Intent.ACTION_CREATE_SHORTCUT)
+                )
+            }
+
+            KeyBindAction.TOGGLE_DM -> {
+                dmToggleSelected = DISPLAY_DRIVE_MODES.find {
+                    it.id == edit.config.value.toIntOrNull()
+                }
+                paramsEntryStep = KeyBindingDialogStep.SET_TOGGLE_DRIVE_MODE
+                step = KeyBindingDialogStep.SET_TOGGLE_DRIVE_MODE
+            }
+
+            KeyBindAction.CAROUSEL_DM -> {
+                val ids = edit.config.value.split("|")
+                    .mapNotNull { it.toIntOrNull() }
+                val selected = ids.mapNotNull { id ->
+                    DISPLAY_DRIVE_MODES.find { it.id == id }
+                }
+                carouselDriveModes = selected.map {
+                    DraggableDMItem.DriveMode(
+                        index = 0,
+                        item = it,
+                        showPos = true
+                    )
+                } + DraggableDMItem.Divider + DISPLAY_DRIVE_MODES
+                    .filter { it.id !in ids }
+                    .map {
+                        DraggableDMItem.DriveMode(
+                            index = 0,
+                            item = it,
+                            showPos = false
+                        )
+                    }
+                paramsEntryStep = KeyBindingDialogStep.SET_CAROUSEL_DRIVE_MODE
+                step = KeyBindingDialogStep.SET_CAROUSEL_DRIVE_MODE
+            }
+
+            KeyBindAction.CAROUSEL_AUDIO_SOURCE -> {
+                val keys = edit.config.value.split("|")
+                    .filter { it.isNotEmpty() }
+                val selected = keys.mapNotNull { key ->
+                    DISPLAY_AUDIO_SOURCES.find { it.key == key }
+                }
+                carouselAudioSources = selected.map {
+                    DraggableAudioSourceItem.Source(
+                        index = 0,
+                        item = it,
+                        showPos = true
+                    )
+                } + DraggableAudioSourceItem.Divider + DISPLAY_AUDIO_SOURCES
+                    .filter { it.key !in keys }
+                    .map {
+                        DraggableAudioSourceItem.Source(
+                            index = 0,
+                            item = it,
+                            showPos = false
+                        )
+                    }
+                paramsEntryStep = KeyBindingDialogStep.SET_CAROUSEL_AUDIO_SOURCE
+                step = KeyBindingDialogStep.SET_CAROUSEL_AUDIO_SOURCE
+            }
+
+            KeyBindAction.CAROUSEL_LAMP -> {
+                if (context.requireDisplayOverlay()) {
+                    val ids = edit.config.value.split("|")
+                        .mapNotNull { it.toIntOrNull() }
+                    val selected = ids.mapNotNull { id ->
+                        DISPLAY_LAMP_MODES.find { it.id == id }
+                    }
+                    carouselLightModes = selected.map {
+                        DraggableLampItem.LampMode(
+                            index = 0,
+                            item = it,
+                            showPos = true
+                        )
+                    } + DraggableLampItem.Divider + DISPLAY_LAMP_MODES
+                        .filter { it.id !in ids }
+                        .map {
+                            DraggableLampItem.LampMode(
+                                index = 0,
+                                item = it,
+                                showPos = false
+                            )
+                        }
+                    paramsEntryStep = KeyBindingDialogStep.SET_CAROUSEL_CAR_LAMP
+                    step = KeyBindingDialogStep.SET_CAROUSEL_CAR_LAMP
+                }
+            }
+
+            KeyBindAction.PHONE_CALL -> {
+                numberValue = TextFieldValue(
+                    edit.config.value,
+                    TextRange(edit.config.value.length)
+                )
+                paramsEntryStep = KeyBindingDialogStep.SET_CALL_PHONE_NUMBER
+                step = KeyBindingDialogStep.SET_CALL_PHONE_NUMBER
+            }
+
+            KeyBindAction.CARPLAY_LAUNCH -> {
+                carplayScreenSelected = edit.config.value
+                    .toIntOrNull()
+                    ?.takeIf { it in 0..2 }
+                    ?: 0
+                paramsEntryStep = KeyBindingDialogStep.SET_CARPLAY_SCREEN
+                step = KeyBindingDialogStep.SET_CARPLAY_SCREEN
+            }
+
+            KeyBindAction.APP_CAROUSEL -> {
+                val segments = edit.config.value.split("|")
+                editAppCarouselId = segments.firstOrNull()?.toIntOrNull()
+                val entries = segments.drop(1).mapNotNull { seg ->
+                    parseAppCarouselValueSegment(seg)
+                        .takeIf { it.first.isNotEmpty() }
+                }
+                carouselOrderedPackages = entries.map { it.first }
+                carouselPickSelected = entries.map { it.first }.toSet()
+                carouselAutoplayByPackage = entries.toMap()
+                paramsEntryStep = KeyBindingDialogStep.SET_APP_CAROUSEL_PICK
+                step = KeyBindingDialogStep.SET_APP_CAROUSEL_PICK
+            }
+
+            // No detail step for this action - fall back to action selection
+            KeyBindAction.APP_LAUNCHER,
+            KeyBindAction.CAMERAS_360,
+            KeyBindAction.TASK_MANAGER,
+            KeyBindAction.ANDROID_BACK,
+            KeyBindAction.ANDROID_HOME,
+            KeyBindAction.NAVIGATE_TO_PAST_APP -> {
+                step = KeyBindingDialogStep.SET_ACTION
+            }
+        }
+    }
+
     suspend fun handleNaviMediaSwitch(appList: List<DeviceAppInfo>): Boolean {
         val candidates = appList.filter { it.packageName in NAVI_PKGS }
 
@@ -295,15 +473,35 @@ fun KeyBindingDialog(
     LaunchedEffect(true) {
         withContext(Dispatchers.IO) {
             val installedApps = systemApps.getAllApps(APP_ICON_ROUND, false, APP_ICON_QUALITY)
-            apps = installedApps.toAllDisplay().distinctBy { it.packageName }
+            val loaded = installedApps.toAllDisplay().distinctBy { it.packageName }
+            // Edit mode - preselect the app stored in the edited bind
+            apps = if (editBind != null && editBind.config.action in listOf(
+                    KeyBindAction.LAUNCH_APP,
+                    KeyBindAction.NAVI_MEDIA_SWITCH
+                )
+            ) {
+                loaded.map { it.copy(isSelected = it.packageName == editBind.config.value) }
+            } else loaded
         }
-        // Debug test bind set
-        if (BuildConfig.DEBUG) {
+        // Debug test bind set, skipped in edit mode to keep the prefilled pattern
+        if (BuildConfig.DEBUG && editBind == null) {
             bind = PickedKeyBind(
                 title = "test",
                 bind = DebugKeyBindHarness.shortClickTestPattern,
                 keyTitles = mapOf(DebugKeyBindHarness.STUB_KEY_CODE to "Any key")
             )
+        }
+    }
+
+    // Action area tap on the list - jump straight to the params step of the stored action
+    LaunchedEffect(Unit) {
+        if (editBind != null && editBind.initialSection == EditKeyBindSection.PARAMS) {
+            // Navi media switch has conditional params - open action change instead of params
+            if (editBind.config.action == KeyBindAction.NAVI_MEDIA_SWITCH) {
+                step = KeyBindingDialogStep.SET_ACTION
+            } else {
+                openParamsEdit(editBind)
+            }
         }
     }
 
@@ -317,6 +515,7 @@ fun KeyBindingDialog(
     Column(modifier = Modifier.padding(top = 22.dp)) {
         Text(
             text = when (step) {
+                KeyBindingDialogStep.EDIT_CHOOSE -> stringResource(R.string.kbd_edit_title)
                 KeyBindingDialogStep.SET_KEY_BIND -> stringResource(R.string.kbd_title_keys)
                 KeyBindingDialogStep.SET_ACTION -> stringResource(R.string.kbd_title_action)
                 KeyBindingDialogStep.SET_APP -> stringResource(R.string.kbd_title_app)
@@ -350,6 +549,7 @@ fun KeyBindingDialog(
 
             Text(
                 text = when (step) {
+                    KeyBindingDialogStep.EDIT_CHOOSE -> stringResource(R.string.kbd_edit_subtitle)
                     KeyBindingDialogStep.SET_KEY_BIND -> stringResource(R.string.kbd_desc_bind_keys)
                     KeyBindingDialogStep.SET_ACTION -> stringResource(R.string.kbd_desc_select_action)
                     KeyBindingDialogStep.SET_APP -> stringResource(R.string.kbd_desc_select_app)
@@ -383,6 +583,87 @@ fun KeyBindingDialog(
         )
 
         when (step) {
+            KeyBindingDialogStep.EDIT_CHOOSE -> editBind?.let { edit ->
+                Column(
+                    modifier = Modifier
+                        .weight(1f, false)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    val editOptions = remember {
+                        listOf(EditOption.KEYS, EditOption.ACTION, EditOption.PARAMS)
+                    }
+
+                    editOptions.forEach { option ->
+
+                        if (option == editOptions.first()) {
+                            Spacer(Modifier.height(10.dp))
+                        }
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 20.dp, vertical = 10.dp)
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(AppTheme.colors.surfaceMenu)
+                                .clickable {
+                                    when (option) {
+                                        EditOption.KEYS -> {
+                                            paramsEntryStep = null
+                                            step = KeyBindingDialogStep.SET_KEY_BIND
+                                        }
+
+                                        EditOption.ACTION -> {
+                                            paramsEntryStep = null
+                                            step = KeyBindingDialogStep.SET_ACTION
+                                        }
+
+                                        EditOption.PARAMS -> openParamsEdit(edit)
+                                    }
+                                }
+                                .padding(vertical = 12.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(
+                                Modifier.fillMaxWidth()
+                            ) {
+                                Text(
+                                    modifier = Modifier.padding(horizontal = 23.dp),
+                                    text = stringResource(
+                                        when (option) {
+                                            EditOption.KEYS -> R.string.kbd_edit_keys_title
+                                            EditOption.ACTION -> R.string.kbd_edit_action_title
+                                            EditOption.PARAMS -> R.string.kbd_edit_params_title
+                                        }
+                                    ),
+                                    style = AppTheme.typography.screenTitle,
+                                    color = AppTheme.colors.contentPrimary
+                                )
+
+                                Spacer(Modifier.height(5.dp))
+
+                                Text(
+                                    text = stringResource(
+                                        when (option) {
+                                            EditOption.KEYS -> R.string.kbd_edit_keys_desc
+                                            EditOption.ACTION -> R.string.kbd_edit_action_desc
+                                            EditOption.PARAMS -> R.string.kbd_edit_params_desc
+                                        }
+                                    ),
+                                    modifier = Modifier.padding(horizontal = 23.dp),
+                                    color = AppTheme.colors.contentPrimary.copy(.4f),
+                                    style = AppTheme.typography.dialogSubtitle
+                                )
+                            }
+                            Spacer(Modifier.width(20.dp))
+                        }
+
+                        if (option == editOptions.last()) {
+                            Spacer(Modifier.height(10.dp))
+                        }
+                    }
+                }
+            }
+
             KeyBindingDialogStep.SET_KEY_BIND -> {
 
                 // Apply key interceptor
@@ -1508,14 +1789,17 @@ fun KeyBindingDialog(
             KeyBindingDialogStep.SET_CAROUSEL_DRIVE_MODE -> {
 
                 LaunchedEffect(Unit) {
-                    val dmList = DISPLAY_DRIVE_MODES.map {
-                        DraggableDMItem.DriveMode(
-                            index = 0,
-                            item = it,
-                            showPos = false
-                        )
+                    // Skip default init when the list is prefilled by params edit
+                    if (carouselDriveModes.isEmpty()) {
+                        val dmList = DISPLAY_DRIVE_MODES.map {
+                            DraggableDMItem.DriveMode(
+                                index = 0,
+                                item = it,
+                                showPos = false
+                            )
+                        }
+                        carouselDriveModes = listOf(DraggableDMItem.Divider) + dmList
                     }
-                    carouselDriveModes = listOf(DraggableDMItem.Divider) + dmList
                 }
 
                 val lazyListState = rememberLazyListState()
@@ -1724,14 +2008,17 @@ fun KeyBindingDialog(
 
             KeyBindingDialogStep.SET_CAROUSEL_AUDIO_SOURCE -> {
                 LaunchedEffect(Unit) {
-                    val srcList = DISPLAY_AUDIO_SOURCES.map {
-                        DraggableAudioSourceItem.Source(
-                            index = 0,
-                            item = it,
-                            showPos = false
-                        )
+                    // Skip default init when the list is prefilled by params edit
+                    if (carouselAudioSources.isEmpty()) {
+                        val srcList = DISPLAY_AUDIO_SOURCES.map {
+                            DraggableAudioSourceItem.Source(
+                                index = 0,
+                                item = it,
+                                showPos = false
+                            )
+                        }
+                        carouselAudioSources = listOf(DraggableAudioSourceItem.Divider) + srcList
                     }
-                    carouselAudioSources = listOf(DraggableAudioSourceItem.Divider) + srcList
                 }
 
                 val lazyListState = rememberLazyListState()
@@ -1894,14 +2181,17 @@ fun KeyBindingDialog(
 
             KeyBindingDialogStep.SET_CAROUSEL_CAR_LAMP -> {
                 LaunchedEffect(Unit) {
-                    val dmList = DISPLAY_LAMP_MODES.map {
-                        DraggableLampItem.LampMode(
-                            index = 0,
-                            item = it,
-                            showPos = false
-                        )
+                    // Skip default init when the list is prefilled by params edit
+                    if (carouselLightModes.isEmpty()) {
+                        val dmList = DISPLAY_LAMP_MODES.map {
+                            DraggableLampItem.LampMode(
+                                index = 0,
+                                item = it,
+                                showPos = false
+                            )
+                        }
+                        carouselLightModes = listOf(DraggableLampItem.Divider) + dmList
                     }
-                    carouselLightModes = listOf(DraggableLampItem.Divider) + dmList
                 }
 
                 val lazyListState = rememberLazyListState()
@@ -2071,10 +2361,22 @@ fun KeyBindingDialog(
                 modifier = Modifier
                     .clip(RoundedCornerShape(4.dp))
                     .clickable(onClick = {
+                        // Params edit - return to the edit chooser instead of the add-flow chain
+                        if (editBind != null && step == paramsEntryStep) {
+                            paramsEntryStep = null
+                            step = KeyBindingDialogStep.EDIT_CHOOSE
+                            return@clickable
+                        }
+
                         when (step) {
-                            KeyBindingDialogStep.SET_KEY_BIND -> onDismiss()
-                            KeyBindingDialogStep.SET_ACTION -> step =
-                                KeyBindingDialogStep.SET_KEY_BIND
+                            KeyBindingDialogStep.EDIT_CHOOSE -> onDismiss()
+                            KeyBindingDialogStep.SET_KEY_BIND -> if (editBind != null) {
+                                step = KeyBindingDialogStep.EDIT_CHOOSE
+                            } else onDismiss()
+
+                            KeyBindingDialogStep.SET_ACTION -> step = if (editBind != null) {
+                                KeyBindingDialogStep.EDIT_CHOOSE
+                            } else KeyBindingDialogStep.SET_KEY_BIND
 
                             KeyBindingDialogStep.SET_APP -> step = KeyBindingDialogStep.SET_ACTION
                             KeyBindingDialogStep.SET_NAVI_MEDIA_PICK -> step =
@@ -2117,7 +2419,11 @@ fun KeyBindingDialog(
                     .padding(horizontal = 14.dp, vertical = 8.dp),
                 text = stringResource(
                     when (step) {
-                        KeyBindingDialogStep.SET_KEY_BIND -> android.R.string.cancel
+                        KeyBindingDialogStep.EDIT_CHOOSE -> android.R.string.cancel
+                        KeyBindingDialogStep.SET_KEY_BIND -> if (editBind != null) {
+                            R.string.back
+                        } else android.R.string.cancel
+
                         KeyBindingDialogStep.SET_ACTION -> R.string.back
                         KeyBindingDialogStep.SET_APP -> R.string.back
                         KeyBindingDialogStep.SET_NAVI_MEDIA_PICK -> R.string.back
@@ -2141,6 +2447,7 @@ fun KeyBindingDialog(
             val enableOk by remember {
                 derivedStateOf {
                     when (step) {
+                        KeyBindingDialogStep.EDIT_CHOOSE -> false
                         KeyBindingDialogStep.SET_KEY_BIND -> bind != null
                         KeyBindingDialogStep.SET_ACTION -> true
                         KeyBindingDialogStep.SET_APP -> apps?.any { it.isSelected } == true
@@ -2163,6 +2470,7 @@ fun KeyBindingDialog(
                 }
             }
             if (step !in listOf(
+                    KeyBindingDialogStep.EDIT_CHOOSE,
                     KeyBindingDialogStep.SET_ACTION,
                     KeyBindingDialogStep.SET_DRIVE_MODE_CHOOSE_METHOD
                 )
@@ -2172,8 +2480,29 @@ fun KeyBindingDialog(
                         .clip(RoundedCornerShape(4.dp))
                         .clickable(enabled = enableOk) {
                             when (step) {
+                                KeyBindingDialogStep.EDIT_CHOOSE -> Unit
+
                                 KeyBindingDialogStep.SET_KEY_BIND -> {
-                                    step = KeyBindingDialogStep.SET_ACTION
+                                    if (editBind != null) {
+                                        // Edit keys mode - move the stored config to the new pattern
+                                        scope.launch(Dispatchers.IO) {
+                                            val newName = bind?.bind
+                                                ?.let { keyBindStorage.getBindName(it) }
+                                                ?: return@launch
+
+                                            if (newName != editBind.bindName) {
+                                                // Rename in place so the bind keeps its list position
+                                                keyBindStorage.renameBind(
+                                                    editBind.bindName,
+                                                    newName,
+                                                    editBind.config
+                                                )
+                                            }
+                                            onDismiss()
+                                        }
+                                    } else {
+                                        step = KeyBindingDialogStep.SET_ACTION
+                                    }
                                 }
 
                                 KeyBindingDialogStep.SET_ACTION -> {
@@ -2244,9 +2573,15 @@ fun KeyBindingDialog(
                                 }
 
                                 KeyBindingDialogStep.SET_APP_CAROUSEL_PICK -> {
-                                    carouselOrderedPackages = (apps ?: emptyList())
-                                        .filter { it.packageName in carouselPickSelected }
-                                        .map { it.packageName }
+                                    // Keep the existing order on edit, append newly picked packages
+                                    carouselOrderedPackages = carouselOrderedPackages
+                                        .filter { it in carouselPickSelected } +
+                                            (apps ?: emptyList())
+                                                .map { it.packageName }
+                                                .filter {
+                                                    it in carouselPickSelected &&
+                                                            it !in carouselOrderedPackages
+                                                }
                                     step = KeyBindingDialogStep.SET_APP_CAROUSEL_ORDER
                                 }
 
@@ -2273,7 +2608,8 @@ fun KeyBindingDialog(
                                                     it.value.split('|').firstOrNull()?.toIntOrNull()
                                                 }
                                                 .maxOrNull() ?: 0
-                                            val newId = maxId + 1
+                                            // Params edit keeps the original carousel id
+                                            val newId = editAppCarouselId ?: (maxId + 1)
                                             val pkgs = carouselOrderedPackages
                                             if (pkgs.size >= 2) {
                                                 val value = buildString {
@@ -2452,7 +2788,12 @@ fun KeyBindingDialog(
                         .padding(horizontal = 14.dp, vertical = 8.dp),
                     text = stringResource(
                         when (step) {
-                            KeyBindingDialogStep.SET_KEY_BIND -> R.string.next
+                            // EDIT_CHOOSE never shows the forward button, kept for exhaustiveness
+                            KeyBindingDialogStep.EDIT_CHOOSE -> R.string.next
+                            KeyBindingDialogStep.SET_KEY_BIND -> if (editBind != null) {
+                                R.string.change
+                            } else R.string.next
+
                             KeyBindingDialogStep.SET_ACTION -> R.string.next
                             KeyBindingDialogStep.SET_APP -> android.R.string.ok
                             KeyBindingDialogStep.SET_NAVI_MEDIA_PICK -> android.R.string.ok
@@ -2478,4 +2819,27 @@ fun KeyBindingDialog(
             }
         }
     }
+}
+
+// Decorates an existing pattern the same way the key interceptor does
+private fun KeyBindPattern.toPickedKeyBind(context: Context): PickedKeyBind {
+    val title = when (this) {
+        is KeyBindPattern.DoubleClick -> context.getString(R.string.kbd_pattern_double)
+        is KeyBindPattern.LongPress -> context.getString(R.string.kbd_pattern_long)
+        is KeyBindPattern.MultiLong -> context.getString(R.string.kbd_pattern_multi)
+        is KeyBindPattern.ShortClick -> context.getString(R.string.kbd_pattern_short)
+    }
+
+    val codes = when (this) {
+        is KeyBindPattern.DoubleClick -> listOf(keyCode)
+        is KeyBindPattern.LongPress -> listOf(keyCode)
+        is KeyBindPattern.MultiLong -> keyCodes
+        is KeyBindPattern.ShortClick -> listOf(keyCode)
+    }
+
+    return PickedKeyBind(
+        title = title,
+        bind = this,
+        keyTitles = codes.associateWith { keyCodeMap.getOrDefault(it, "Unknown") }
+    )
 }

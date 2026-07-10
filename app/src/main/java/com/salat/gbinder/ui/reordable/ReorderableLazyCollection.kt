@@ -509,13 +509,18 @@ open class ReorderableLazyCollectionState<out T> internal constructor(
                 Scroller.Direction.FORWARD
             }
 
+            // empty space beyond the content edge is a valid drop zone for the edge slot
             val targetItem = findTargetItem(
                 draggingItemRect,
                 items = state.layoutInfo.visibleItemsInfo,
                 direction = searchDirection
             ) {
                 it.index != draggingItem.index
-            }
+            } ?: findEdgeFallbackTarget(
+                draggingItemRect,
+                draggingItem,
+                items = state.layoutInfo.visibleItemsInfo
+            )
             if (targetItem != null) {
                 scope.launch {
                     moveItems(draggingItem, targetItem)
@@ -525,8 +530,56 @@ open class ReorderableLazyCollectionState<out T> internal constructor(
         onMoveStateMutex.unlock()
     }
 
+    private fun findEdgeFallbackTarget(
+        draggingItemRect: Rect,
+        draggingItem: LazyCollectionItemInfo<T>,
+        items: List<LazyCollectionItemInfo<T>>,
+    ): LazyCollectionItemInfo<T>? {
+        val candidates = items.filter { it.key in reorderableKeys }
+        if (candidates.isEmpty()) return null
+
+        val dragCenterMain = draggingItemRect.center.getAxis(orientation)
+        val dragMainSize = draggingItemRect.size.getAxis(orientation)
+
+        // main axis is visually reversed in these configurations, same rule as handleOffset in onDrag
+        val mainAxisReversed = state.layoutInfo.reverseLayout ||
+                (layoutDirection == LayoutDirection.Rtl && orientation == Orientation.Horizontal)
+
+        fun mainCenter(item: LazyCollectionItemInfo<T>) =
+            item.offset.mainAxis() + item.size.getAxis(orientation) / 2f
+
+        fun mainStart(item: LazyCollectionItemInfo<T>) = item.offset.mainAxis().toFloat()
+
+        fun mainEnd(item: LazyCollectionItemInfo<T>) =
+            (item.offset.mainAxis() + item.size.getAxis(orientation)).toFloat()
+
+        // past the end of the list - append after the last item
+        val lastItem = candidates.maxByOrNull { it.index }
+        if (lastItem != null && lastItem.index > draggingItem.index) {
+            // zone starts where the center crossing rule stops matching, whichever edge comes first
+            val beyondEnd = if (mainAxisReversed) {
+                dragCenterMain < kotlin.math.max(mainCenter(lastItem) - dragMainSize / 2f, mainStart(lastItem))
+            } else {
+                dragCenterMain > kotlin.math.min(mainCenter(lastItem) + dragMainSize / 2f, mainEnd(lastItem))
+            }
+            if (beyondEnd) return lastItem
+        }
+
+        // before the start of the list - insert before the first item
+        val firstItem = candidates.minByOrNull { it.index }
+        if (firstItem != null && firstItem.index < draggingItem.index) {
+            val beyondStart = if (mainAxisReversed) {
+                dragCenterMain > kotlin.math.min(mainCenter(firstItem) + dragMainSize / 2f, mainEnd(firstItem))
+            } else {
+                dragCenterMain < kotlin.math.max(mainCenter(firstItem) - dragMainSize / 2f, mainStart(firstItem))
+            }
+            if (beyondStart) return firstItem
+        }
+
+        return null
+    }
+
     // keep dragging item in visible area to prevent it from disappearing
-// keep dragging item in visible area to prevent it from disappearing
     private suspend fun moveDraggingItemToEnd(
         direction: Scroller.Direction,
     ) {

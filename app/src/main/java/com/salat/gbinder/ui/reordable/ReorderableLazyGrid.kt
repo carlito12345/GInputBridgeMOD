@@ -146,10 +146,11 @@ private fun LazyGridItemInfo.toLazyCollectionItemInfo() =
 
 private fun LazyGridLayoutInfo.toLazyCollectionLayoutInfo() =
     object : LazyCollectionLayoutInfo<LazyGridItemInfo> {
+        private val items = this@toLazyCollectionLayoutInfo.visibleItemsInfo.map {
+            it.toLazyCollectionItemInfo()
+        }
         override val visibleItemsInfo: List<LazyCollectionItemInfo<LazyGridItemInfo>>
-            get() = this@toLazyCollectionLayoutInfo.visibleItemsInfo.map {
-                it.toLazyCollectionItemInfo()
-            }
+            get() = items
         override val viewportSize: IntSize
             get() = this@toLazyCollectionLayoutInfo.viewportSize
         override val orientation: Orientation
@@ -163,12 +164,23 @@ private fun LazyGridLayoutInfo.toLazyCollectionLayoutInfo() =
 
 private fun LazyGridState.toLazyCollectionState() =
     object : LazyCollectionState<LazyGridItemInfo> {
+        private var cachedSource: LazyGridLayoutInfo? = null
+        private var cachedWrapped: LazyCollectionLayoutInfo<LazyGridItemInfo>? = null
+
         override val firstVisibleItemIndex: Int
             get() = this@toLazyCollectionState.firstVisibleItemIndex
         override val firstVisibleItemScrollOffset: Int
             get() = this@toLazyCollectionState.firstVisibleItemScrollOffset
         override val layoutInfo: LazyCollectionLayoutInfo<LazyGridItemInfo>
-            get() = this@toLazyCollectionState.layoutInfo.toLazyCollectionLayoutInfo()
+            get() {
+                val src = this@toLazyCollectionState.layoutInfo
+                val cached = cachedWrapped
+                if (cached != null && src === cachedSource) return cached
+                val wrapped = src.toLazyCollectionLayoutInfo()
+                cachedSource = src
+                cachedWrapped = wrapped
+                return wrapped
+            }
 
         override suspend fun animateScrollBy(value: Float, animationSpec: AnimationSpec<Float>) =
             this@toLazyCollectionState.animateScrollBy(value, animationSpec)

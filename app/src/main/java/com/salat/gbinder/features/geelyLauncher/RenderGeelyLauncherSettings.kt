@@ -455,7 +455,7 @@ private fun ColumnScope.RenderGeelyLauncherAppsGrid(
                     lockMode = isApplying,
                     enableClick = false,
                     onHideApp = { onHideApp(app) },
-                    onLongClick = {}
+                    onLongClick = { _, _ -> }
                 )
             }
             /*

@@ -19,8 +19,8 @@ android {
 //        applicationId = "com.ecarx.hardkeytest"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1595
-        versionName = "4.3.1"
+        versionCode = 1627
+        versionName = "4.4.0"
 
         setProperty("archivesBaseName", "$versionName[$versionCode]GInputBridge")
 
@@ -139,6 +139,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.material.icons.core)
     implementation(libs.androidx.media)
     implementation(libs.material)
     implementation(libs.coil.compose)

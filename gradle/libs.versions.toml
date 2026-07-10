@@ -1,13 +1,14 @@
 [versions]
-agp = "8.9.3"
+agp = "8.10.1"
 coilCompose = "2.7.0"
-kotlin = "2.0.21"
+kotlin = "2.1.10"
 coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 activityCompose = "1.10.1"
-composeBom = "2025.05.01"
+composeBom = "2025.12.00"
+materialIconsCore = "1.7.8"
 androidxDatastore = "1.1.7"
 serialization = "1.8.1"
 googleServices = "4.4.2"
@@ -17,10 +18,10 @@ firebaseCrashlytics = "20.0.1"
 firebaseFirestore = "25.1.4"
 firebaseConfig = "23.0.0"
 firebaseCrashlyticsPlugin = "3.0.6"
-hilt = "2.51.1"
+hilt = "2.56.2"
 hiltCompose = "1.2.0"
 navigationCompose = "2.8.5"
-ksp = "2.0.21-1.0.25"
+ksp = "2.1.10-1.0.31"
 appcompat = "1.6.1"
 material = "1.12.0"
 timber = "5.0.1"
@@ -52,6 +53,7 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-material-icons-core = { group = "androidx.compose.material", name = "material-icons-core", version.ref = "materialIconsCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }

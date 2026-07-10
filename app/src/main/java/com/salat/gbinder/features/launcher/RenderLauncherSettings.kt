@@ -478,7 +478,7 @@ fun ColumnScope.RenderLauncherSettings(
                 onClick = {
                     context.toast(context.getString(R.string.icon_view_preview))
                 },
-                onLongClick = { },
+                onLongClick = { _, _ -> },
             )
         }
     }

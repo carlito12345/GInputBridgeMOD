@@ -95,9 +95,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.setViewTreeLifecycleOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import coil.compose.AsyncImage
-import coil.request.CachePolicy
-import coil.request.ImageRequest
-import coil.size.Precision
 import com.salat.gbinder.BuildConfig
 import com.salat.gbinder.R
 import com.salat.gbinder.adb.data.entity.AdbConnectionState
@@ -110,6 +107,7 @@ import com.salat.gbinder.components.openAccessibilitySettings
 import com.salat.gbinder.components.openAppNotifications
 import com.salat.gbinder.components.openAppSystemSettings
 import com.salat.gbinder.components.requestUninstall
+import com.salat.gbinder.coroutines.IoCoroutineScope
 import com.salat.gbinder.datastore.LauncherPrefs
 import com.salat.gbinder.datastore.LauncherStorageRepository
 import com.salat.gbinder.entity.AllAppMenuItem
@@ -182,6 +180,10 @@ class LauncherOverlayService : Service() {
     @Inject
     lateinit var adb: AdbRepository
 
+    @Inject
+    @IoCoroutineScope
+    lateinit var ioScope: CoroutineScope
+
     private lateinit var windowManager: WindowManager
 
     private var launcherContainer: ComposeView? = null
@@ -227,9 +229,12 @@ class LauncherOverlayService : Service() {
         .setOngoing(true)
         .build()
 
+    private var isForegrounded = false
+
     @Suppress("DEPRECATION")
     @SuppressLint("ObsoleteSdkInt")
     private fun tryEnterForeground(): Boolean {
+        if (isForegrounded) return true
         var ok = false
         runCatching {
             ServiceCompat.startForeground(
@@ -248,6 +253,7 @@ class LauncherOverlayService : Service() {
                 Timber.e(e2, "[LAUNCHER] minimal startForeground failed")
             }
         }
+        isForegrounded = ok
         return ok
     }
 
@@ -260,7 +266,7 @@ class LauncherOverlayService : Service() {
         }
         isAlive = true
         isStarting = false
-        return START_STICKY
+        return START_NOT_STICKY
     }
 
     @OptIn(FlowPreview::class)
@@ -298,7 +304,7 @@ class LauncherOverlayService : Service() {
 
         // Build ui
         setupLauncherOverlay()
-        serviceScope.launch {
+        ioScope.launch {
             for (payload in saveQueue) {
                 runCatching { data.saveMyApps(payload) }
                     .onFailure { Timber.e(it, "[LAUNCHER] saveMyApps failed") }
@@ -347,7 +353,8 @@ class LauncherOverlayService : Service() {
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                     WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
-                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
+                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                    WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
             PixelFormat.TRANSLUCENT
         )
 
@@ -512,12 +519,12 @@ class LauncherOverlayService : Service() {
             }
         }
 
-        // Scale calc
-        val borderRadius = remember { (16f * config.uiScale).roundToInt() }
-        val elevation = remember { (4f * config.uiScale).roundToInt() }
-        val borderWidth = remember { (2f * config.uiScale).roundToInt() }
+        // Scale calc - keyed so live uiScale changes apply while overlay is open
+        val borderRadius = remember(config.uiScale) { (16f * config.uiScale).roundToInt() }
+        val elevation = remember(config.uiScale) { (4f * config.uiScale).roundToInt() }
+        val borderWidth = remember(config.uiScale) { (2f * config.uiScale).roundToInt() }
 
-        val border = remember { RoundedCornerShape(borderRadius.dp) }
+        val border = remember(borderRadius) { RoundedCornerShape(borderRadius.dp) }
         val windowFrame = if (config.windowShowFrame) {
             Modifier
                 .border(
@@ -608,10 +615,10 @@ class LauncherOverlayService : Service() {
                                 }
 
                                 is LauncherActivitySignal.ApplyNewIcon ->
-                                    data.applyIcon(it.id, it.packageName, it.uri)
+                                    ioScope.launch { data.applyIcon(it.id, it.packageName, it.uri) }
 
                                 is LauncherActivitySignal.CancelIcon -> {
-                                    data.clearIcon(it.id, it.packageName)
+                                    ioScope.launch { data.clearIcon(it.id, it.packageName) }
                                     restoreOverlayIfNeeded()
                                 }
 
@@ -738,7 +745,7 @@ class LauncherOverlayService : Service() {
                                                         config = config,
                                                         lockMode = lockMode,
                                                         gridState = myAppsGridState,
-                                                        onClick = ::launchMyApp,
+                                                        onClick = { app -> launchMyApp(app) },
                                                         onLongClick = { item, offset ->
                                                             when (item.type) {
                                                                 DisplayLauncherItemType.GROUP -> {
@@ -769,14 +776,11 @@ class LauncherOverlayService : Service() {
                                                                 }
                                                         },
                                                         onReorderDrop = {
-                                                            serviceScope.launch {
-                                                                var index = 0
-                                                                val snapshot = uiItems.map { item ->
-                                                                    index++
-                                                                    item.copy(order = index)
+                                                            val snapshot =
+                                                                uiItems.mapIndexed { index, item ->
+                                                                    item.copy(order = index + 1)
                                                                 }
-                                                                saveQueue.trySend(snapshot)
-                                                            }
+                                                            saveQueue.trySend(snapshot)
                                                         }
                                                     )
                                                 }
@@ -785,15 +789,14 @@ class LauncherOverlayService : Service() {
                                             LauncherTabs.AllApps -> {
                                                 val list by data.allApps.collectAsStateWithLifecycle()
 
-                                                // Prewarm
-                                                // PrewarmIcons(list, config)
-
                                                 RenderLauncherAllApps(
                                                     items = list,
                                                     config = config,
                                                     gridState = allAppsGridState,
-                                                    onClick = ::launchAllApp,
-                                                    onLongClick = ::onOpenAllAppMenu
+                                                    onClick = { app -> launchAllApp(app) },
+                                                    onLongClick = { app, offset ->
+                                                        onOpenAllAppMenu(app, offset)
+                                                    }
                                                 )
                                             }
                                         }
@@ -804,8 +807,10 @@ class LauncherOverlayService : Service() {
                                 if (config.recentsEnable) {
                                     RenderRecents(
                                         config = config,
-                                        onClick = ::launchAllApp,
-                                        onLongClick = ::onOpenAllAppMenu
+                                        onClick = { app -> launchAllApp(app) },
+                                        onLongClick = { app, offset ->
+                                            onOpenAllAppMenu(app, offset)
+                                        }
                                     )
                                 }
                             }
@@ -828,7 +833,8 @@ class LauncherOverlayService : Service() {
                                     myApps = items,
                                     config = config
                                 ) { newMyApps ->
-                                    serviceScope.launch {
+                                    // App scope - save must survive overlay close
+                                    ioScope.launch {
                                         // Save new dataset
                                         data.saveMyApps(newMyApps)
                                         // Back to main
@@ -1102,15 +1108,14 @@ class LauncherOverlayService : Service() {
         isAlive = false
         isStarting = false
         super.onDestroy()
+        hideLauncherOverlay()
         // Finish Compose lifecycle to avoid leaks
         runCatching {
             if (::composeLifecycleOwner.isInitialized) {
                 composeLifecycleOwner.setCurrentState(Lifecycle.State.DESTROYED)
             }
         }
-        serviceScope.cancel()
         stateKeeper.setLauncherOverlayEnabled(false)
-        hideLauncherOverlay()
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
@@ -1149,34 +1154,7 @@ class LauncherOverlayService : Service() {
         }
     }
 
-    /* @Composable
-    private fun PrewarmIcons(list: List<DisplayLauncherApp>, config: DisplayLauncherConfig) {
-        val ctx = LocalContext.current
-        val imageLoader = LocalContext.current.imageLoader
-        val pxSize = with(LocalDensity.current) { config.iconSize.dp.roundToPx() }
-        LaunchedEffect(Unit) {
-            val prewarmCount = minOf(list.size, 50)
-            repeat(prewarmCount) { i ->
-                val ir = list[i].iconRef
-                val stableKey =
-                    "pkg:${ir.packageName}|res:${ir.resId}|dpi:${ir.densityDpi}|vc:${ir.versionCode}|w:${pxSize}|h:${pxSize}"
-                imageLoader.enqueue(
-                    Builder(ctx)
-                        .data(ir)
-                        .size(pxSize, pxSize)
-                        .precision(coil.size.Precision.EXACT)
-                        .allowHardware(true)
-                        .memoryCacheKey(stableKey)
-                        .placeholderMemoryCacheKey(stableKey)
-                        .memoryCachePolicy(CachePolicy.ENABLED)
-                        .diskCachePolicy(CachePolicy.DISABLED)
-                        .build()
-                )
-            }
-        }
-    } */
-
-    private fun removeItemById(id: Long) = serviceScope.launch(Dispatchers.Default) {
+    private fun removeItemById(id: Long) = ioScope.launch {
         data.myAppsItems.value?.let { myApps ->
             data.saveMyApps(
                 myApps.filter { it.id != id }
@@ -1184,7 +1162,7 @@ class LauncherOverlayService : Service() {
         }
     }
 
-    private fun createNewGroupDivider(title: String) = serviceScope.launch(Dispatchers.Default) {
+    private fun createNewGroupDivider(title: String) = ioScope.launch {
         data.myAppsItems.value?.let { myApps ->
             data.saveMyApps(
                 myApps + DisplayLauncherItem(
@@ -1211,7 +1189,7 @@ class LauncherOverlayService : Service() {
         packageName: String,
         intent: String,
         bitmap: Bitmap?
-    ) = serviceScope.launch(Dispatchers.Default) {
+    ) = ioScope.launch {
         data.myAppsItems.value?.let { myApps ->
             val id = myApps.biggestId + 1L
 
@@ -1241,7 +1219,7 @@ class LauncherOverlayService : Service() {
         }
     }
 
-    private fun DisplayLauncherApp.createMyApp() = serviceScope.launch(Dispatchers.Default) {
+    private fun DisplayLauncherApp.createMyApp() = ioScope.launch {
         data.myAppsItems.value?.let { myApps ->
             data.saveMyApps(
                 myApps + DisplayLauncherItem(
@@ -1264,7 +1242,7 @@ class LauncherOverlayService : Service() {
     }
 
     private fun renameMyAppItem(id: Long, title: String) =
-        serviceScope.launch(Dispatchers.Default) {
+        ioScope.launch {
             data.myAppsItems.value?.let { myApps ->
                 data.saveMyApps(
                     myApps.map {
@@ -1305,7 +1283,8 @@ class LauncherOverlayService : Service() {
     }
 
     private fun hideLauncherOverlay() {
-        if (!isClosing.get()) isClosing.set(true)
+        // Close exactly once - onDestroy calls this again after a user-initiated close
+        if (!isClosing.compareAndSet(false, true)) return
 
         launcherContainer?.let { view ->
             runCatching {
@@ -1314,6 +1293,9 @@ class LauncherOverlayService : Service() {
             }
             launcherContainer = null
         }
+
+        // Let the app-scoped drainer finish the buffered save before exits
+        saveQueue.close()
 
         // Ensure no background coroutines survive
         serviceScope.cancel()
@@ -1748,28 +1730,9 @@ class LauncherOverlayService : Service() {
                         val ctx = LocalContext.current
                         val pxSize =
                             with(LocalDensity.current) { config.iconSize.dp.roundToPx() }
-                        val ir = app.iconRef
 
-                        val model = remember(app.iconRef, app.customIcon) {
-                            val builder = ImageRequest.Builder(ctx)
-                                .size(pxSize, pxSize)
-                                .precision(Precision.EXACT)
-                                .allowHardware(false)
-                                .memoryCachePolicy(CachePolicy.ENABLED)
-                                .diskCachePolicy(CachePolicy.DISABLED)
-                                .dispatcher(Dispatchers.IO)
-
-                            if (app.customIcon != null) {
-                                builder.data(app.customIcon)
-                            } else {
-                                val stableKey =
-                                    "pkg:${ir.packageName}|res:${ir.resId}|dpi:${ir.densityDpi}|vc:${ir.versionCode}|w:${pxSize}|h:${pxSize}"
-                                builder.data(app.iconRef)
-                                    .memoryCacheKey(stableKey)
-                                    .placeholderMemoryCacheKey(stableKey)
-                            }
-
-                            builder.build()
+                        val model = remember(app.iconRef, app.customIcon, pxSize) {
+                            launcherIconRequest(ctx, app.iconRef, app.customIcon, pxSize)
                         }
                         AsyncImage(
                             model = model,

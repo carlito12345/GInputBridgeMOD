@@ -83,6 +83,7 @@ fun ColumnScope.RenderLauncherMyApps(
         items(
             items = items,
             key = { it.id },
+            contentType = { it.type == DisplayLauncherItemType.GROUP },
             span = { item ->
                 if (item.type == DisplayLauncherItemType.GROUP) {
                     GridItemSpan(maxLineSpan)
@@ -120,8 +121,8 @@ fun ColumnScope.RenderLauncherMyApps(
                             lockMode = lockMode,
                             enableClick = lockMode,
                             onHideApp = onHideApp,
-                            onClick = { onClick(app) },
-                            onLongClick = { offset -> onLongClick(app, offset) }
+                            onClick = onClick,
+                            onLongClick = onLongClick
                         )
                     }
 

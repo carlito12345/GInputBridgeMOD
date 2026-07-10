@@ -23,7 +23,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.SecondaryScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -70,7 +70,7 @@ fun RowScope.RenderLauncherMainToolbar(
         val tabsAccent = AppTheme.colors.contentAccent
         val tabsPassive = AppTheme.colors.contentPrimary.copy(.75f)
 
-        ScrollableTabRow(
+        SecondaryScrollableTabRow(
             selectedTabIndex = selectedIndex.value,
             modifier = Modifier
                 .fillMaxHeight()
@@ -78,10 +78,9 @@ fun RowScope.RenderLauncherMainToolbar(
             containerColor = Color.Transparent,
             contentColor = tabsAccent,
             edgePadding = 26.dp,
-            indicator = { tabPositions ->
-                val currentTabPosition = tabPositions[selectedIndex.value]
+            indicator = {
                 MaterialTabIndicator(
-                    currentTabPosition = currentTabPosition,
+                    selectedTabIndex = selectedIndex.value,
                     tabsAccent = tabsAccent
                 )
             },

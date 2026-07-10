@@ -1,5 +1,6 @@
 package com.salat.gbinder.features.launcher
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -39,16 +40,11 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import coil.request.CachePolicy
-import coil.request.ImageRequest
-import coil.size.Precision
 import com.salat.gbinder.R
 import com.salat.gbinder.entity.DisplayLauncherItem
 import com.salat.gbinder.entity.DisplayLauncherItemType
-import com.salat.gbinder.ui.DrawableImage
 import com.salat.gbinder.ui.theme.AppTheme
 import com.salat.gbinder.util.rememberTimeLockedBoolean
-import kotlinx.coroutines.Dispatchers
 
 @Composable
 fun RenderLauncherMyAppCell(
@@ -66,8 +62,8 @@ fun RenderLauncherMyAppCell(
     lockMode: Boolean,
     enableClick: Boolean,
     onHideApp: (item: DisplayLauncherItem) -> Unit,
-    onClick: () -> Unit = {},
-    onLongClick: (offset: Offset) -> Unit
+    onClick: (item: DisplayLauncherItem) -> Unit = {},
+    onLongClick: (item: DisplayLauncherItem, offset: Offset) -> Unit
 ) {
     var clickLock by rememberTimeLockedBoolean(1000L)
     var rootOffset by remember { mutableStateOf(Offset.Zero) }
@@ -86,6 +82,7 @@ fun RenderLauncherMyAppCell(
                             detectTapGestures(
                                 onLongPress = {
                                     onLongClick(
+                                        app,
                                         Offset(
                                             x = it.x + rootOffset.x,
                                             y = it.y + rootOffset.y
@@ -94,7 +91,7 @@ fun RenderLauncherMyAppCell(
                                 },
                                 onTap = {
                                     if (!clickLock) {
-                                        onClick()
+                                        onClick(app)
                                     }
                                     clickLock = true
                                 }
@@ -113,26 +110,7 @@ fun RenderLauncherMyAppCell(
             if (ir != null) {
 
                 val model = remember(app.iconRef, app.customIcon, pxSize.takeIf { sizeSensitive }) {
-                    val builder = ImageRequest.Builder(ctx)
-                        .size(pxSize, pxSize)
-                        .precision(Precision.EXACT)
-                        .allowHardware(false)
-                        .memoryCachePolicy(CachePolicy.ENABLED)
-                        .diskCachePolicy(CachePolicy.DISABLED)
-                        .dispatcher(Dispatchers.IO)
-
-                    if (app.customIcon != null) {
-                        builder.data(app.customIcon)
-                    } else {
-                        val stableKey =
-                            "pkg:${ir?.packageName}|res:${ir?.resId}|dpi:${ir?.densityDpi}|vc:${ir?.versionCode}|w:${pxSize}|h:${pxSize}"
-
-                        builder.data(app.iconRef)
-                            .memoryCacheKey(stableKey)
-                            .placeholderMemoryCacheKey(stableKey)
-                    }
-
-                    builder.build()
+                    launcherIconRequest(ctx, app.iconRef, app.customIcon, pxSize)
                 }
                 AsyncImage(
                     model = model,
@@ -167,16 +145,19 @@ fun RenderLauncherMyAppCell(
             }
 
             if (enableShortcuts && (app.type == DisplayLauncherItemType.ACTIVITY || app.type == DisplayLauncherItemType.MACRO)) {
-                DrawableImage(
-                    when {
-                        app.type == DisplayLauncherItemType.ACTIVITY -> R.drawable.ic_l_cursor
+                Image(
+                    painter = painterResource(
+                        when {
+                            app.type == DisplayLauncherItemType.ACTIVITY -> R.drawable.ic_l_cursor
 
-                        app.isCall -> R.drawable.ic_l_phone
+                            app.isCall -> R.drawable.ic_l_phone
 
-                        app.isSplit -> R.drawable.ic_l_split
+                            app.isSplit -> R.drawable.ic_l_split
 
-                        else -> R.drawable.ic_l_link
-                    },
+                            else -> R.drawable.ic_l_link
+                        }
+                    ),
+                    contentDescription = null,
                     modifier = Modifier
                         .offset(x = 2.dp, y = 2.dp)
                         .size(shortcutSize.dp)

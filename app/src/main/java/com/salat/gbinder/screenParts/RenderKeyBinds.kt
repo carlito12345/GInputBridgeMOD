@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -36,11 +37,15 @@ import com.salat.gbinder.R
 import com.salat.gbinder.entity.DisplayKeyAction
 import com.salat.gbinder.entity.DisplayKeyBind
 import com.salat.gbinder.ui.DrawableImage
+import com.salat.gbinder.ui.clickableNoRipple
 import com.salat.gbinder.ui.theme.AppTheme
 
 @Composable
 internal fun RenderKeyBinds(
     keyBinds: List<DisplayKeyBind>?,
+    onEditDialog: (String) -> Unit,
+    onEditKeys: (String) -> Unit,
+    onEditParams: (String) -> Unit,
     onDeleteDialog: (String) -> Unit
 ) {
     val context = LocalContext.current
@@ -62,56 +67,69 @@ internal fun RenderKeyBinds(
                 ) {
                     Spacer(Modifier.width(16.dp))
 
-                    Column(
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
+                    // Tap on the keys area opens the key capture edit directly
+                    Row(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(8.dp))
+                            .clickableNoRipple { onEditKeys(item.bindName) },
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        item.keyNames.forEach { keyName ->
-                            Text(
-                                modifier = Modifier
-                                    .padding(
-                                        horizontal = 4.dp,
-                                        vertical = 2.dp
-                                    )
-                                    .clip(RoundedCornerShape(4.dp))
-                                    .background(AppTheme.colors.surfaceMenu)
-                                    .padding(
-                                        horizontal = 4.dp,
-                                        vertical = 2.dp
-                                    ),
-                                text = keyName,
-                                style = AppTheme.typography.dialogSubtitle,
-                                overflow = TextOverflow.Ellipsis,
-                                maxLines = 1,
-                                color = AppTheme.colors.contentPrimary
-                            )
-                            if (keyName != item.keyNames.last()) {
+                        Column(
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            item.keyNames.forEach { keyName ->
                                 Text(
-                                    text = "+",
+                                    modifier = Modifier
+                                        .padding(
+                                            horizontal = 4.dp,
+                                            vertical = 2.dp
+                                        )
+                                        .clip(RoundedCornerShape(4.dp))
+                                        .background(AppTheme.colors.surfaceMenu)
+                                        .padding(
+                                            horizontal = 4.dp,
+                                            vertical = 2.dp
+                                        ),
+                                    text = keyName,
                                     style = AppTheme.typography.dialogSubtitle,
+                                    overflow = TextOverflow.Ellipsis,
                                     maxLines = 1,
                                     color = AppTheme.colors.contentPrimary
                                 )
+                                if (keyName != item.keyNames.last()) {
+                                    Text(
+                                        text = "+",
+                                        style = AppTheme.typography.dialogSubtitle,
+                                        maxLines = 1,
+                                        color = AppTheme.colors.contentPrimary
+                                    )
+                                }
                             }
+
                         }
 
+                        Text(
+                            modifier = Modifier.padding(
+                                start = 8.dp,
+                                end = 12.dp
+                            ),
+                            text = "${item.type.lowercase()}   =",
+                            style = AppTheme.typography.dialogSubtitle,
+                            color = AppTheme.colors.contentPrimary
+                        )
                     }
 
-                    Text(
-                        modifier = Modifier.padding(
-                            start = 8.dp,
-                            end = 12.dp
-                        ),
-                        text = "${item.type.lowercase()}   =",
-                        style = AppTheme.typography.dialogSubtitle,
-                        color = AppTheme.colors.contentPrimary
-                    )
+                    // Tap on the action summary opens the params edit directly
+                    val actionAreaModifier = Modifier
+                        .weight(1f)
+                        .clip(RoundedCornerShape(8.dp))
+                        .clickableNoRipple { onEditParams(item.bindName) }
 
                     when (item.action) {
 
                         DisplayKeyAction.LAUNCH_APP -> Row(
-                            modifier = Modifier
-                                .weight(1f),
+                            modifier = actionAreaModifier,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             item.app?.icon?.let { icon ->
@@ -147,7 +165,7 @@ internal fun RenderKeyBinds(
                         }
 
                         DisplayKeyAction.NAVI_MEDIA_SWITCH -> Row(
-                            modifier = Modifier.weight(1f),
+                            modifier = actionAreaModifier,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
@@ -158,8 +176,7 @@ internal fun RenderKeyBinds(
                         }
 
                         DisplayKeyAction.LAUNCH_LINK -> Row(
-                            modifier = Modifier
-                                .weight(1f),
+                            modifier = actionAreaModifier,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             item.link?.icon?.let { icon ->
@@ -213,7 +230,7 @@ internal fun RenderKeyBinds(
                         }
 
                         DisplayKeyAction.TOGGLE_DM -> Row(
-                            modifier = Modifier.weight(1f),
+                            modifier = actionAreaModifier,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             val rawText = context.getString(
@@ -247,7 +264,7 @@ internal fun RenderKeyBinds(
                         }
 
                         DisplayKeyAction.CAROUSEL_DM -> Row(
-                            modifier = Modifier.weight(1f),
+                            modifier = actionAreaModifier,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             val driveModesText =
@@ -303,7 +320,7 @@ internal fun RenderKeyBinds(
                         }
 
                         DisplayKeyAction.PHONE_CALL -> Row(
-                            modifier = Modifier.weight(1f),
+                            modifier = actionAreaModifier,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             val annotatedText = buildAnnotatedString {
@@ -324,7 +341,7 @@ internal fun RenderKeyBinds(
                         }
 
                         DisplayKeyAction.CAMERAS_360 -> Row(
-                            modifier = Modifier.weight(1f),
+                            modifier = actionAreaModifier,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
@@ -335,7 +352,7 @@ internal fun RenderKeyBinds(
                         }
 
                         DisplayKeyAction.CARPLAY_LAUNCH -> Row(
-                            modifier = Modifier.weight(1f),
+                            modifier = actionAreaModifier,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             val detail = item.carplayScreen.orEmpty()
@@ -366,7 +383,7 @@ internal fun RenderKeyBinds(
                         }
 
                         DisplayKeyAction.CAROUSEL_LAMP -> Row(
-                            modifier = Modifier.weight(1f),
+                            modifier = actionAreaModifier,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             val lampModesText =
@@ -422,7 +439,7 @@ internal fun RenderKeyBinds(
                         }
 
                         DisplayKeyAction.CAROUSEL_AUDIO_SOURCE -> Row(
-                            modifier = Modifier.weight(1f),
+                            modifier = actionAreaModifier,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             val audioListText = item.audioSources.orEmpty()
@@ -469,7 +486,7 @@ internal fun RenderKeyBinds(
                         }
 
                         DisplayKeyAction.APP_CAROUSEL -> Row(
-                            modifier = Modifier.weight(1f),
+                            modifier = actionAreaModifier,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             val appListText = item.appCarouselSummaries.orEmpty()
@@ -516,7 +533,7 @@ internal fun RenderKeyBinds(
                         }
 
                         DisplayKeyAction.APP_LAUNCHER -> Row(
-                            modifier = Modifier.weight(1f),
+                            modifier = actionAreaModifier,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             DrawableImage(
@@ -534,7 +551,7 @@ internal fun RenderKeyBinds(
                         }
 
                         DisplayKeyAction.TASK_MANAGER -> Row(
-                            modifier = Modifier.weight(1f),
+                            modifier = actionAreaModifier,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
@@ -545,7 +562,7 @@ internal fun RenderKeyBinds(
                         }
 
                         DisplayKeyAction.ANDROID_BACK -> Row(
-                            modifier = Modifier.weight(1f),
+                            modifier = actionAreaModifier,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
@@ -556,7 +573,7 @@ internal fun RenderKeyBinds(
                         }
 
                         DisplayKeyAction.ANDROID_HOME -> Row(
-                            modifier = Modifier.weight(1f),
+                            modifier = actionAreaModifier,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
@@ -567,7 +584,7 @@ internal fun RenderKeyBinds(
                         }
 
                         DisplayKeyAction.NAVIGATE_TO_PAST_APP -> Row(
-                            modifier = Modifier.weight(1f),
+                            modifier = actionAreaModifier,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
@@ -579,6 +596,22 @@ internal fun RenderKeyBinds(
                     }
 
                     Spacer(Modifier.width(10.dp))
+
+                    IconButton(
+                        modifier = Modifier
+                            .size(36.dp)
+                            .padding(start = 2.dp),
+                        onClick = { onEditDialog(item.bindName) }
+                    ) {
+                        Icon(
+                            modifier = Modifier.size(22.dp),
+                            imageVector = Icons.Filled.Settings,
+                            tint = AppTheme.colors.contentPrimary.copy(.7f),
+                            contentDescription = "edit"
+                        )
+                    }
+
+                    Spacer(Modifier.width(4.dp))
 
                     IconButton(
                         modifier = Modifier

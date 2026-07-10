@@ -1,5 +1,6 @@
 package com.salat.gbinder.features.launcher
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,13 +27,12 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.salat.gbinder.R
 import com.salat.gbinder.entity.DisplayLauncherApp
 import com.salat.gbinder.entity.DisplayLauncherItemType
-import com.salat.gbinder.ui.DrawableImage
 import com.salat.gbinder.util.rememberTimeLockedBoolean
 
 @Composable
@@ -49,8 +49,8 @@ fun RenderLauncherAllAppCell(
     shortcutType: DisplayLauncherItemType? = null,
     sizeSensitive: Boolean = true,
     frozenIconColorFilter: ColorFilter,
-    onClick: () -> Unit = {},
-    onLongClick: (offset: Offset) -> Unit
+    onClick: (item: DisplayLauncherApp) -> Unit = {},
+    onLongClick: (item: DisplayLauncherApp, offset: Offset) -> Unit
 ) {
     var clickLock by rememberTimeLockedBoolean(1000L)
     var rootOffset by remember { mutableStateOf(Offset.Zero) }
@@ -65,6 +65,7 @@ fun RenderLauncherAllAppCell(
                 detectTapGestures(
                     onLongPress = {
                         onLongClick(
+                            app,
                             Offset(
                                 x = it.x + rootOffset.x,
                                 y = it.y + rootOffset.y
@@ -73,7 +74,7 @@ fun RenderLauncherAllAppCell(
                     },
                     onTap = {
                         if (!clickLock) {
-                            onClick()
+                            onClick(app)
                         }
                         clickLock = true
                     }
@@ -84,29 +85,9 @@ fun RenderLauncherAllAppCell(
     ) {
         val ctx = LocalContext.current
         val pxSize = with(LocalDensity.current) { cellSize.dp.roundToPx() }
-        val ir = app.iconRef
 
         val model = remember(app.iconRef, app.customIcon, pxSize.takeIf { sizeSensitive }) {
-            val builder = ImageRequest.Builder(ctx)
-                .size(pxSize, pxSize)
-                .precision(coil.size.Precision.EXACT)
-                .allowHardware(false)
-                .memoryCachePolicy(coil.request.CachePolicy.ENABLED)
-                .diskCachePolicy(coil.request.CachePolicy.DISABLED)
-                .dispatcher(kotlinx.coroutines.Dispatchers.IO)
-
-            if (app.customIcon != null) {
-                builder.data(app.customIcon)
-            } else {
-                val stableKey =
-                    "pkg:${ir.packageName}|res:${ir.resId}|dpi:${ir.densityDpi}|vc:${ir.versionCode}|w:${pxSize}|h:${pxSize}"
-
-                builder.data(app.iconRef)
-                    .memoryCacheKey(stableKey)
-                    .placeholderMemoryCacheKey(stableKey)
-            }
-
-            builder.build()
+            launcherIconRequest(ctx, app.iconRef, app.customIcon, pxSize)
         }
         Box(Modifier.size(cellSize.dp)) {
             AsyncImage(
@@ -122,13 +103,15 @@ fun RenderLauncherAllAppCell(
 
             // Settings preview
             if (enableShortcuts) {
-                DrawableImage(
-                    if (shortcutType == DisplayLauncherItemType.ACTIVITY) {
-                        R.drawable.ic_l_cursor
-                    } else {
-                        R.drawable.ic_l_link
-                    },
-                    sizeDp = shortcutSize,
+                Image(
+                    painter = painterResource(
+                        if (shortcutType == DisplayLauncherItemType.ACTIVITY) {
+                            R.drawable.ic_l_cursor
+                        } else {
+                            R.drawable.ic_l_link
+                        }
+                    ),
+                    contentDescription = null,
                     modifier = Modifier
                         .offset(x = 2.dp, y = 2.dp)
                         .size(shortcutSize.dp)

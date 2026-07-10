@@ -76,6 +76,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.salat.gbinder.adb.domain.repository.AdbRepository
 import com.salat.gbinder.components.cleanupShareTempFiles
+import com.salat.gbinder.components.inMainToast
 import com.salat.gbinder.components.isNotificationServiceEnabled
 import com.salat.gbinder.components.openAccessibilitySettings
 import com.salat.gbinder.components.openUrlSmart
@@ -101,10 +102,13 @@ import com.salat.gbinder.entity.DisplayAdbState
 import com.salat.gbinder.entity.DisplayAppUpdate
 import com.salat.gbinder.entity.DisplayKeyAction
 import com.salat.gbinder.entity.DisplayKeyBind
+import com.salat.gbinder.entity.EditKeyBindParams
+import com.salat.gbinder.entity.EditKeyBindSection
 import com.salat.gbinder.entity.HugeTogglerItem
 import com.salat.gbinder.entity.KeyBindAction
 import com.salat.gbinder.entity.parseAppCarouselValueSegment
 import com.salat.gbinder.entity.UiDownloadState
+import com.salat.gbinder.features.clusterBackground.RenderClusterBackgroundScreen
 import com.salat.gbinder.features.configurator.RenderConfigurator
 import com.salat.gbinder.features.configurator.RenderSystemParams
 import com.salat.gbinder.features.geelyLauncher.RenderGeelyLauncherSettings
@@ -240,6 +244,7 @@ class MainActivity : ComponentActivity() {
             var showConfigurator by rememberSaveable { mutableStateOf(Pair(false, false)) }
             var showSystemParams by remember { mutableStateOf(false) }
             var showGeelyLauncherSettings by remember { mutableStateOf(false) }
+            var showClusterBackground by remember { mutableStateOf(false) }
 
             var mainScreenState by rememberSaveable(
                 stateSaver = MainScreenState.saver
@@ -485,10 +490,17 @@ class MainActivity : ComponentActivity() {
                                 uiScaleState = uiScale,
                                 onClose = { showGeelyLauncherSettings = false }
                             )
+                        } else if (showClusterBackground) {
+                            RenderClusterBackgroundScreen(
+                                uiScaleState = uiScale,
+                                onClose = { showClusterBackground = false }
+                            )
                         } else if (showSystemParams) {
                             RenderSystemParams(
                                 uiScaleState = uiScale,
                                 enableAdbHelper = mainScreenState.enableAdbHelper,
+                                adbTelnetEnabled = mainScreenState.enableAdbHelper &&
+                                    mainScreenState.adbHelperPort == TELNET_HELPER_PORT,
                                 adbDimAutoStop = mainScreenState.adbDimAutoStop,
                                 onAdbDimAutoStopChanged = {
                                     mainScreenState = mainScreenState.copy(adbDimAutoStop = it)
@@ -498,6 +510,9 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onNavigateToGeelyLauncherSettings = {
                                     showGeelyLauncherSettings = true
+                                },
+                                onNavigateToClusterBackground = {
+                                    showClusterBackground = true
                                 },
                                 onClose = { showSystemParams = false }
                             )
@@ -886,6 +901,39 @@ class MainActivity : ComponentActivity() {
             )
         }
 
+        var editBindParams by remember { mutableStateOf<EditKeyBindParams?>(null) }
+        editBindParams?.let { params ->
+            KeyBindingDialog(
+                uiScaleState = uiScale,
+                systemApps = remember { systemApps },
+                keyBindStorage = remember { keyBindStorage },
+                editBind = params,
+                onDismiss = { editBindParams = null }
+            )
+        }
+
+        fun onEditBind(bindName: String, initialSection: EditKeyBindSection? = null) {
+            scope.launch(Dispatchers.IO) {
+                val config = keyBindStorage.parseBinds(keyBindStorage.getCode())[bindName]
+                val pattern = keyBindStorage.parseBindName(bindName)
+
+                // Bind removed meanwhile or corrupt name
+                if (config == null || pattern == null) {
+                    context.inMainToast(context.getString(R.string.not_found))
+                    return@launch
+                }
+
+                withContext(Dispatchers.Main) {
+                    editBindParams = EditKeyBindParams(
+                        bindName = bindName,
+                        config = config,
+                        pattern = pattern,
+                        initialSection = initialSection
+                    )
+                }
+            }
+        }
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -931,6 +979,9 @@ class MainActivity : ComponentActivity() {
         // Key binds list
         RenderKeyBinds(
             keyBinds = keyBinds,
+            onEditDialog = { bindCode -> onEditBind(bindCode) },
+            onEditKeys = { bindCode -> onEditBind(bindCode, EditKeyBindSection.KEYS) },
+            onEditParams = { bindCode -> onEditBind(bindCode, EditKeyBindSection.PARAMS) },
             onDeleteDialog = { bindCode -> showDeleteBindConfirmDialog(bindCode) }
         )
 
