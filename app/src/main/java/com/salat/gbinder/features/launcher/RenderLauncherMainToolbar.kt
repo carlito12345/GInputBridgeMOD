@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.sp
 import com.salat.gbinder.R
 import com.salat.gbinder.entity.LauncherTabs
 import com.salat.gbinder.ui.MaterialTabIndicator
+import com.salat.gbinder.ui.clickableNoRipple
 import com.salat.gbinder.ui.theme.AppTheme
 import kotlinx.coroutines.launch
 
@@ -190,33 +191,18 @@ fun RowScope.RenderLauncherMainToolbar(
     
     // Connection status indicator
     if (onConnectionStatusClick != null) {
-        val (bgColor, borderColor, textColor, statusText) = when {
-            rootAvailable -> listOf(
-                AppTheme.colors.greenAccent.copy(alpha = 0.2f),
-                AppTheme.colors.greenAccent,
-                AppTheme.colors.greenAccent,
-                "Root"
-            )
-            adbConnected -> listOf(
-                AppTheme.colors.greenAccent.copy(alpha = 0.2f),
-                AppTheme.colors.greenAccent,
-                AppTheme.colors.greenAccent,
-                "ADB"
-            )
-            else -> listOf(
-                AppTheme.colors.contentPrimary.copy(alpha = 0.1f),
-                AppTheme.colors.contentPrimary.copy(alpha = 0.3f),
-                AppTheme.colors.contentPrimary.copy(alpha = 0.5f),
-                "Off"
-            )
-        }
+        val isConnected = rootAvailable || adbConnected
+        val bgColor = if (isConnected) AppTheme.colors.greenAccent.copy(alpha = 0.2f) else AppTheme.colors.contentPrimary.copy(alpha = 0.1f)
+        val fgColor = if (isConnected) AppTheme.colors.greenAccent else AppTheme.colors.contentPrimary.copy(alpha = 0.5f)
+        val borderColor = fgColor
+        val statusText = if (rootAvailable) "Root" else if (adbConnected) "ADB" else "Off"
         
         Row(
             modifier = Modifier
                 .clip(RoundedCornerShape(12.dp))
-                .background(bgColor as androidx.compose.ui.graphics.Color)
-                .border(1.dp, borderColor as androidx.compose.ui.graphics.Color, RoundedCornerShape(12.dp))
-                .clickable(onClick = onConnectionStatusClick)
+                .background(bgColor)
+                .border(1.dp, borderColor, RoundedCornerShape(12.dp))
+                .clickableNoRipple(onClick = onConnectionStatusClick)
                 .padding(horizontal = 8.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -224,16 +210,16 @@ fun RowScope.RenderLauncherMainToolbar(
                 modifier = Modifier
                     .size(6.dp)
                     .clip(CircleShape)
-                    .background(textColor as androidx.compose.ui.graphics.Color)
+                    .background(fgColor)
             )
             Spacer(Modifier.width(4.dp))
             Text(
-                text = statusText as String,
+                text = statusText,
                 style = AppTheme.typography.overlayLauncherIconTitle.copy(
                     fontSize = 11.sp,
                     lineHeight = 11.sp
                 ),
-                color = textColor as androidx.compose.ui.graphics.Color
+                color = fgColor
             )
         }
         Spacer(Modifier.width(8.dp))

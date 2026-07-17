@@ -2,10 +2,6 @@ package com.salat.gbinder
 
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.AccessibilityServiceInfo
-import android.content.Intent
-import android.net.Uri
-import android.os.PowerManager
-import android.provider.Settings
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityWindowInfo
 import com.salat.gbinder.repository.AccessibilityRepository
@@ -45,20 +41,6 @@ class BootAccessibilityService : AccessibilityService() {
         super.onCreate()
         logs.deepLog("[AS] Created")
         
-        // Request to be excluded from battery optimization
-        try {
-            val pm = getSystemService(POWER_SERVICE) as PowerManager
-            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
-                val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
-                    data = Uri.parse("package:$packageName")
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                }
-                startActivity(intent)
-            }
-        } catch (e: Exception) {
-            Timber.w(e, "[AS] Failed to request battery optimization exclusion")
-        }
-
         serviceScope.launch(Dispatchers.Main) {
             stateChangeFlow
                 //.debounce(150)

@@ -2023,7 +2023,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun Int.toDecimalSecondString(digits: Int = 2) =
-        String.format(Locale.US, "%.${digits}f сек", this / 1000.0)
+        String.format(Locale.US, "%.${digits}f 秒", this / 1000.0)
 
     private fun extractInts(input: String): List<Int> {
         return Regex("\\d+")
