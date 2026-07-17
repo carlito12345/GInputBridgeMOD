@@ -8,7 +8,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_ALL_READING_LIGHTS_SWITCH",
         value = 554763008,
-        description = "Включение/выключение всех плафонов освещения салона.",
+        description = "所有车内照明灯开/关。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -16,7 +16,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_CHARGING_CAP",
         value = 553780480,
-        description = "Электропривод крышки зарядного порта.",
+        description = "充电口盖电动驱动。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -24,7 +24,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_CHILD_SAFETY_LOCK",
         value = 553780224,
-        description = "Детский замок задних дверей.",
+        description = "后车门儿童锁。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -32,7 +32,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_CUSTOM_KEY",
         value = 554762496,
-        description = "Назначение функции на пользовательскую кнопку.",
+        description = "将功能分配给自定义按钮。",
         possibleValues = mapOf(
             "CUSTOM_KEY_TYPE_360_PANORAMA" to 1,
             "CUSTOM_KEY_TYPE_AUTO_PARK" to 101,
@@ -52,7 +52,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_DIM_ZONE_A_WARNING",
         value = 555746816,
-        description = "Предупреждение о затемнённой зоне A.",
+        description = "盲区警告 A。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -60,7 +60,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_DISPLAY_ONOFF",
         value = 554697216,
-        description = "Питание подсистем/подсветки кузова: вкл/выкл.",
+        description = "车身子系统/照明供电：开/关。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -68,7 +68,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_DOOR",
         value = 553779456,
-        description = "Команды электропривода двери (открыть/закрыть/пауза).",
+        description = "电动门驱动命令（开/关/暂停）。",
         possibleValues = mapOf(
             "DOOR_CLOSE" to 0,
             "DOOR_OPEN" to 1,
@@ -80,7 +80,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_DOOR_LOCK",
         value = 553779712,
-        description = "Запирание дверей.",
+        description = "车门上锁。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -88,7 +88,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_DOOR_LOCK_FAULT",
         value = 553713920,
-        description = "Неисправность привода замков дверей.",
+        description = "车门锁执行器故障。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -96,7 +96,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_DOOR_STATUS",
         value = 553785856,
-        description = "Состояние дверей (открыто/закрыто).",
+        description = "车门状态（开/关）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -104,7 +104,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_FOLD_REAR_MIRROR",
         value = 554041600,
-        description = "Складирование наружных зеркал.",
+        description = "外后视镜折叠。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -112,7 +112,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_FPL_FOLLOW_DRL",
         value = 555745536,
-        description = "Связь ближнего света с ДХО (сценарии).",
+        description = "近光灯与日间行车灯联动（场景）。",
         possibleValues = mapOf(
             "FPL_FOLLOW_DRL_MODE1" to 555745537,
             "FPL_FOLLOW_DRL_MODE2" to 555745538,
@@ -123,7 +123,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_FUEL_CAP",
         value = 553780736,
-        description = "Электропривод лючка топливного бака.",
+        description = "油箱盖电动驱动。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -131,7 +131,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_LIGHT_ATMOSPHERE_LAMPS",
         value = 553979904,
-        description = "Атмосферная подсветка салона.",
+        description = "车内氛围灯。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -139,7 +139,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_LIGHT_FRONT_FOG_LAMPS",
         value = 553976832,
-        description = "Передние противотуманные фары: вкл/выкл.",
+        description = "前雾灯：开/关。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -147,7 +147,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_LIGHT_HAZARD_FLASHERS",
         value = 553979648,
-        description = "Аварийная сигнализация: вкл/выкл.",
+        description = "危险警告灯：开/关。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -155,7 +155,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_LIGHT_LEFT_TRUN_SIGNAL",
         value = 553980160,
-        description = "Левый указатель поворота.",
+        description = "左转向灯。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -163,7 +163,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_LIGHT_READING_LIGHT",
         value = 553980672,
-        description = "Индивидуальный плафон освещения салона.",
+        description = "独立车内照明灯。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -171,7 +171,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_LIGHT_REAR_FOG_LAMPS",
         value = 553977088,
-        description = "Задние противотуманные фонари: вкл/выкл.",
+        description = "后雾灯：开/关。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -179,7 +179,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_LIGHT_RIGHT_TRUN_SIGNAL",
         value = 553980416,
-        description = "Правый указатель поворота.",
+        description = "右转向灯。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -187,7 +187,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_LIGHT_WELCOME_LIGHT",
         value = 553981952,
-        description = "Приветственная подсветка при подходе/отпирании.",
+        description = "靠近/解锁时迎宾灯。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -195,7 +195,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_POWER_ONOFF",
         value = 554696960,
-        description = "Главный выключатель питания BCM‑подсистем.",
+        description = "BCM 子系统主电源开关。",
         possibleValues = mapOf(
             "BCM_FUNC_POWER_ONOFF_CONFIRM" to 554696962,
         )
@@ -205,7 +205,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_REAR_MIRROR_ADJUST",
         value = 554041856,
-        description = "Электрорегулировка наружных зеркал.",
+        description = "外后视镜电动调节。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -213,7 +213,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_STEERING_WHEEL_ADJUST",
         value = 554107136,
-        description = "Электрорегулировка рулевой колонки.",
+        description = "转向柱电动调节。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -221,7 +221,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_SUNCURT_CLS_BTN",
         value = 555746560,
-        description = "Кнопка закрытия солнцезащитной шторки.",
+        description = "遮阳帘关闭按钮。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -229,7 +229,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_SUNCURT_OPEN_BTN",
         value = 555746304,
-        description = "Кнопка открытия солнцезащитной шторки.",
+        description = "遮阳帘开启按钮。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -237,7 +237,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_SUNROOF_CLS_BTN",
         value = 555746048,
-        description = "Кнопка закрытия люка.",
+        description = "天窗关闭按钮。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -245,7 +245,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_SUNROOF_ININ_SWITCH",
         value = 555745280,
-        description = "Переключатель направления люка (вперёд/назад).",
+        description = "天窗方向开关（向前/向后）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -253,7 +253,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_SUNROOF_OPEN_BTN",
         value = 555745792,
-        description = "Кнопка открытия люка.",
+        description = "天窗开启按钮。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -261,7 +261,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_SUNROOF_TILT",
         value = 553845760,
-        description = "Режим приоткрытия (TILT) люка.",
+        description = "天窗翘起模式（TILT）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -269,7 +269,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_WASHER",
         value = 553910528,
-        description = "Омыватель ветрового стекла.",
+        description = "挡风玻璃清洗。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -277,7 +277,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_WINDOW",
         value = 553844992,
-        description = "Команды стеклоподъёмника (откр./закр./пауза/процент).",
+        description = "车窗升降命令（开/关/暂停/百分比）。",
         possibleValues = mapOf(
             "WINDOW_PAUSE" to 553844993,
             "WINDOW_HALF" to 553844994,
@@ -294,7 +294,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_WINDOW_CURRENT_POS",
         value = 553846272,
-        description = "Текущее положение стеклоподъёмника, %.",
+        description = "车窗当前位置，%。",
         possibleValues = mapOf(
             "WINDOW_CLOSE" to 0,
             "WINDOW_OPEN" to 1,
@@ -307,7 +307,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_WINDOW_MOVING_STATE",
         value = 554762752,
-        description = "Состояние движения стеклоподъёмника.",
+        description = "车窗升降器运动状态。",
         possibleValues = mapOf(
             "WINDOW_CLOSE" to 0,
             "WINDOW_OPEN" to 1,
@@ -320,7 +320,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_WINDOW_POS",
         value = 553845504,
-        description = "Целевая позиция стеклоподъёмника, %.",
+        description = "目标车窗位置，%。",
         possibleValues = mapOf(
             "WINDOW_CLOSE" to 0,
             "WINDOW_OPEN" to 1,
@@ -333,7 +333,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "BCM_FUNC_WIPER",
         value = 553713920,
-        description = "Управление дворниками (режим/скорость).",
+        description = "雨刮器控制（模式/速度）。",
         possibleValues = mapOf(
             "WIPER_GEAR_AUTO" to 553713921,
             "WIPER_GEAR_LOW" to 553713922,
@@ -347,7 +347,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CAR_MODULE_LAMP",
         value = 721420288,
-        description = "Выбор режима наружного света (OFF/габариты/ближний/авто/AHBC).",
+        description = "选择外部照明模式（关闭/示廓灯/近光/自动/AHBC）。",
         possibleValues = mapOf(
             "LAMP_EXTERIOR_LIGHT_CONTROL_AHBC" to 537136644,
             "LAMP_EXTERIOR_LIGHT_CONTROL_AUTOMATIC" to 537136643,
@@ -361,7 +361,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_BATTERY_CHARGING_CURRENT_POWER",
         value = 606080000,
-        description = "Текущая мощность зарядки.",
+        description = "当前充电功率。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -369,7 +369,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_BATTERY_DISCHARGING_CURRENT_POWER",
         value = 606080256,
-        description = "Текущая мощность раздачи энергии (V2L/V2V).",
+        description = "当前输出功率（V2L/V2V）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -377,7 +377,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_CHARGE_IMMEDIATELY",
         value = 609222656,
-        description = "Немедленный старт зарядки (обход расписания).",
+        description = "立即开始充电（绕过计划）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -385,7 +385,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_CHARGING",
         value = 605028608,
-        description = "Статусы процесса зарядки/подключения.",
+        description = "充电/连接过程状态。",
         possibleValues = mapOf(
             "CHARGING_PLUG_STATE_CONNECTED_WAITING" to 605225493,
             "CHARGING_PLUG_STATE_DISCONNECTED" to 605225489,
@@ -402,7 +402,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_CHARGING_CURRENT",
         value = 605029888,
-        description = "Текущий зарядный ток.",
+        description = "当前充电电流。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -410,7 +410,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_CHARGING_CURRENT_MAX",
         value = 605030144,
-        description = "Максимально допустимый зарядный ток.",
+        description = "最大允许充电电流。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -418,7 +418,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_CHARGING_CURRENT_MIN",
         value = 605030400,
-        description = "Минимально допустимый зарядный ток.",
+        description = "最小允许充电电流。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -426,7 +426,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_CHARGING_CURRENT_STEP",
         value = 605030656,
-        description = "Шаг регулировки зарядного тока.",
+        description = "充电电流调节步进。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -434,7 +434,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_CHARGING_ENERGY",
         value = 605291776,
-        description = "Энергия, переданная за текущую сессию зарядки.",
+        description = "本次充电会话传输的能量。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -442,7 +442,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_CHARGING_ESTIMATED_TIME",
         value = 605291264,
-        description = "Расчётное время до завершения AC‑зарядки.",
+        description = "交流充电预计完成时间。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -450,7 +450,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_CHARGING_ESTIMATED_TIME_DC",
         value = 605292032,
-        description = "Расчётное время до завершения DC‑зарядки.",
+        description = "直流充电预计完成时间。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -458,7 +458,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_CHARGING_PLUG_STATE",
         value = 605225472,
-        description = "Состояние штекера зарядного разъёма.",
+        description = "充电插头连接状态。",
         possibleValues = mapOf(
             "CHARGING_PLUG_STATE_CONNECTED_WAITING" to 605225493,
             "CHARGING_PLUG_STATE_DISCONNECTED" to 605225489,
@@ -475,7 +475,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_CHARGING_PLUG_TYPE",
         value = 605225216,
-        description = "Тип подключённого зарядного штекера.",
+        description = "已连接充电插头类型。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -483,7 +483,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_CHARGING_SOC",
         value = 605028864,
-        description = "Уровень заряда HV‑батареи (SoC) при зарядке.",
+        description = "充电时高压电池 SoC。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -491,7 +491,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_CHARGING_SOC_MAX",
         value = 605029120,
-        description = "Целевой максимум SoC при зарядке.",
+        description = "充电目标最大 SoC。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -499,7 +499,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_CHARGING_SOC_MIN",
         value = 605029376,
-        description = "Минимальный SoC для зарядки/целевой порог.",
+        description = "充电最低 SoC/目标阈值。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -507,7 +507,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_CHARGING_SOC_STEP",
         value = 605029632,
-        description = "Шаг изменения целевого SoC.",
+        description = "目标 SoC 调节步进。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -515,7 +515,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_CHARGING_WORK_CURRENT",
         value = 605291008,
-        description = "Ток на разъёме во время зарядки.",
+        description = "充电时连接器电流。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -523,7 +523,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_CHARGING_WORK_VOLTAGE",
         value = 605290752,
-        description = "Напряжение на разъёме во время зарядки.",
+        description = "充电时连接器电压。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -531,7 +531,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_DISCHARGING_ENETGY",
         value = 605357056,
-        description = "Энергия, выданная во внешнюю нагрузку (V2L/V2V).",
+        description = "对外输出能量（V2L/V2V）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -539,7 +539,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_DISCHARGING_ESTIMATED_TIME",
         value = 605356800,
-        description = "Оценка времени до завершения раздачи энергии.",
+        description = "能源输出完成时间估算。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -547,7 +547,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_DISCHARGING_SOC",
         value = 605160192,
-        description = "Текущий SoC при V2L/V2V.",
+        description = "V2L/V2V 当前 SoC。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -555,7 +555,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_DISCHARGING_SOC_MAX",
         value = 605160448,
-        description = "Порог макс. SoC для V2L/V2V.",
+        description = "V2L/V2V 最大 SoC 阈值。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -563,7 +563,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_DISCHARGING_SOC_MIN",
         value = 605160704,
-        description = "Порог мин. SoC для V2L/V2V.",
+        description = "V2L/V2V 最小 SoC 阈值。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -571,7 +571,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_DISCHARGING_SOC_STEP",
         value = 605160960,
-        description = "Шаг изменения SoC для V2L/V2V.",
+        description = "V2L/V2V SoC 调节步进。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -579,7 +579,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_DISCHARGING_SWITCH_V2L",
         value = 605159936,
-        description = "Включение режима V2L (питание внешних устройств).",
+        description = "启用 V2L 模式（为外部设备供电）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -587,7 +587,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_DISCHARGING_SWITCH_V2V",
         value = 605159680,
-        description = "Включение режима V2V (подзарядка другого авто).",
+        description = "启用 V2V 模式（为另一辆车充电）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -595,7 +595,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_DISCHARGING_WORK_CURRENT",
         value = 605356544,
-        description = "Ток при V2L/V2V.",
+        description = "V2L/V2V 电流。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -603,7 +603,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_DISCHARGING_WORK_VOLTAGE",
         value = 605356288,
-        description = "Напряжение при V2L/V2V.",
+        description = "V2L/V2V 电压。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -611,7 +611,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_DISTANCE_INTERVAL_MAINTAIN",
         value = 609225216,
-        description = "Поддержание дистанции ради экономии энергии.",
+        description = "为节能而保持车距。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -619,7 +619,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_DISTANCE_PROTECTION",
         value = 609222912,
-        description = "Ограничение расхода для сохранения запаса хода.",
+        description = "限制消耗以保持续航。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -627,7 +627,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_DISTANCE_PROTECTION_UNIT",
         value = 609223168,
-        description = "Единицы для параметров защиты запаса хода.",
+        description = "续航保护参数单位。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -635,7 +635,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_ENDURANCE_MILEAGE",
         value = 606079744,
-        description = "Запас хода (оценка).",
+        description = "续航里程（估算）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -643,7 +643,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_EXTERNAL_CHARGING_LIGHT",
         value = 605031936,
-        description = "Внешний индикатор состояния зарядки.",
+        description = "外部充电状态指示灯。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -651,7 +651,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_EXTERNAL_POWER_SUPPLY",
         value = 606078976,
-        description = "Питание внешних устройств от авто (V2L).",
+        description = "车辆对外供电（V2L）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -659,7 +659,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_FUEL_TO_BATT_NOTWORK_TOAST",
         value = 609225984,
-        description = "Уведомление: заряд от ДВС недоступен.",
+        description = "通知：内燃机充电不可用。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -667,7 +667,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_GEAR_LVL_INDCN",
         value = 609225728,
-        description = "Индикация уровня передачи для энергорежимов.",
+        description = "能量模式档位级别显示。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -675,7 +675,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_HV_BATT_ACCHRGNP",
         value = 609223936,
-        description = "Состояние AC‑разъёма HV‑батареи.",
+        description = "高压电池交流充电口状态。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -683,7 +683,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_HV_BATT_CHRG",
         value = 609223424,
-        description = "Состояние зарядки HV‑батареи.",
+        description = "高压电池充电状态。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -691,7 +691,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_HV_BATT_CHRG_TIME",
         value = 609224960,
-        description = "Время до завершения зарядки HV‑батареи.",
+        description = "高压电池充电剩余时间。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -699,7 +699,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_HV_BATT_DCCHRGNP",
         value = 609224192,
-        description = "Состояние DC‑разъёма HV‑батареи.",
+        description = "高压电池直流充电口状态。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -707,7 +707,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_HV_BATT_DCHRGNP",
         value = 609224448,
-        description = "Состояние разъёма раздачи HV‑батареи.",
+        description = "高压电池放电接口状态。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -715,7 +715,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_HV_DIS_CHRG_STS",
         value = 609223680,
-        description = "Состояние режима раздачи энергии (discharge).",
+        description = "能量输出模式（放电）状态。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -723,7 +723,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_MAINTAIN_BATTERY_TEMP",
         value = 605030912,
-        description = "Поддержание температуры HV‑батареи при зарядке.",
+        description = "充电时高压电池温度保持。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -731,7 +731,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_NOTIFICATION_WRONG_OPERATION_REMIND",
         value = 606142720,
-        description = "Напоминание о некорректной операции зарядки.",
+        description = "充电操作错误提醒。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -739,7 +739,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_PHEV_PARKING_POWER",
         value = 605358080,
-        description = "Питание при парковке для PHEV.",
+        description = "PHEV 驻车供电。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -747,7 +747,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_PRE_CHARGING",
         value = 605094144,
-        description = "Настройки отложенной/плановой зарядки.",
+        description = "延迟/定时充电设置。",
         possibleValues = mapOf(
             "PRE_CHARGING_STATUS_CANCELED" to 605094918,
             "PRE_CHARGING_STATUS_CANCEL_FAILED" to 605094919,
@@ -765,7 +765,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_PRE_CHARGING_IMMEDIATELY",
         value = 605095424,
-        description = "Немедленный старт запланированной зарядки.",
+        description = "立即开始定时充电。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -773,7 +773,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_PRE_CHARGING_STATUS",
         value = 605094912,
-        description = "Статус отложенной/плановой зарядки.",
+        description = "延迟/定时充电状态。",
         possibleValues = mapOf(
             "PRE_CHARGING_STATUS_CANCELED" to 605094918,
             "PRE_CHARGING_STATUS_CANCEL_FAILED" to 605094919,
@@ -791,7 +791,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_PRE_CHARGING_TYPE",
         value = 605095168,
-        description = "Тип расписания зарядки (выкл/разово/циклично).",
+        description = "充电计划类型（关闭/单次/循环）。",
         possibleValues = mapOf(
             "CHARGE_FUNC_PRE_CHARGING_TYPE_CYCLE" to 605095170,
             "CHARGE_FUNC_PRE_CHARGING_TYPE_OFF" to 605095168,
@@ -803,7 +803,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_TIME_INTERVAL_MAINTAIN",
         value = 609225472,
-        description = "Управление по времени (энергоуправление).",
+        description = "定时控制（能量管理）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -811,7 +811,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_TRAVEL_HVAC",
         value = 606078208,
-        description = "Параметры климата в поездке (энергопотребление).",
+        description = "行驶中空调参数（能耗）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -819,7 +819,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_WARM_UP",
         value = 605030944,
-        description = "Режим прогрева HV‑системы/протокола зарядки.",
+        description = "高压系统/充电协议预热模式。",
         possibleValues = mapOf(
             "WARM_UP_ECO" to 605030929,
             "WARM_UP_SPORT" to 605030930,
@@ -830,7 +830,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "CHARGE_FUNC_WARM_UP_LEVEL",
         value = 605030928,
-        description = "Уровень прогрева/подготовки.",
+        description = "预热/准备程度。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -838,7 +838,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DM_FUNC_DM_CUSTOM_BPF",
         value = 570622976,
-        description = "Профиль Custom: BPF.",
+        description = "自定义模式：BPF。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -846,7 +846,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DM_FUNC_DM_CUSTOM_CLIMATE_MODE",
         value = 570624512,
-        description = "Профиль Custom: климат‑система.",
+        description = "自定义模式：空调系统。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -854,7 +854,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DM_FUNC_DM_CUSTOM_DRIVER_INFO",
         value = 570625024,
-        description = "Профиль Custom: оформление/информация на панели.",
+        description = "自定义模式：仪表板设计/信息。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -862,7 +862,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DM_FUNC_DM_CUSTOM_EN_START_STOP",
         value = 570625536,
-        description = "Профиль Custom: система Start/Stop.",
+        description = "自定义模式：启停系统。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -870,7 +870,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DM_FUNC_DM_CUSTOM_INFOR_THEME",
         value = 570624768,
-        description = "Профиль Custom: тема панели.",
+        description = "自定义模式：仪表板主题。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -878,7 +878,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DM_FUNC_DM_CUSTOM_INTERIOR_LIGHT",
         value = 570625280,
-        description = "Профиль Custom: подсветка салона.",
+        description = "自定义模式：车内照明。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -886,7 +886,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DM_FUNC_DM_CUSTOM_PROPULSION_SYS",
         value = 570622208,
-        description = "Профиль Custom: силовая установка.",
+        description = "自定义模式：动力总成。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -894,7 +894,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DM_FUNC_DM_CUSTOM_RAB",
         value = 570622720,
-        description = "Профиль Custom: RAB.",
+        description = "自定义模式：RAB。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -902,7 +902,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DM_FUNC_DM_CUSTOM_STEERING_WHEEL_FEEL",
         value = 570624256,
-        description = "Профиль Custom: усилие на руле.",
+        description = "自定义模式：转向力度。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -910,7 +910,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DM_FUNC_DM_CUSTOM_SUSPENSION_MODE",
         value = 570622464,
-        description = "Профиль Custom: настройки подвески.",
+        description = "自定义模式：悬架设置。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -918,7 +918,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DM_FUNC_DRIVE_MODE_SELECT",
         value = 570491136,
-        description = "Переключение режимов вождения.",
+        description = "切换驾驶模式。",
         possibleValues = mapOf(
             "DRIVE_MODE_SELECTION_ADAPTIVE" to 570491158,
             "DRIVE_MODE_SELECTION_AWD" to 570491150,
@@ -954,7 +954,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DM_FUNC_STEERING_WHEEL_FEEL_SYNC_DRIVEMODE",
         value = 570688256,
-        description = "Связать усилие на руле с режимом вождения.",
+        description = "将转向力度与驾驶模式关联。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -962,7 +962,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DRIVE_MODE_ECO_PLUS",
         value = 570491156,
-        description = "Режим вождения: Эко+.",
+        description = "驾驶模式：Eco+ 模式。",
         emptyMap()
     ),
     PropertyData(
@@ -970,7 +970,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DRIVE_MODE_SELECTION_ADAPTIVE",
         value = 570491158,
-        description = "Режим вождения: Адаптивный режим.",
+        description = "驾驶模式：自适应模式。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -978,7 +978,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DRIVE_MODE_SELECTION_AWD",
         value = 570491150,
-        description = "Режим вождения: Полный привод.",
+        description = "驾驶模式：全时四驱。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -986,7 +986,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DRIVE_MODE_SELECTION_COMFORT",
         value = 570491138,
-        description = "Режим вождения: Комфортный режим.",
+        description = "驾驶模式：舒适模式。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -994,7 +994,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DRIVE_MODE_SELECTION_CUSTOM",
         value = 570491200,
-        description = "Режим вождения: Пользовательский профиль.",
+        description = "驾驶模式：自定义模式。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1002,7 +1002,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DRIVE_MODE_SELECTION_DYNAMIC",
         value = 570491139,
-        description = "Режим вождения: Динамичный режим.",
+        description = "驾驶模式：动态模式。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1010,7 +1010,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DRIVE_MODE_SELECTION_ECO",
         value = 570491137,
-        description = "Режим вождения: Экономичный режим.",
+        description = "驾驶模式：节能模式。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1018,7 +1018,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DRIVE_MODE_SELECTION_ECO_HEV_PHEV",
         value = 570491152,
-        description = "Режим вождения: Эко (HEV/PHEV).",
+        description = "驾驶模式：经济模式（HEV/PHEV）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1026,7 +1026,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DRIVE_MODE_SELECTION_HDC",
         value = 570491141,
-        description = "Режим вождения: Помощь при спуске (HDC).",
+        description = "驾驶模式：陡坡缓降（HDC）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1034,7 +1034,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DRIVE_MODE_SELECTION_HYBRID",
         value = 570491143,
-        description = "Режим вождения: Гибридный режим.",
+        description = "驾驶模式：混动模式。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1042,7 +1042,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DRIVE_MODE_SELECTION_MUD",
         value = 570491146,
-        description = "Режим вождения: Для грязи.",
+        description = "驾驶模式：泥地模式。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1050,7 +1050,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DRIVE_MODE_SELECTION_NORMAL",
         value = 570491153,
-        description = "Режим вождения: Стандартный режим.",
+        description = "驾驶模式：标准模式。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1058,7 +1058,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DRIVE_MODE_SELECTION_OFFROAD",
         value = 570491155,
-        description = "Режим вождения: Внедорожный режим.",
+        description = "驾驶模式：越野模式。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1066,7 +1066,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DRIVE_MODE_SELECTION_PHEV",
         value = 570491148,
-        description = "Режим вождения: Режим PHEV.",
+        description = "驾驶模式：插电混动模式。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1074,7 +1074,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DRIVE_MODE_SELECTION_POWER",
         value = 570491144,
-        description = "Режим вождения: Максимальная отдача.",
+        description = "驾驶模式：最大性能模式。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1082,7 +1082,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DRIVE_MODE_SELECTION_PURE",
         value = 570491142,
-        description = "Режим вождения: Чисто электрический ход.",
+        description = "驾驶模式：纯电模式。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1090,7 +1090,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DRIVE_MODE_SELECTION_ROCK",
         value = 570491147,
-        description = "Режим вождения: Для каменистых участков.",
+        description = "驾驶模式：岩石模式。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1098,7 +1098,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DRIVE_MODE_SELECTION_SAND",
         value = 570491149,
-        description = "Режим вождения: Для песка.",
+        description = "驾驶模式：沙地模式。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1106,7 +1106,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DRIVE_MODE_SELECTION_SAVE",
         value = 570491151,
-        description = "Режим вождения: Сохранение заряда.",
+        description = "驾驶模式：保电模式。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1114,7 +1114,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DRIVE_MODE_SELECTION_SNOW",
         value = 570491145,
-        description = "Режим вождения: Для снега.",
+        description = "驾驶模式：雪地模式。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1122,7 +1122,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DRIVE_MODE_SELECTION_START_TYPE18",
         value = 570491159,
-        description = "Режим вождения: Служебный профиль запуска (тип 18).",
+        description = "驾驶模式：服务启动配置（类型 18）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1130,7 +1130,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DRIVE_MODE_SELECTION_START_TYPE72",
         value = 570491160,
-        description = "Режим вождения: Служебный профиль запуска (тип 72).",
+        description = "驾驶模式：服务启动配置（类型 72）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1138,7 +1138,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DRIVE_MODE_SELECTION_START_TYPE79",
         value = 570491161,
-        description = "Режим вождения: Служебный профиль запуска (тип 79).",
+        description = "驾驶模式：服务启动配置（类型 79）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1146,7 +1146,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DRIVE_MODE_SELECTION_START_TYPE97",
         value = 570491162,
-        description = "Режим вождения: Служебный профиль запуска (тип 97).",
+        description = "驾驶模式：服务启动配置（类型 97）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1154,7 +1154,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DRIVE_MODE_SELECTION_XC",
         value = 570491140,
-        description = "Режим вождения: Кросс‑кантри.",
+        description = "驾驶模式：越野穿越模式。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1162,7 +1162,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "DRIVE_MODE_SELECTION_eAWD",
         value = 570491154,
-        description = "Режим вождения: Электрический полный привод.",
+        description = "驾驶模式：电动四驱模式。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1177,7 +1177,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "ENERGY_REGENERATION_LEVEL_AUTO",
         value = 537003268,
-        description = "Уровень рекуперации: автоматический.",
+        description = "能量回收等级：自动。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1185,7 +1185,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "ENERGY_REGENERATION_LEVEL_HIGH",
         value = 537003267,
-        description = "Уровень рекуперации: высокий.",
+        description = "能量回收等级：高。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1193,7 +1193,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "ENERGY_REGENERATION_LEVEL_LOW",
         value = 537003265,
-        description = "Уровень рекуперации: низкий.",
+        description = "能量回收等级：低。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1201,7 +1201,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "ENERGY_REGENERATION_LEVEL_MID",
         value = 537003266,
-        description = "Уровень рекуперации: средний.",
+        description = "能量回收等级：中。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1209,7 +1209,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "FUNCTION_SPEED_CONTROL_MODE",
         value = 537069056,
-        description = "Режим систем поддержки/ограничения скорости.",
+        description = "速度辅助/限制系统模式。",
         possibleValues = mapOf(
             "SPEED_CONTROL_MODE_ACC" to 537069058,
             "SPEED_CONTROL_MODE_CC" to 537069057,
@@ -1222,7 +1222,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "FUNC_UNIT_AVG_FUEL",
         value = 620822784,
-        description = "Единицы среднего расхода топлива.",
+        description = "平均油耗单位。",
         possibleValues = mapOf(
             "UNIT_AVG_FUEL_KM_L" to 620822786,
             "UNIT_AVG_FUEL_L_100KM" to 620822785,
@@ -1235,7 +1235,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "FUNC_UNIT_DATE_FORMAT",
         value = 620888576,
-        description = "Формат даты (DMY/MDY/YMD).",
+        description = "日期格式（DMY/MDY/YMD）。",
         possibleValues = mapOf(
             "UNIT_DATE_FORMAT_DMY" to 620888578,
             "UNIT_DATE_FORMAT_MDY" to 620888579,
@@ -1247,7 +1247,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "FUNC_UNIT_DRIVEN_DISTANCE",
         value = 620823040,
-        description = "Единицы расстояния/пробега.",
+        description = "距离/里程单位。",
         possibleValues = mapOf(
             "UNIT_DRIVEN_DISTANCE_KM" to 620823041,
             "UNIT_DRIVEN_DISTANCE_MILES" to 620823042,
@@ -1258,7 +1258,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "FUNC_UNIT_SPEED",
         value = 620823808,
-        description = "Единицы скорости (км/ч, миль/ч).",
+        description = "速度单位（km/h、mph）。",
         possibleValues = mapOf(
             "SPEED_CONTROL_MODE_ACC" to 537069058,
             "SPEED_CONTROL_MODE_CC" to 537069057,
@@ -1286,7 +1286,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "FUNC_UNIT_TEMPERATURE",
         value = 620823296,
-        description = "Единицы температуры (°C/°F).",
+        description = "温度单位（°C/°F）。",
         possibleValues = mapOf(
             "TEMPERATURE_UNIT_C" to 268830209,
             "TEMPERATURE_UNIT_F" to 268830210,
@@ -1299,7 +1299,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "FUNC_UNIT_TIME_INDICATION",
         value = 620888320,
-        description = "Формат времени (24ч/AM‑PM).",
+        description = "时间格式（24小时制/上午-下午）。",
         possibleValues = mapOf(
             "UNIT_TIME_INDICATION_24H" to 620888322,
             "UNIT_TIME_INDICATION_AM_PM" to 620888321,
@@ -1310,7 +1310,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "FUNC_UNIT_TIRE_PRESSURE",
         value = 620823552,
-        description = "Единицы давления в шинах (kPa/bar/psi).",
+        description = "胎压单位（kPa/bar/psi）。",
         possibleValues = mapOf(
             "UNIT_TIRE_PRESSURE_BAR" to 620823554,
             "UNIT_TIRE_PRESSURE_KPA" to 620823553,
@@ -1322,7 +1322,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_AC",
         value = 268501760,
-        description = "Включение компрессора кондиционера (A/C).",
+        description = "空调压缩机（A/C）开启。",
         possibleValues = mapOf(
             "AC_ON" to 1,
             "AC_OFF" to 0
@@ -1333,7 +1333,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_AC_MAX",
         value = 268502016,
-        description = "MAX A/C: максимальное охлаждение.",
+        description = "MAX A/C: максимальное 冷却.",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1341,7 +1341,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_AIR_FRAGRANCE",
         value = 269156608,
-        description = "Система ароматизации салона (тип/уровень/слот).",
+        description = "车内香氛系统（类型/浓度/插槽）。",
         possibleValues = mapOf(
             "AIR_FRAGRANCE_JASMINE" to 269156870,
             "AIR_FRAGRANCE_LAVENDER" to 269156867,
@@ -1366,7 +1366,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_AIR_FRAGRANCE_LEVEL",
         value = 269157120,
-        description = "Интенсивность ароматизации.",
+        description = "香氛浓度。",
         possibleValues = mapOf(
             "AIR_FRAGRANCE_LEVEL_1" to 269157121,
             "AIR_FRAGRANCE_LEVEL_2" to 269157122,
@@ -1379,7 +1379,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_AIR_FRAGRANCE_LOW",
         value = 269157888,
-        description = "Низкая интенсивность ароматизации.",
+        description = "低香氛浓度。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1387,7 +1387,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_AIR_FRAGRANCE_SLOT",
         value = 269157376,
-        description = "Выбор картриджа аромата (слот).",
+        description = "选择香氛盒（插槽）。",
         possibleValues = mapOf(
             "AIR_FRAGRANCE_SLOT_1" to 269157377,
             "AIR_FRAGRANCE_SLOT_2" to 269157378,
@@ -1401,7 +1401,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_AIR_FRAGRANCE_TYPE",
         value = 269156864,
-        description = "Тип выбранного аромата (код).",
+        description = "所选香氛类型（代码）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1409,7 +1409,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_AIR_FRAGRANCE_TYPE_ID",
         value = 269157632,
-        description = "Идентификатор аромата (код).",
+        description = "香氛标识符（代码）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1424,7 +1424,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_AQS_STATUS",
         value = 269751808,
-        description = "Состояние системы контроля качества воздуха (AQS).",
+        description = "空气质量系统（AQS）状态。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1432,7 +1432,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_AUTO",
         value = 268501504,
-        description = "Режим автоматического управления климатом.",
+        description = "空调自动控制模式。",
         possibleValues = mapOf(
             "AUTO_CLOSE_WINDOW_KEY_LONG_PRESS" to 537396226,
             "AUTO_CLOSE_WINDOW_OFF" to 0,
@@ -1482,7 +1482,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_AUTOMATIC_VENTILATION_DRY",
         value = 269485312,
-        description = "Автосушка испарителя после выключения A/C.",
+        description = "关闭空调后蒸发器自动干燥。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1490,7 +1490,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_AUTO_CLOSE_WINDOW_REMIND",
         value = 269418752,
-        description = "Напоминание закрыть окна для эффективности климата.",
+        description = "提示关闭车窗以提高空调效率。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1498,7 +1498,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_AUTO_CLOSE_WINDOW_REMIND_REQUEST",
         value = 269419008,
-        description = "Запрос напоминания о закрытии окон.",
+        description = "请求关闭车窗提醒。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1506,7 +1506,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_AUTO_CONTROL",
         value = 269749248,
-        description = "Автоматическое управление климат‑системой.",
+        description = "空调系统自动控制。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1514,7 +1514,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_AUTO_CZIS",
         value = 269485568,
-        description = "Авто‑режим системы очистки воздуха CZIS.",
+        description = "CZIS 空气净化系统自动模式。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1522,7 +1522,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_AUTO_DEFROST_CONFIRM",
         value = 268699392,
-        description = "Подтверждение автозапуска обогрева стекла.",
+        description = "玻璃加热自动启动确认。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1530,7 +1530,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_AUTO_DEFROST_FRONT",
         value = 268698880,
-        description = "Автовключение обдува лобового стекла.",
+        description = "前挡风玻璃除雾自动启动。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1538,7 +1538,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_AUTO_DEFROST_REAR",
         value = 268698624,
-        description = "Автовключение обогрева заднего стекла.",
+        description = "后窗加热自动启动。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1546,7 +1546,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_AUTO_DEFROST_REQUEST",
         value = 268699136,
-        description = "Запрос на автоматический дефрост.",
+        description = "请求自动除霜。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1554,7 +1554,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_ELECTRIC_DEFROST",
         value = 269027328,
-        description = "Электрообогрев зоны лобового стекла.",
+        description = "前挡风玻璃电加热区域。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1562,7 +1562,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_AUTO_FAN_SETTING",
         value = 268567040,
-        description = "Профиль авто‑скорости вентилятора.",
+        description = "风扇转速自动模式。",
         possibleValues = mapOf(
             "AUTO_FAN_SETTING_HIGH" to 268567043,
             "AUTO_FAN_SETTING_HIGHER" to 268567045,
@@ -1576,7 +1576,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_AUTO_FAN_SPEED_HARD_KEY",
         value = 268567552,
-        description = "Событие клавиши авто‑скорости вентилятора.",
+        description = "自动风扇速度按键事件。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1584,7 +1584,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_AUTO_ION",
         value = 269222144,
-        description = "Автовключение ионизатора.",
+        description = "离子发生器自动开启。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1592,7 +1592,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_AUTO_ION_CONFIRM",
         value = 269222656,
-        description = "Подтверждение авто‑ионизатора.",
+        description = "自动离子发生器确认。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1600,7 +1600,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_AUTO_ION_REQUEST",
         value = 269222400,
-        description = "Запрос на авто‑ионизатор.",
+        description = "请求自动离子发生器。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1704,7 +1704,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_BLOWING_MODE",
         value = 268894464,
-        description = "Распределение потоков воздуха (лицо/ноги/стекло/авто).",
+        description = "气流分布（面部/脚部/玻璃/自动）。",
         possibleValues = mapOf(
             "BLOWING_MODE_AUTO_SWITCH" to 268894472,
             "BLOWING_MODE_FACE" to 268894465,
@@ -1721,7 +1721,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_BLOWING_MODE_HARD_KEY",
         value = 268896256,
-        description = "Событие клавиши выбора направления обдува.",
+        description = "送风方向选择按键事件。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1729,7 +1729,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_CIRCULATION",
         value = 268632320,
-        description = "Режим рециркуляции: внутренняя/наружная/авто.",
+        description = "循环模式：内循环/外循环/自动。",
         possibleValues = mapOf(
             "CIRCULATION_AUTO" to 268632323,
             "CIRCULATION_INNER" to 268632321,
@@ -1742,7 +1742,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_CIRCULATION_LONG_TOUCH",
         value = 268632832,
-        description = "Долгое нажатие на кнопку рециркуляции.",
+        description = "长按循环按钮。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1750,7 +1750,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_CIRCULATION_TIMER",
         value = 268632576,
-        description = "Таймер переключения рециркуляции.",
+        description = "循环切换定时器。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1758,7 +1758,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_CLIMATE_HARDKEY_SOUND",
         value = 269486080,
-        description = "Звуковая индикация клавиш климата.",
+        description = "空调按键声音反馈。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1766,7 +1766,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_CLIMATE_LOCK",
         value = 269484544,
-        description = "Блокировка управления климатом.",
+        description = "空调控制锁定。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1774,7 +1774,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_CLIMATE_ZONE",
         value = 268502272,
-        description = "Количество климатических зон.",
+        description = "空调分区数量。",
         possibleValues = mapOf(
             "CLIMATE_ZONE_DUAL" to 268502274,
             "CLIMATE_ZONE_FOUR" to 268502276,
@@ -1787,7 +1787,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_CO2_HIGHER_CONFIRM",
         value = 269353728,
-        description = "Подтверждение предупреждения о повышенном CO₂.",
+        description = "CO₂ 浓度过高警告确认。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1795,7 +1795,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_DEFROST_FRONT",
         value = 268697856,
-        description = "Антизапотевание лобового стекла.",
+        description = "前挡风玻璃防雾。",
         possibleValues = mapOf(
             "FRONTDEFROST_ON" to 1,
             "FRONTDEFROST_OFF" to 0
@@ -1806,7 +1806,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_DEFROST_FRONT_MAX",
         value = 268698112,
-        description = "Максимальный режим обдува/обогрева лобового стекла.",
+        description = "前挡风玻璃最大吹风/加热模式。",
         possibleValues = mapOf(
             "FRONTDEFROSTMAX_ON" to 1,
             "FRONTDEFROSTMAX_OFF" to 0
@@ -1817,7 +1817,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_DEFROST_REAR",
         value = 268698368,
-        description = "Обогрев заднего стекла.",
+        description = "后窗加热。",
         possibleValues = mapOf(
             "REARDEFROST_ON" to 1,
             "REARDEFROST_OFF" to 0
@@ -1828,7 +1828,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_DIRECTION_MODE",
         value = 268894976,
-        description = "Режим направленности обдува (Focus/Avoid/Custom).",
+        description = "送风定向模式（集中/避开/自定义）。",
         possibleValues = mapOf(
             "DIRECTION_MODE_AVOID" to 268894978,
             "DIRECTION_MODE_CUSTOM" to 268894723,
@@ -1841,7 +1841,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_DISPLAY_WINDOW_TAB",
         value = 269484800,
-        description = "Текущая вкладка окна климата.",
+        description = "当前空调窗口标签页。",
         possibleValues = mapOf(
             "DISPLAY_WINDOW_TAB_DEFAULT" to 269484801,
             "DISPLAY_WINDOW_TAB_HARDWARE_POP" to 269484804,
@@ -1857,7 +1857,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_ECO_SWITCH",
         value = 268960000,
-        description = "Эко‑режим A/C (снижение энергопотребления).",
+        description = "空调经济模式（降低能耗）。",
         possibleValues = mapOf(
             "ACECO_ON" to 1,
             "ACECO_OFF" to 0
@@ -1868,7 +1868,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_ELECTRICAL_AIR_VENT",
         value = 269746432,
-        description = "Электропривод заслонок воздуховодов.",
+        description = "风道风门电动执行器。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1876,7 +1876,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_FAN_SPEED",
         value = 268566784,
-        description = "Скорость вентилятора климат‑системы.",
+        description = "空调风扇转速。",
         possibleValues = mapOf(
             "FAN_SPEED_LEVEL_1" to 268566785,
             "FAN_SPEED_LEVEL_2" to 268566786,
@@ -1896,7 +1896,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_FAN_SPEED_BLOWER",
         value = 269752064,
-        description = "Команда изменить скорость вентилятора.",
+        description = "更改风扇转速命令。",
         possibleValues = mapOf(
             "HVAC_FUNC_FAN_SPEED_BLOWER_DOWN" to 269752066,
             "HVAC_FUNC_FAN_SPEED_BLOWER_UP" to 269752065,
@@ -1907,7 +1907,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_FAN_SPEED_HARD_KEY",
         value = 268567296,
-        description = "Событие клавиши скорости вентилятора.",
+        description = "风扇速度按键事件。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1915,7 +1915,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_FILTER_ELEMENT_LIFE",
         value = 269746944,
-        description = "Оставшийся ресурс салонного фильтра.",
+        description = "空调滤芯剩余寿命。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1923,7 +1923,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_G_CLEAN",
         value = 269485056,
-        description = "Интенсивная очистка воздуха (G‑Clean/IAPS).",
+        description = "强力空气净化（G-Clean/IAPS）。",
         possibleValues = mapOf(
             "GCLEAN_ON" to 1,
             "GCLEAN_OFF" to 0
@@ -1934,7 +1934,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_INTELLIGENT_DEODORIZATION",
         value = 269748224,
-        description = "Интеллектуальная дезодорация салона.",
+        description = "智能车内除味。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1949,7 +1949,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_IONIZER_CLS_WIN_POPUP",
         value = 269751552,
-        description = "Поп‑ап «Закройте окна» для ионизатора.",
+        description = "离子发生器“关闭车窗”弹出提示。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1957,7 +1957,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_IONIZER_CLS_WIN_POPUP_SETTING",
         value = 269751296,
-        description = "Настройка поп‑апа «Закройте окна».",
+        description = "“关闭车窗”弹出窗口设置。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1965,7 +1965,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_IONS_SWITCH",
         value = 268961024,
-        description = "Ионизатор воздуха: вкл/выкл.",
+        description = "空气离子发生器：开/关。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1973,7 +1973,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_OVERHEAT_PROTECTION",
         value = 268960768,
-        description = "Защита салона от перегрева на стоянке.",
+        description = "停车时车内过热保护。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1981,7 +1981,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_POST_CLIMATISATION",
         value = 269091328,
-        description = "Постклиматизация после поездки.",
+        description = "行驶后空调持续运行。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -1989,7 +1989,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_POWER",
         value = 268501248,
-        description = "Главный выключатель климат‑системы.",
+        description = "空调系统主开关。",
         possibleValues = mapOf(
             "POWER_CHARGE_MODE_FAIL" to 606078979,
             "POWER_CHARGE_MODE_FINISH" to 606078980,
@@ -2033,7 +2033,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_POWER_VR",
         value = 268505344,
-        description = "Голосовое включение/выключение климата.",
+        description = "语音控制空调开/关。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2041,7 +2041,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_PRE_CLIMATISATION",
         value = 269091072,
-        description = "Предклиматизация перед поездкой.",
+        description = "行驶前空调预调节。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2049,7 +2049,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_REFRESHING_FRAGRANCE_POP",
         value = 269160960,
-        description = "Уведомление об ароматизации.",
+        description = "香氛通知。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2064,7 +2064,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_SEAT_HEATING",
         value = 268763648,
-        description = "Подогрев сиденья (уровни/авто).",
+        description = "座椅加热（档位/自动）。",
         possibleValues = mapOf(
             "SEAT_HEATING_LEVEL_1" to 268763649,
             "SEAT_HEATING_LEVEL_2" to 268763650,
@@ -2078,7 +2078,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_SEAT_HEATING_LVLAUTO",
         value = 269751040,
-        description = "Авто‑уровень подогрева сиденья.",
+        description = "座椅加热自动调节。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2086,7 +2086,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_SEAT_MASSAGE",
         value = 268764928,
-        description = "Массаж сиденья (уровни/программы).",
+        description = "座椅按摩（档位/程序）。",
         possibleValues = mapOf(
             "SEAT_MASSAGE_ADJUST" to 759236612,
             "SEAT_MASSAGE_LEVEL_1" to 268764929,
@@ -2112,7 +2112,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_SEAT_MASSAGE_PROGRAM",
         value = 268765952,
-        description = "Выбор программы массажа сиденья.",
+        description = "选择座椅按摩程序。",
         possibleValues = mapOf(
             "SEAT_MASSAGE_PROGRAM_1" to 268765953,
             "SEAT_MASSAGE_PROGRAM_2" to 268765954,
@@ -2132,7 +2132,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_SEAT_MASSAGE_SWITCH",
         value = 268765696,
-        description = "Вкл/выкл массаж сиденья.",
+        description = "座椅按摩开/关。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2140,7 +2140,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_SEAT_VENTILATION",
         value = 268763392,
-        description = "Вентиляция сиденья (уровни/авто).",
+        description = "座椅通风（档位/自动）。",
         possibleValues = mapOf(
             "SEAT_VENTILATION_LEVEL_1" to 268763393,
             "SEAT_VENTILATION_LEVEL_2" to 268763394,
@@ -2154,7 +2154,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_SEAT_VENTILATION_LVLAUTO",
         value = 269750784,
-        description = "Авто‑уровень вентиляции сиденья.",
+        description = "座椅通风自动调节。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2162,7 +2162,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_STEERING_WHEEL_HEAT",
         value = 269025536,
-        description = "Подогрев рулевого колеса (уровни/авто).",
+        description = "方向盘加热（档位/自动）。",
         possibleValues = mapOf(
             "STEERING_WHEEL_HEAT_AUTO" to 269025551,
             "STEERING_WHEEL_HEAT_HIGH" to 269025539,
@@ -2176,7 +2176,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_SWEEPING_MODE",
         value = 268894720,
-        description = "Маятниковое перемещение жалюзи (качание).",
+        description = "摆叶摆动模式。",
         possibleValues = mapOf(
             "SWEEPING_MODE_LEFT_RIGHT" to 268894721,
             "SWEEPING_MODE_LR_AND_UD" to 268894723,
@@ -2189,7 +2189,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_TEMP",
         value = 268828928,
-        description = "Установка требуемой температуры.",
+        description = "设定目标温度。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2197,7 +2197,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_TEMP_DUAL",
         value = 268829952,
-        description = "Синхронизация/развязка температур по зонам.",
+        description = "分区温度同步/独立。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2205,7 +2205,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_TEMP_HARD_KEY",
         value = 268830464,
-        description = "Событие клавиши температуры.",
+        description = "温度按键事件。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2213,7 +2213,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_TEMP_MAX",
         value = 268829184,
-        description = "Верхний предел уставки температуры.",
+        description = "温度设定上限。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2221,7 +2221,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_TEMP_MIN",
         value = 268829440,
-        description = "Нижний предел уставки температуры.",
+        description = "温度设定下限。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2229,7 +2229,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_TEMP_OPTIMIZE",
         value = 269615616,
-        description = "Оптимизация регулировки температуры (AUTO).",
+        description = "温度调节优化（AUTO）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2237,7 +2237,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_TEMP_STEP",
         value = 268829696,
-        description = "Шаг изменения уставки температуры.",
+        description = "温度设定调节步进。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2245,7 +2245,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_TEMP_UNIT",
         value = 268830208,
-        description = "Единицы температуры для климата.",
+        description = "空调温度单位。",
         possibleValues = mapOf(
             "TEMPERATURE_UNIT_C" to 268830209,
             "TEMPERATURE_UNIT_F" to 268830210
@@ -2256,7 +2256,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "HVAC_FUNC_VENTILATION_ONTIME",
         value = 269485824,
-        description = "Запланированная вентиляция салона по времени.",
+        description = "定时车内通风。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2430,7 +2430,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 1,
         key = "INT_INFO_CONFIG_466",
         value = 1052163,
-        description = "Параметр конфигурации (код 466).",
+        description = "配置参数（代码 466）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2459,7 +2459,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 1,
         key = "INT_INFO_HIGHWAY_ASSIST",
         value = 1052161,
-        description = "Конфигурация функции Highway Assist.",
+        description = "高速公路辅助功能配置。",
         possibleValues = mapOf(
             "HIGHWAY_ASSIST_AUTO_ALLOWED_HANDS" to 132,
             "HIGHWAY_ASSIST_AUTO_HWA_NOT_HANDS" to 131,
@@ -2500,7 +2500,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "LAMP_EXTERIOR_LIGHT_CONTROL_AHBC",
         value = 537136644,
-        description = "Наружный свет: автоматический дальний (AHBC).",
+        description = "外部照明：自动远光（AHBC）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2508,7 +2508,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "LAMP_EXTERIOR_LIGHT_CONTROL_AUTOMATIC",
         value = 537136643,
-        description = "Наружный свет: автоматический режим.",
+        description = "外部照明：自动模式。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2516,7 +2516,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "LAMP_EXTERIOR_LIGHT_CONTROL_LOWBEAM",
         value = 537136642,
-        description = "Наружный свет: ближний свет.",
+        description = "外部照明：近光。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2524,7 +2524,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "LAMP_EXTERIOR_LIGHT_CONTROL_OFF",
         value = 0,
-        description = "Наружный свет: выключено.",
+        description = "外部照明：关闭。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2532,7 +2532,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "LAMP_EXTERIOR_LIGHT_CONTROL_POS_LIGHT",
         value = 537136641,
-        description = "Наружный свет: габаритные огни.",
+        description = "外部照明：示廓灯。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2540,7 +2540,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "PAS_FUNC_APA_SELF_RECOMMENDED",
         value = 587596032,
-        description = "Рекомендация места для автопарковки (APA).",
+        description = "自动泊车（APA）车位推荐。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2548,7 +2548,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "PAS_FUNC_AUT_PRKG_SLOT_NR_REQ",
         value = 588252672,
-        description = "Запрос/выбор номера парковочного места.",
+        description = "请求/选择停车位编号。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2556,7 +2556,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "PAS_FUNC_DRVR_ASSC_SYS_BTN_PUSH",
         value = 588252416,
-        description = "События кнопки ассистента парковки.",
+        description = "泊车辅助按钮事件。",
         possibleValues = mapOf(
             "DRVR_ASSC_SYS_BTN_PUSH_ABORT" to 588252428,
             "DRVR_ASSC_SYS_BTN_PUSH_CONFIRM_BTN" to 588252424,
@@ -2577,7 +2577,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "PAS_FUNC_DRVR_ASSC_SYS_PARK_MOD",
         value = 588252928,
-        description = "Выбор сценария парковки (паралл./перпендикуляр./выезд).",
+        description = "选择泊车方式（平行/垂直/驶出）。",
         possibleValues = mapOf(
             "DRVR_ASSC_SYS_PARK_MOD_CANCEL" to 588252929,
             "DRVR_ASSC_SYS_PARK_MOD_DEFAULT" to 2,
@@ -2602,7 +2602,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "PAS_FUNC_PAC_3DVIEW_LOCK",
         value = 587404288,
-        description = "Фиксация 3D‑вида камеры.",
+        description = "3D 摄像头视角锁定。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2610,7 +2610,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "PAS_FUNC_PAC_ACTIVATION",
         value = 587399424,
-        description = "Активация камер парковочного ассистента.",
+        description = "激活泊车辅助摄像头。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2618,7 +2618,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "PAS_FUNC_PAC_CAR_MODE_TRANSPARENT",
         value = 587407616,
-        description = "Режим «прозрачного шасси».",
+        description = "透明底盘模式。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2626,7 +2626,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "PAS_FUNC_PAC_STEER_LINK",
         value = 587399680,
-        description = "Связка траекторных линий с углом руля.",
+        description = "轨迹线与方向盘角度联动。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2641,7 +2641,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "PAS_FUNC_PAS_MUTE",
         value = 587268608,
-        description = "Отключение звука предупреждений парковочных датчиков.",
+        description = "关闭泊车雷达警告音。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2649,7 +2649,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "PAS_FUNC_PAS_TRAILER_PRESENT",
         value = 587268864,
-        description = "Режим прицепа для систем парковки.",
+        description = "泊车系统拖车模式。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2664,7 +2664,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "PAS_FUNC_PRKG_INTRPT_RELD_BTN",
         value = 588253184,
-        description = "Кнопка прерывания процесса парковки.",
+        description = "泊车过程中断按钮。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2672,7 +2672,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "PAS_FUNC_RCTA_WARNING_VOLUME",
         value = 587531520,
-        description = "Громкость предупреждений RCTA.",
+        description = "RCTA 警告音量。",
         possibleValues = mapOf(
             "RCTA_WARNING_VOLUME_HIGH" to 587531523,
             "RCTA_WARNING_VOLUME_LOW" to 587531521,
@@ -2685,7 +2685,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "PAS_FUNC_SAP_ACTIVATION",
         value = 587464960,
-        description = "Активация функции удалённой/смарт‑парковки (SAP).",
+        description = "激活远程/智能泊车（SAP）功能。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2693,7 +2693,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SCENE_FUNC_CSD_DRIVER_THEATER_MODE",
         value = 788664080,
-        description = "Сценарий: «театральный режим» для водителя.",
+        description = "场景：驾驶员“剧院模式”。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2701,7 +2701,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SCENE_FUNC_CSD_PASSENGER_THEATER_MODE",
         value = 788664096,
-        description = "Сценарий: «театральный режим» для пассажира.",
+        description = "场景：乘客“剧院模式”。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2709,7 +2709,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SCENE_FUNC_NAP_MODE",
         value = 788662272,
-        description = "Сценарий: режим сна/отдыха.",
+        description = "场景：睡眠/休息模式。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2717,7 +2717,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SCENE_FUNC_PSD_PASSENGER_THEATER_MODE",
         value = 788664112,
-        description = "Сценарий: «театральный режим» (PSD).",
+        description = "场景：“剧院模式”（PSD）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2725,7 +2725,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SCENE_FUNC_SEAT_ADJMT_REQ",
         value = 788664320,
-        description = "Сценарий: запрос на автонастройку сиденья.",
+        description = "场景：请求座椅自动调节。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2733,7 +2733,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SCENE_FUNC_SEAT_BACK_TARG_POS_AG",
         value = 788664576,
-        description = "Целевая позиция наклона спинки сиденья (угол).",
+        description = "目标座椅靠背倾斜位置（角度）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2741,7 +2741,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SCENE_FUNC_SEAT_CUSH_EXT_TARG_POS_PERC",
         value = 788665600,
-        description = "Целевая длина выдвижной подушки, %.",
+        description = "目标坐垫伸出长度，%。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2749,7 +2749,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SCENE_FUNC_SEAT_CUSH_TILT_TARG_POS_PERC",
         value = 788665344,
-        description = "Целевой наклон подушки, %.",
+        description = "目标坐垫倾斜角度，%。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2757,7 +2757,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SCENE_FUNC_SEAT_HEI_TARG_POS_PERC",
         value = 788665088,
-        description = "Целевая высота сиденья, %.",
+        description = "目标座椅高度，%。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2765,7 +2765,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SCENE_FUNC_SEAT_LEN_TARG_POS_PERC",
         value = 788664832,
-        description = "Целевая продольная позиция сиденья, %.",
+        description = "目标座椅纵向位置，%。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2773,7 +2773,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SCENE_FUNC_WASH_MODE",
         value = 788595200,
-        description = "Сценарий: режим мойки автомобиля.",
+        description = "场景：洗车模式。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2781,7 +2781,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_ABS_WARNING",
         value = 1058304,
-        description = "Индикатор ABS (вкл/выкл/мигает).",
+        description = "ABS 指示灯（开/关/闪烁）。",
         possibleValues = mapOf(
             "ABS_WARNING_STATE_FLSG" to 1058306,
             "ABS_WARNING_STATE_OFF" to 1058308,
@@ -2801,7 +2801,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_ALRM_STS",
         value = 2122496,
-        description = "Состояние охранной сигнализации.",
+        description = "防盗报警状态。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2809,7 +2809,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_AQI_LEVEL_AMBIENT",
         value = 2106112,
-        description = "Качество наружного воздуха (AQI).",
+        description = "室外空气质量（AQI）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2835,7 +2835,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_BRK_WARNING",
         value = 1058048,
-        description = "Индикатор тормозной системы.",
+        description = "制动系统指示灯。",
         possibleValues = mapOf(
             "BRK_WARNING_STATE_OFF" to 1058050,
             "BRK_WARNING_STATE_ON" to 1058049,
@@ -2860,7 +2860,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_CAR_SPEED",
         value = 1048832,
-        description = "Скорость автомобиля (датчик).",
+        description = "车速（传感器）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2868,7 +2868,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_CAR_SPEED_FROM_IPK",
         value = 1055232,
-        description = "Скорость по данным комбинации приборов.",
+        description = "仪表盘显示车速。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2876,7 +2876,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_DAY_NIGHT",
         value = 2101248,
-        description = "Режим день/ночь (по датчику света).",
+        description = "日间/夜间模式（根据光线传感器）。",
         possibleValues = mapOf(
             "DAY_NIGHT_MODE_DAY" to 2101249,
             "DAY_NIGHT_MODE_NIGHT" to 2101250,
@@ -2888,7 +2888,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_DRIVER_TIREDNESS_STATUS",
         value = 3149824,
-        description = "Индикатор усталости/внимания водителя.",
+        description = "驾驶员疲劳/注意力指示灯。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2896,7 +2896,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_DRVR_SEAT_BACKREST_PERC",
         value = 1058560,
-        description = "Положение спинки сиденья водителя, %.",
+        description = "驾驶员座椅靠背位置，%。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2904,7 +2904,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_DRVR_SEAT_CUSHION_PERC",
         value = 1058304,
-        description = "Положение подушки сиденья водителя, %.",
+        description = "驾驶员座椅坐垫位置，%。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2912,7 +2912,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_DRVR_SEAT_HEIGHT_PERC",
         value = 1057792,
-        description = "Высота сиденья водителя, %.",
+        description = "驾驶员座椅高度，%。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2920,7 +2920,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_DRVR_SEAT_LENGTH_PERC",
         value = 1058048,
-        description = "Продольное положение сиденья водителя, %.",
+        description = "驾驶员座椅纵向位置，%。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2928,7 +2928,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_ENDURANCE_MILEAGE",
         value = 1050624,
-        description = "Оценочный запас хода (общий).",
+        description = "总续航估算。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2936,7 +2936,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_ENDURANCE_MILEAGE_EV",
         value = 1054976,
-        description = "Оценочный запас хода (EV‑режим).",
+        description = "纯电续航估算。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2944,7 +2944,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_ENDURANCE_MILEAGE_FUEL",
         value = 1054720,
-        description = "Оценочный запас хода (на топливе).",
+        description = "燃油续航估算。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2952,7 +2952,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_ENGINE_COOLANT_LEVEL",
         value = 2098432,
-        description = "Уровень охлаждающей жидкости.",
+        description = "冷却液液位。",
         possibleValues = mapOf(
             "ENGINE_COOLANT_LEVEL_LOW" to 2098434,
             "ENGINE_COOLANT_LEVEL_LOW_1" to 2098435,
@@ -2965,7 +2965,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_ENGINE_COOLANT_TEMPERATURE",
         value = 1052416,
-        description = "Температура охлаждающей жидкости (датчик).",
+        description = "冷却液温度（传感器）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -2973,7 +2973,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_ENGINE_OIL_LEVEL",
         value = 2098176,
-        description = "Уровень моторного масла.",
+        description = "机油油位。",
         possibleValues = mapOf(
             "ENGINE_OIL_LEVEL_HIGH" to 2098180,
             "ENGINE_OIL_LEVEL_LOW_1" to 2098178,
@@ -2989,7 +2989,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_ENGINE_OIL_PERC",
         value = 1057792,
-        description = "Остаточный ресурс моторного масла, %.",
+        description = "机油剩余寿命，%。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3004,7 +3004,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_ESC_WARNING",
         value = 1058560,
-        description = "Индикатор системы стабилизации (ESC).",
+        description = "车身稳定系统（ESC）指示灯。",
         possibleValues = mapOf(
             "ESC_WARNING_STATE_FLSG" to 1058562,
             "ESC_WARNING_STATE_OFF" to 1058564,
@@ -3017,7 +3017,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_EV_BATTERY_LEVEL",
         value = 1051136,
-        description = "Уровень заряда HV‑батареи (SoC).",
+        description = "高压电池 SoC。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3025,7 +3025,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_FUEL_LEVEL",
         value = 1050112,
-        description = "Уровень топлива (датчик).",
+        description = "燃油液位（传感器）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3033,7 +3033,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_GEAR",
         value = 2097664,
-        description = "Индикация выбранной передачи.",
+        description = "档位显示。",
         possibleValues = mapOf(
             "GEAR_LVL_ONE" to 609225730,
             "GEAR_LVL_THREE" to 609225732,
@@ -3046,7 +3046,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_IGNITION_STATE",
         value = 2097408,
-        description = "Состояние зажигания.",
+        description = "点火状态。",
         possibleValues = mapOf(
             "IGNITION_STATE_ACC" to 2097412,
             "IGNITION_STATE_DRIVING" to 2097415,
@@ -3062,7 +3062,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_LIGHT",
         value = 2100992,
-        description = "Освещённость (датчик света).",
+        description = "光照强度（光线传感器）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3070,7 +3070,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_ODOMETER",
         value = 1050368,
-        description = "Пробег (одометр).",
+        description = "里程（里程表）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3078,7 +3078,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_PASS_SEAT_BACKREST_PERC",
         value = 1059584,
-        description = "Положение спинки сиденья пассажира, %.",
+        description = "乘客座椅靠背位置，%。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3086,7 +3086,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_PASS_SEAT_CUSHION_PERC",
         value = 1059328,
-        description = "Положение подушки сиденья пассажира, %.",
+        description = "乘客座椅坐垫位置，%。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3094,7 +3094,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_PASS_SEAT_HEIGHT_PERC",
         value = 1058816,
-        description = "Высота сиденья пассажира, %.",
+        description = "乘客座椅高度，%。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3102,7 +3102,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_PASS_SEAT_LENGTH_PERC",
         value = 1059072,
-        description = "Продольное положение сиденья пассажира, %.",
+        description = "乘客座椅纵向位置，%。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3110,7 +3110,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_PM25_LEVEL_INDOOR",
         value = 2105856,
-        description = "Уровень PM2.5 в салоне.",
+        description = "车内 PM2.5 浓度。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3118,7 +3118,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_RAIN",
         value = 1052160,
-        description = "Уровень сигнала датчика дождя/чувствительности.",
+        description = "雨量传感器信号/灵敏度。",
         possibleValues = mapOf(
             "RAINSENSORSENSILVL_LVL1" to 0,
             "RAINSENSORSENSILVL_LVL2" to 1,
@@ -3134,7 +3134,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_SAFE_BELT_DRIVER",
         value = 2101760,
-        description = "Состояние ремня безопасности водителя.",
+        description = "驾驶员安全带状态。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3142,7 +3142,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_SEAT_OCCUPATION_STATUS_DRIVER",
         value = 2110208,
-        description = "Занятость сиденья водителя.",
+        description = "驾驶员座椅占用。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3150,7 +3150,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_SEAT_OCCUPATION_STATUS_PASSENGER",
         value = 2110464,
-        description = "Занятость сиденья переднего пассажира.",
+        description = "前排乘客座椅占用。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3158,7 +3158,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_SEAT_OCCUPATION_STATUS_SECOND_ROW_LEFT",
         value = 2110720,
-        description = "Занятость второго ряда: левое место.",
+        description = "第二排左侧座位占用。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3166,7 +3166,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_SEAT_OCCUPATION_STATUS_SECOND_ROW_RIGHT",
         value = 2110976,
-        description = "Занятость второго ряда: правое место.",
+        description = "第二排右侧座位占用。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3202,7 +3202,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_STEERING_WHEEL_ANGLE",
         value = 1052672,
-        description = "Угол поворота рулевого колеса.",
+        description = "方向盘转角。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3210,7 +3210,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_TEMPERATURE_AMBIENT",
         value = 1051392,
-        description = "Температура наружного воздуха.",
+        description = "室外温度。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3218,7 +3218,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_TEMPERATURE_INDOOR",
         value = 1051648,
-        description = "Температура в салоне.",
+        description = "车内温度。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3226,7 +3226,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_TIREDNESS_DRIVING_STATE",
         value = 3148544,
-        description = "Состояние усталости при вождении.",
+        description = "驾驶疲劳状态。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3234,7 +3234,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_VEH_MTN_STATE",
         value = 3148288,
-        description = "Состояние движения/устойчивости авто.",
+        description = "车辆行驶/稳定性状态。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3242,7 +3242,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_WARN_ENGINE_COOLANT_SYSTEM_FAULT",
         value = 3148032,
-        description = "Предупреждение: неисправность системы охлаждения.",
+        description = "警告：冷却系统故障。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3250,7 +3250,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_WARN_ENGINE_COOLANT_TEMP_HIGH",
         value = 3146752,
-        description = "Предупреждение: высокая температура ОЖ.",
+        description = "警告：冷却液温度过高。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3258,7 +3258,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_WARN_ENGINE_OIL_PRESSURE",
         value = 3146496,
-        description = "Предупреждение: давление моторного масла.",
+        description = "警告：机油压力过高。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3266,7 +3266,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_WARN_ENGINE_OIL_SYSTEM_FAULT",
         value = 3147776,
-        description = "Предупреждение: неисправность системы смазки.",
+        description = "警告：润滑系统故障。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3274,7 +3274,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_WARN_EV_BATTERY_LOW",
         value = 3146240,
-        description = "Предупреждение: низкий заряд HV‑батареи.",
+        description = "警告：高压电池电量低。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3282,7 +3282,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_WARN_FUEL_RED",
         value = 3145984,
-        description = "Предупреждение: низкий уровень топлива.",
+        description = "警告：燃油量低。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3290,7 +3290,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_WARN_TRANSMISSION_TEMP_HIGH",
         value = 3147008,
-        description = "Предупреждение: высокая температура трансмиссии.",
+        description = "警告：变速箱温度过高。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3298,7 +3298,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_ACC_WITH_TSR",
         value = 671482624,
-        description = "Адаптивный круиз с учётом распознавания знаков (TSR).",
+        description = "带交通标志识别（TSR）的自适应巡航。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3306,7 +3306,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_ADAS_PADDLE_LANE_CHANGE_ASSIST",
         value = 671619840,
-        description = "Смена полосы лепестками (вкл/выкл).",
+        description = "拨片换道（开/关）。",
         possibleValues = mapOf(
             "ADAS_PADDLE_LANE_CHANGE_ASSIST_DISABLE" to 1051904,
             "ADAS_PADDLE_LANE_CHANGE_ASSIST_ENABLE" to 1051905,
@@ -3317,7 +3317,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AIRING_WHEN_SMOKING_MODE",
         value = 738395136,
-        description = "Режим проветривания при курении.",
+        description = "吸烟通风模式。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3325,7 +3325,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AI_ASSIST_DEFAULT_ON",
         value = 671613440,
-        description = "Включать AI‑ассистента по умолчанию.",
+        description = "默认启用 AI 助手。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3333,7 +3333,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AI_ASSIST_FUSION_NAVI",
         value = 671613696,
-        description = "Использовать навигацию в работе AI‑ассистента.",
+        description = "AI 助手使用导航功能。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3341,7 +3341,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AI_ASSIST_LANE_CHANGE_CONFIRM",
         value = 671614464,
-        description = "Требовать подтверждение смены полосы.",
+        description = "变道需要确认。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3349,7 +3349,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AI_ASSIST_LANE_CHANGE_STRATEGY",
         value = 671614208,
-        description = "Стратегия смены полосы (мягкая/стандартная/активная).",
+        description = "变道策略（柔和/标准/主动）。",
         possibleValues = mapOf(
             "AI_ASSIST_LANE_CHANGE_STRATEGY_GENTLE" to 671614209,
             "AI_ASSIST_LANE_CHANGE_STRATEGY_OFF" to 0,
@@ -3362,7 +3362,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AI_ASSIST_LANE_CHANGE_WARNING",
         value = 671614720,
-        description = "Тип предупреждения при смене полосы (голос/вибрация/оба).",
+        description = "变道警告类型（语音/振动/两者）。",
         possibleValues = mapOf(
             "AI_ASSIST_LANE_CHANGE_WARNING_BOTH" to 671614723,
             "AI_ASSIST_LANE_CHANGE_WARNING_OFF" to 0,
@@ -3375,7 +3375,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AI_ASSIST_OUT_OVERTAKING_LANE",
         value = 671613952,
-        description = "Авто‑уход из полосы обгона.",
+        description = "自动驶离超车道。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3383,7 +3383,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AI_DRIVER_ASSIST",
         value = 671613184,
-        description = "Главный переключатель AI‑ассистента.",
+        description = "AI 助手主开关。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3391,7 +3391,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AMBIENCE_DOOR_OPEN_MUSIC_AUD_TYP",
         value = 709886976,
-        description = "Тип звука при открытии двери.",
+        description = "开门声音类型。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3413,7 +3413,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AMBIENCE_LIGHT_COLOR_SET",
         value = 537528576,
-        description = "Выбор цвета атмосферной подсветки.",
+        description = "选择氛围灯颜色。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3421,7 +3421,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AMBIENCE_LIGHT_CONTROL_MODE",
         value = 705168896,
-        description = "Режим управления подсветкой (цвет/музыка/экран/время).",
+        description = "背光控制模式（颜色/音乐/屏幕/时间）。",
         possibleValues = mapOf(
             "AMBIENCE_LIGHT_CONTROL_MODE_COLOR" to 705168900,
             "AMBIENCE_LIGHT_CONTROL_MODE_MORE" to 705168897,
@@ -3435,7 +3435,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AMBIENCE_LIGHT_EFFECT_SET",
         value = 705167616,
-        description = "Выбор эффекта подсветки.",
+        description = "选择背光效果。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3450,7 +3450,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AMBIENCE_LIGHT_EXPERIENCE",
         value = 537526528,
-        description = "Сценарий работы подсветки (полный/кастом).",
+        description = "背光工作模式（完整/自定义）。",
         possibleValues = mapOf(
             "AMBIENCE_LIGHT_EXPERIENCE_CUSTOM" to 537526530,
             "AMBIENCE_LIGHT_EXPERIENCE_FULL" to 537526529,
@@ -3461,7 +3461,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AMBIENCE_LIGHT_GOODBYE_SHOW",
         value = 704971264,
-        description = "Прощальная световая анимация.",
+        description = "告别灯光动画。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3469,7 +3469,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AMBIENCE_LIGHT_ICHARGING_REMIND",
         value = 705168128,
-        description = "Световое напоминание о зарядке.",
+        description = "充电灯光提示。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3477,7 +3477,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AMBIENCE_LIGHT_INTENSITY_SET",
         value = 704708864,
-        description = "Яркость атмосферной подсветки.",
+        description = "氛围灯亮度。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3485,7 +3485,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AMBIENCE_LIGHT_INTERACTIVE_EFFECT",
         value = 537528320,
-        description = "Интерактивные эффекты подсветки.",
+        description = "交互式背光效果。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3517,7 +3517,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AMBIENCE_LIGHT_MUSIC",
         value = 704974592,
-        description = "Музыкальный режим подсветки.",
+        description = "音乐律动背光模式。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3525,7 +3525,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AMBIENCE_LIGHT_MUSIC_SHOW_MODE",
         value = 704972800,
-        description = "Режим показа подсветки под музыку.",
+        description = "音乐律动背光模式。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3533,7 +3533,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AMBIENCE_LIGHT_PHONE_CALL_REMINDER",
         value = 704971776,
-        description = "Световое напоминание о звонке.",
+        description = "来电灯光提示。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3548,7 +3548,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AMBIENCE_LIGHT_SOLID_COLOR_SET",
         value = 709885952,
-        description = "Выбор фиксированного цвета подсветки.",
+        description = "选择固定背光颜色。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3556,7 +3556,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AMBIENCE_LIGHT_THEME_COLOR",
         value = 704709120,
-        description = "Выбор темы/цвета подсветки (предустановки).",
+        description = "选择背光主题/颜色（预设）。",
         possibleValues = mapOf(
             "AMBIENCE_LIGHT_THEME_COLOR_APPLE_GREEN" to 704709132,
             "AMBIENCE_LIGHT_THEME_COLOR_BLUE" to 704709126,
@@ -3592,7 +3592,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AMBIENCE_LIGHT_WELCOME_SHOW",
         value = 704971008,
-        description = "Приветственная световая анимация.",
+        description = "迎宾灯光动画。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3600,7 +3600,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AMBIENCE_LIGHT_WELCOME_SHOW_MODE",
         value = 704972544,
-        description = "Режим приветственной анимации.",
+        description = "迎宾动画模式。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3608,7 +3608,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AMBIENCE_MUSIC_SHOW_PASS_EXCLU",
         value = 705169920,
-        description = "Исключать пассажирскую сторону из музыкальной анимации.",
+        description = "将乘客侧从音乐律动动画中排除。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3616,7 +3616,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AMBIENCE_OPEN_PASS_DOOR_SHOW",
         value = 705169664,
-        description = "Световая анимация при открытии двери.",
+        description = "开门灯光动画。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3624,7 +3624,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AMBIENCE_WELCOME_AUD_REQ",
         value = 709886720,
-        description = "Запрос звукового приветствия.",
+        description = "请求语音问候。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3632,7 +3632,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_APPROACH_TAIL_UNLOCK",
         value = 738264320,
-        description = "Авторазблокировка багажника при приближении.",
+        description = "靠近时后备箱自动解锁。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3640,7 +3640,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_APPROACH_UNLOCK",
         value = 738263296,
-        description = "Авторазблокировка при приближении ключа.",
+        description = "钥匙靠近时自动解锁。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3648,7 +3648,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_ARTIFICIAL_SOUND_TYPE",
         value = 538575872,
-        description = "Тип внешнего звука оповещения (AVAS).",
+        description = "外部提示音类型（AVAS）。",
         possibleValues = mapOf(
             "ARTIFICIAL_SOUND_TYPE_1" to 538575873,
             "ARTIFICIAL_SOUND_TYPE_2" to 538575874,
@@ -3666,7 +3666,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AUDIBLE_LOCKING_FEEDBACK",
         value = 537920256,
-        description = "Звуковое подтверждение запирания.",
+        description = "锁车声音确认。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3674,7 +3674,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AUDIO_SEPARATED",
         value = 771948800,
-        description = "Разделение аудио (водитель/пассажир).",
+        description = "音频分区（驾驶员/乘客）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3682,7 +3682,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AUTONOMOUS_EMERGENCY_BRAKING",
         value = 537333248,
-        description = "Автоматическое экстренное торможение (AEB).",
+        description = "自动紧急制动（AEB）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3690,7 +3690,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AUTONOMOUS_EMERGENCY_BRAKING_WARN",
         value = 537333249,
-        description = "Настройки предупреждения AEB.",
+        description = "AEB 警告设置。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3698,7 +3698,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AUTO_CLOSE_ROOF_RAINY",
         value = 537395968,
-        description = "Автозакрытие крыши при дожде.",
+        description = "下雨时天窗自动关闭。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3706,7 +3706,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AUTO_CLOSE_WINDOW",
         value = 537396224,
-        description = "Автозакрытие окон при запирании/удержании.",
+        description = "锁车/长按锁车时车窗自动关闭。",
         possibleValues = mapOf(
             "AUTO_CLOSE_WINDOW_KEY_LONG_PRESS" to 537396226,
             "AUTO_CLOSE_WINDOW_OFF" to 0,
@@ -3718,7 +3718,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AUTO_HOLD",
         value = 537265152,
-        description = "Auto Hold: удержание после остановки.",
+        description = "Auto Hold: удержание после 停止.",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3726,7 +3726,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AUTO_LANE_CHANGE_ASSIST",
         value = 671351040,
-        description = "Ассистент автоматической смены полосы.",
+        description = "自动变道辅助。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3734,7 +3734,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AUTO_REAR_WIPING",
         value = 537657856,
-        description = "Автовключение заднего стеклоочистителя.",
+        description = "后雨刮器自动启动。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3742,7 +3742,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AUTO_SHOW_MODE",
         value = 540279296,
-        description = "Демонстрационный режим интерфейса (Auto Show).",
+        description = "界面演示模式（Auto Show）。",
         possibleValues = mapOf(
             "SETTING_FUNC_AUTO_SHOW_MODE_TEXT_FALSE" to 1,
             "SETTING_FUNC_AUTO_SHOW_MODE_TEXT_GEAR" to 2,
@@ -3754,7 +3754,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AUTO_SHOW_MODE_ENTER_CONDITIONS",
         value = 540279040,
-        description = "Условия входа в демо‑режим.",
+        description = "进入演示模式的条件。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3762,7 +3762,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AUTO_SHOW_MODE_ICON",
         value = 540280832,
-        description = "Иконка демо‑режима.",
+        description = "演示模式图标。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3770,7 +3770,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AUTO_SHOW_MODE_POPUP",
         value = 540280064,
-        description = "Поп‑ап демо‑режима.",
+        description = "演示模式弹出窗口。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3778,7 +3778,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AUTO_SHOW_MODE_TEXT",
         value = 540280576,
-        description = "Текст/режим отображения в демо‑режиме.",
+        description = "演示模式文本/显示方式。",
         possibleValues = mapOf(
             "SETTING_FUNC_AUTO_SHOW_MODE_TEXT_FALSE" to 1,
             "SETTING_FUNC_AUTO_SHOW_MODE_TEXT_GEAR" to 2,
@@ -3790,7 +3790,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AUTO_TRAILER_LAMP_CHECK",
         value = 537135872,
-        description = "Автоматическая проверка ламп прицепа.",
+        description = "拖车灯光自动检测。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3798,7 +3798,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_AWAY_LOCK",
         value = 738263552,
-        description = "Автоблокировка при удалении ключа.",
+        description = "拔出钥匙后自动锁车。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3806,7 +3806,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_BACKLIGHT_LINKAGE",
         value = 687931648,
-        description = "Связать яркость с датчиком освещённости/дневным режимом.",
+        description = "将亮度与光线传感器/日间模式联动。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3814,7 +3814,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_BREATH_SCREEN_MODE",
         value = 540284928,
-        description = "Режим «дыхания» подсветки экрана.",
+        description = "屏幕背光“呼吸”模式。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3822,7 +3822,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_BRIGHTNESS_BACKLIGHT",
         value = 687997184,
-        description = "Яркость подсветки.",
+        description = "背光亮度。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3830,7 +3830,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_BRIGHTNESS_BACKLIGHT_MAX",
         value = 687997440,
-        description = "Максимальная яркость подсветки.",
+        description = "背光最大亮度。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3838,7 +3838,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_BRIGHTNESS_BACKLIGHT_MIN",
         value = 687997696,
-        description = "Минимальная яркость подсветки.",
+        description = "背光最小亮度。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3846,7 +3846,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_BRIGHTNESS_BACKLIGHT_STEP",
         value = 687997952,
-        description = "Шаг изменения яркости подсветки.",
+        description = "背光亮度调节步进。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3854,7 +3854,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_BRIGHTNESS_DAY",
         value = 538247936,
-        description = "Яркость дисплея (дневной режим).",
+        description = "显示屏亮度（日间模式）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3862,7 +3862,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_BRIGHTNESS_DAYMODE",
         value = 688062976,
-        description = "Яркость в дневном режиме.",
+        description = "日间模式亮度。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3870,7 +3870,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_BRIGHTNESS_DIM",
         value = 687998208,
-        description = "Яркость (режим DIM).",
+        description = "亮度（DIM 模式）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3878,7 +3878,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_BRIGHTNESS_DIM_MAX",
         value = 687998464,
-        description = "Максимальная яркость (DIM).",
+        description = "最大亮度（DIM）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3886,7 +3886,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_BRIGHTNESS_DIM_MIN",
         value = 687998720,
-        description = "Минимальная яркость (DIM).",
+        description = "最小亮度（DIM）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3894,7 +3894,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_BRIGHTNESS_DIM_STEP",
         value = 687998976,
-        description = "Шаг яркости (DIM).",
+        description = "亮度调节步进（DIM）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3902,7 +3902,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_BRIGHTNESS_MAX",
         value = 538248448,
-        description = "Максимальная яркость дисплея.",
+        description = "显示屏最大亮度。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3910,7 +3910,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_BRIGHTNESS_MIN",
         value = 538248704,
-        description = "Минимальная яркость дисплея.",
+        description = "显示屏最小亮度。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3918,7 +3918,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_BRIGHTNESS_NIGHT",
         value = 538248192,
-        description = "Яркость дисплея (ночной режим).",
+        description = "显示屏亮度（夜间模式）。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3933,7 +3933,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_BRIGHTNESS_STEP",
         value = 538248960,
-        description = "Шаг яркости дисплея.",
+        description = "显示屏亮度调节步进。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3941,7 +3941,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_CAE_SWITCH",
         value = 771818240,
-        description = "Активное звучание (CAE): вкл/выкл.",
+        description = "主动声浪（CAE）：开/关。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -3949,7 +3949,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_CARPET_LIGHT",
         value = 721488640,
-        description = "Подсветка зоны у двери: режим/время.",
+        description = "车门区域照明：模式/时间。",
         possibleValues = mapOf(
             "CARPET_LIGHT_THEME_MODE_1" to 721489153,
             "CARPET_LIGHT_THEME_MODE_2" to 721489154,
@@ -3965,7 +3965,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_CARPET_LIGHT_SWT",
         value = 709887232,
-        description = "Подсветка зоны у двери: вкл/выкл.",
+        description = "车门区域照明：开/关。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -4519,7 +4519,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_LAMP_EXTERIOR_LIGHT_CONTROL",
         value = 537136640,
-        description = "Режим света фар",
+        description = "大灯模式",
         possibleValues = mapOf(
             "LAMP_EXTERIOR_LIGHT_CONTROL_POS_LIGHT" to 537136641,
             "LAMP_EXTERIOR_LIGHT_CONTROL_LOWBEAM" to 537136642,
@@ -4681,7 +4681,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 2,
         key = "SETTING_FUNC_MIRROR_DIPPING",
         value = 537461504,
-        description = "Функция автоматического наклона пассажирского зеркала при движении задним ходом, чтобы лучше видеть бордюр/разметку.",
+        description = "倒车时乘客侧后视镜自动下翻功能，以便更好地观察路沿/标线。",
         possibleValues = mapOf(
             "MIRROR_DIPPING_BOTH" to 537461507,
             "MIRROR_DIPPING_DRIVER" to 537461505,
@@ -7937,7 +7937,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_CO2_INDOOR",
         value = 1051904,
-        description = "Уровень CO₂ в салоне.",
+        description = "车内 CO₂ 浓度。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -8050,7 +8050,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_PM25_LEVEL_AMBIENT",
         value = 2105600,
-        description = "Уровень PM2.5 снаружи.",
+        description = "车外 PM2.5 浓度。",
         possibleValues = emptyMap()
     ),
     PropertyData(
@@ -8128,7 +8128,7 @@ fun getAllProperty(): List<PropertyData> = listOf(
         type = 3,
         key = "SENSOR_TYPE_RPM",
         value = 1050880,
-        description = "Обороты двигателя (RPM), об/мин.",
+        description = "发动机转速（RPM）。",
         possibleValues = emptyMap()
     ),
     PropertyData(

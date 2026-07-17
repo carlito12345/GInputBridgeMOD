@@ -165,6 +165,7 @@
     <string name="not_that_interested">Not that interested</string>
     <string name="configurator">Configurator</string>
     <string name="search">Search</string>
+    <string name="no_search_results">没有找到应用</string>
     <string name="favorites_display">Functions added to \"Favorites\" will be displayed here</string>
     <string name="nothing_found">Nothing found</string>
 
@@ -263,7 +264,7 @@
     <string name="attention">Attention</string>
     <string name="delegated_to_debugm">Works via DebugM</string>
     <string name="custom_driving_modes_warning">The use of non-standard driving modes and their impact on vehicle components and assemblies is not sufficiently studied. Use them at your own risk.</string>
-    <string name="driving_mode_restore_warning">If you are already using mode restoration via DebugM or MConfig, it’s better to stick to one. GIB may restore modes slightly faster, which can disrupt the mode restoration logic in DebugM.</string>
+    <string name="driving_mode_restore_warning">If you are already using mode restoration via DebugM or MConfig, it’s better to stick to one. GLauncher may restore modes slightly faster, which can disrupt the mode restoration logic in DebugM.</string>
     <string name="overlay_size">Overlay size</string>
     <string name="vertical_offset">Vertical offset</string>
     <string name="steering_wheel_buttons">Steering wheel buttons</string>
@@ -312,7 +313,7 @@
     <string name="import_settings">Import settings</string>
     <string name="import_settings_desc">Select a file to import all settings. Your current settings will be lost.</string>
     <string name="import_export_settings">Import and export settings</string>
-    <string name="free_button_action_title">To free up a button action for binding via GIB:</string>
+    <string name="free_button_action_title">To free up a button action for binding via GLauncher:</string>
     <string name="standard_system_actions">Standard system actions:</string>
     <string name="cut_system_actions">Cut system actions:</string>
     <string name="standard">Standard</string>
@@ -343,7 +344,7 @@
     <string name="headlight">Headlight</string>
     <string name="headlight_settings">Headlight</string>
     <string name="system_parameters">System parameters</string>
-    <string name="free_button_action_custom">To free up a button action for custom bindings, select one of the green (Custom) actions. After this, the button action will become available in GIB. For Atlas, additional steps are required to disable.</string>
+    <string name="free_button_action_custom">To free up a button action for custom bindings, select one of the green (Custom) actions. After this, the button action will become available in GLauncher. For Atlas, additional steps are required to disable.</string>
     <string name="turn_signal_volume">Turn signal sound volume</string>
     <string name="low">Low</string>
     <string name="medium">Medium</string>
@@ -732,4 +733,44 @@ In response to GET_*_INFO, the action com.salat.gbinder.INFO_VALUE_RESULT is rec
     <string name="cluster_bg_err_no_file">No cluster file loaded</string>
     <string name="cluster_bg_err_unknown">Something went wrong</string>
     <string name="cluster_theme_replacement_desc">This feature replaces the pre-installed instrument cluster themes. If the themes do not switch in your system, there is no point in trying to replace them.</string>
+
+    <!-- Floating Button -->
+    <string name="floating_button">Floating button</string>
+    <string name="floating_button_desc">Show a floating shortcut button over the screen</string>
+    <string name="floating_button_settings">Floating button settings</string>
+    <string name="gesture_single_click">Single click</string>
+    <string name="gesture_double_click">Double click</string>
+    <string name="gesture_triple_click">Triple click</string>
+    <string name="gesture_long_press">Long press</string>
+    <string name="gesture_swipe_up">Swipe up</string>
+    <string name="gesture_swipe_down">Swipe down</string>
+    <string name="gesture_swipe_left">Swipe left</string>
+    <string name="gesture_swipe_right">Swipe right</string>
+    <string name="gesture_none">None</string>
+    <string name="gesture_toggle_launcher">Toggle launcher</string>
+    <string name="gesture_launch_app">Launch app</string>
+
+    <!-- Permission Manager -->
+    <string name="permission_management">Permission management</string>
+    <string name="permission_management_desc">View and manage app permissions via ADB</string>
+    <string name="grant_all_permissions">Grant all permissions</string>
+    <string name="grant_all_permissions_desc">Grant all available runtime permissions to the selected app</string>
+    <string name="grant">Grant</string>
+    <string name="granting">Granting...</string>
+    <string name="select_all">Select all</string>
+    <string name="deselect_all">Deselect all</string>
+    <string name="select_app">Select application</string>
+
+    <!-- Hidden Apps -->
+    <string name="hide_app">Hide</string>
+    <string name="unhide_app">Unhide</string>
+    <string name="show_hidden_apps">Show hidden apps</string>
+    <string name="show_hidden_apps_desc">Show previously hidden apps in the all-apps grid</string>
+    <string name="app_hidden">App is hidden</string>
+
+
+    <!-- Root Mode -->
+    <string name="root_mode">Root mode</string>
+    <string name="root_mode_desc">Execute commands via su instead of ADB. Requires root access.</string>
+
 </resources>

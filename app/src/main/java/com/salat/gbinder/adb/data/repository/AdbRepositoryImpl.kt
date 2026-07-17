@@ -72,6 +72,9 @@ class AdbRepositoryImpl(private val dataStore: DataStoreRepository) : AdbReposit
     private val _connectionState =
         MutableStateFlow<AdbConnectionState>(AdbConnectionState.Disconnected)
     override val connectionState: StateFlow<AdbConnectionState> = _connectionState.asStateFlow()
+    
+    private val _rootAvailable = MutableStateFlow(false)
+    override val rootAvailable: StateFlow<Boolean> = _rootAvailable.asStateFlow()
 
     @Volatile
     private var socket: Socket? = null
@@ -125,14 +128,62 @@ class AdbRepositoryImpl(private val dataStore: DataStoreRepository) : AdbReposit
                     if (enable) reconnect()
                 }
             }
+            // Check root availability on startup and when root mode toggles
+            launch {
+                isRootAvailable()
+            }
+            launch {
+                dataStore.getValueFlow(GeneralPrefs.ROOT_MODE_ENABLED, false).collect { enabled ->
+                    if (enabled) {
+                        val available = isRootAvailable()
+                        if (available) {
+                            _rootAvailable.value = true
+                            _connectionState.value = AdbConnectionState.Connected
+                        }
+                    } else {
+                        if (_connectionState.value is AdbConnectionState.Connected && _rootAvailable.value) {
+                            _connectionState.value = AdbConnectionState.Disconnected
+                        }
+                    }
+                }
+            }
+            // Auto-detect and connect on startup
+            launch {
+                delay(1000) // Wait for initialization
+                val rootModeEnabled = dataStore.getValueFlow(GeneralPrefs.ROOT_MODE_ENABLED, false).first()
+                val adbHelperEnabled = dataStore.getValueFlow(GeneralPrefs.ENABLE_ADB_HELPER, false).first()
+                
+                if (rootModeEnabled) {
+                    // Check root first
+                    val rootAvailable = isRootAvailable()
+                    if (rootAvailable) {
+                        _rootAvailable.value = true
+                        _connectionState.value = AdbConnectionState.Connected
+                        Timber.d("[ADB] Auto-connected via root mode")
+                        return@launch
+                    }
+                }
+                
+                if (adbHelperEnabled && _connectionState.value !is AdbConnectionState.Connected) {
+                    // Try ADB connection
+                    val port = dataStore.getValueFlow(GeneralPrefs.ADB_HELPER_PORT, 5555).first()
+                    connect(host, port)
+                    Timber.d("[ADB] Auto-connecting via ADB on port $port")
+                }
+            }
         }
     }
 
     /**
      * Connects to adbd at host:port with ephemeral RSA keys; idempotent.
      */
-    suspend fun connect(host: String, port: Int) =
-        if (isTelnetMode(port)) connectTelnet() else connectAdb(host, port)
+    override suspend fun connect(host: String, port: Int): Boolean {
+        val connected = if (isTelnetMode(port)) connectTelnet() else connectAdb(host, port)
+        if (connected) {
+            ioScope.launch { isRootAvailable() }
+        }
+        return connected
+    }
 
     private suspend fun connectAdb(host: String, port: Int): Boolean = withContext(Dispatchers.IO) {
         lock.withLock {
@@ -279,6 +330,12 @@ class AdbRepositoryImpl(private val dataStore: DataStoreRepository) : AdbReposit
      * Executes "shell:<command>" with lazy connect and background reconnect on failure.
      */
     override suspend fun execute(command: String): String = withContext(Dispatchers.IO) {
+        // Root mode: bypass ADB and execute directly via su
+        val rootMode = dataStore.getValueFlow(GeneralPrefs.ROOT_MODE_ENABLED, false).first()
+        if (rootMode && _rootAvailable.value) {
+            return@withContext executeWithRoot(command)
+        }
+
         val enable = dataStore.getValueFlow(GeneralPrefs.ENABLE_ADB_HELPER, false).first()
         if (!enable) {
             disconnect()
@@ -332,6 +389,12 @@ class AdbRepositoryImpl(private val dataStore: DataStoreRepository) : AdbReposit
     }
 
     private suspend fun executeAtlasCommand(command: String): String = withContext(Dispatchers.IO) {
+        // Root mode: bypass ADB
+        val rootMode = dataStore.getValueFlow(GeneralPrefs.ROOT_MODE_ENABLED, false).first()
+        if (rootMode && _rootAvailable.value) {
+            return@withContext executeWithRoot(command)
+        }
+
         val port = dataStore.getValueFlow(GeneralPrefs.ADB_HELPER_PORT, 5555).first()
         if (port != 5555) return@withContext "Atlas ADB port is not 5555"
 
@@ -799,7 +862,7 @@ class AdbRepositoryImpl(private val dataStore: DataStoreRepository) : AdbReposit
     /**
      * Closes connection/socket; idempotent.
      */
-    suspend fun disconnect() = withContext(Dispatchers.IO) {
+    override suspend fun disconnect() = withContext(Dispatchers.IO) {
         Timber.d("[ADB] disconnect")
         isManuallyDisconnected = true
         cancelReconnectLoop()
@@ -1225,6 +1288,136 @@ class AdbRepositoryImpl(private val dataStore: DataStoreRepository) : AdbReposit
         }
 
         return out.toString()
+    }
+
+    override suspend fun getApkPath(packageName: String): String {
+        val pkg = packageName.trim()
+        if (pkg.isEmpty() || pkg.equals("unknown", ignoreCase = true) || !isValidPackageName(pkg)) {
+            return ""
+        }
+        return execute("pm path $pkg")
+            .lineSequence()
+            .firstOrNull { it.startsWith("package:") }
+            ?.removePrefix("package:")
+            ?.trim() ?: ""
+    }
+
+    override suspend fun listAppPermissions(packageName: String): List<Pair<String, String>> {
+        val pkg = packageName.trim()
+        if (pkg.isEmpty() || pkg.equals("unknown", ignoreCase = true) || !isValidPackageName(pkg)) {
+            return emptyList()
+        }
+        val result = execute("dumpsys package $pkg")
+        if (result.isBlank()) return emptyList()
+
+        val permissions = mutableMapOf<String, String>()
+        var inRequested = false
+        var inInstall = false
+        var inRuntime = false
+
+        for (line in result.lineSequence()) {
+            val trimmed = line.trim()
+            when {
+                trimmed.startsWith("requested permissions:") -> {
+                    inRequested = true; inInstall = false; inRuntime = false
+                }
+                trimmed.startsWith("install permissions:") -> {
+                    inRequested = false; inInstall = true; inRuntime = false
+                }
+                trimmed.startsWith("runtime permissions:") -> {
+                    inRequested = false; inInstall = false; inRuntime = true
+                }
+                trimmed.startsWith("deferred permissions:") -> {
+                    inRequested = false; inInstall = false; inRuntime = false
+                }
+                !trimmed.startsWith("android.permission.") && !trimmed.startsWith("com.android.") -> {
+                    if (!trimmed.startsWith("android.permission") && !trimmed.contains("permission")) {
+                        // Stop tracking sections when we hit non-permission lines that look like headers
+                        if (trimmed.endsWith(":") && !trimmed.startsWith("android.")) {
+                            inRequested = false; inInstall = false; inRuntime = false
+                        }
+                    }
+                }
+            }
+
+            if (trimmed.startsWith("android.permission.") || trimmed.startsWith("com.android.")) {
+                val parts = trimmed.split(":")
+                val permName = parts[0].trim()
+                if (inRequested && parts.size == 1) {
+                    // Declared but no grant status
+                    permissions.putIfAbsent(permName, "declared")
+                } else if (parts.size >= 2) {
+                    val rawStatus = parts[1].trim()
+                    val status = when {
+                        rawStatus.contains("granted=true") || rawStatus == "granted=true" -> "granted"
+                        rawStatus.contains("granted=false") || rawStatus == "granted=false" -> "denied"
+                        rawStatus.contains("granted") && !rawStatus.contains("false") -> "granted"
+                        else -> "declared"
+                    }
+                    permissions[permName] = status
+                }
+            }
+        }
+        return permissions.entries.sortedBy { it.key }.map { it.key to it.value }.take(100)
+    }
+
+    override suspend fun grantPermissions(packageName: String, permissions: List<String>): String {
+        val pkg = packageName.trim()
+        if (pkg.isEmpty() || pkg.equals("unknown", ignoreCase = true) || !isValidPackageName(pkg)) {
+            return "no valid package names"
+        }
+        if (permissions.isEmpty()) return "no permissions to grant"
+
+        val results = StringBuilder()
+        for (perm in permissions) {
+            if (perm.isBlank()) continue
+            val cmd = "pm grant $pkg $perm"
+            val out = try {
+                execute(cmd)
+            } catch (e: Exception) {
+                "ERROR: ${e.message}"
+            }
+            if (results.isNotEmpty()) results.append("\n")
+            results.append("$perm: $out")
+        }
+        return results.toString()
+    }
+
+    override suspend fun isRootAvailable(): Boolean = withContext(Dispatchers.IO) {
+        try {
+            // Try "which su" first
+            val process = Runtime.getRuntime().exec(arrayOf("which", "su"))
+            val output = process.inputStream.bufferedReader().readText().trim()
+            val exitCode = process.waitFor()
+            if (exitCode == 0 && output.isNotBlank()) {
+                _rootAvailable.value = true
+                return@withContext true
+            }
+            // Fallback: try "su -c id"
+            val process2 = Runtime.getRuntime().exec(arrayOf("su", "-c", "id"))
+            val output2 = process2.inputStream.bufferedReader().readText().trim()
+            val exitCode2 = process2.waitFor()
+            val available = exitCode2 == 0 && output2.contains("uid=0")
+            _rootAvailable.value = available
+            return@withContext available
+        } catch (e: Exception) {
+            Timber.w(e, "[Root] check failed")
+            _rootAvailable.value = false
+            return@withContext false
+        }
+    }
+
+    /**
+     * Executes a command with root privileges via su -c.
+     */
+    private suspend fun executeWithRoot(command: String): String = withContext(Dispatchers.IO) {
+        val process = Runtime.getRuntime().exec(arrayOf("su", "-c", command))
+        val output = process.inputStream.bufferedReader().readText().trim()
+        val exitCode = process.waitFor()
+        if (exitCode != 0) {
+            Timber.w("[Root] command failed (exit=%d): %s", exitCode, command)
+        }
+        output
     }
 
     private fun isValidPackageName(value: String): Boolean {

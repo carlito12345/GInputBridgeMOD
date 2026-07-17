@@ -22,5 +22,11 @@ interface LauncherDataRepository {
 
     suspend fun clearIcon(id: Long, packageName: String)
 
+    val hiddenPackages: StateFlow<Set<String>>
+
+    suspend fun setAppHidden(packageName: String, isHidden: Boolean)
+
+    fun isPackageHidden(packageName: String): Boolean
+
     suspend fun saveIcon(id: Long, image: Bitmap): String
 }

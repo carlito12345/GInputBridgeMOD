@@ -6,5 +6,6 @@ import androidx.compose.runtime.Immutable
 enum class LauncherScreen {
     MAIN,
     SETTINGS,
-    ADD_APPS
+    ADD_APPS,
+    FLOATING_BUTTON_SETTINGS
 }

@@ -283,6 +283,16 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 }
+                launch {
+                    dataStore.getValueFlow(GeneralPrefs.ROOT_MODE_ENABLED, false).collect { enabled ->
+                        mainScreenState = mainScreenState.copy(rootModeEnabled = enabled)
+                    }
+                }
+                launch {
+                    adb.rootAvailable.collect { available ->
+                        mainScreenState = mainScreenState.copy(rootAvailable = available)
+                    }
+                }
                 readyUi = true
             }
 
@@ -1749,6 +1759,27 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+        Spacer(Modifier.height(14.dp))
+
+        // Root mode toggle
+        RenderSwitcher(
+            modifier = Modifier.padding(horizontal = 20.dp),
+            title = stringResource(R.string.root_mode),
+            subtitle = stringResource(R.string.root_mode_desc),
+            value = mainScreenState.rootModeEnabled,
+            enable = mainScreenState.rootAvailable,
+            isNegative = true,
+            subtitleColor = AppTheme.colors.contentPrimary.copy(.7f),
+            titleStyle = AppTheme.typography.dialogTitle,
+            subtitleStyle = AppTheme.typography.dialogSubtitle,
+            onChange = {
+                scope.launch(Dispatchers.IO) {
+                    dataStore.saveValue(GeneralPrefs.ROOT_MODE_ENABLED, it)
+                }
+                updateMainScreenState(mainScreenState.copy(rootModeEnabled = it))
+            }
+        )
 
         Spacer(Modifier.height(14.dp))
 

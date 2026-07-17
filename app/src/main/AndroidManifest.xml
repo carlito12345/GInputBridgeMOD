@@ -29,7 +29,7 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="@string/launcher_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GBinder"
@@ -47,11 +47,13 @@
             android:exported="true"
             android:launchMode="singleTask"
             android:theme="@style/Theme.GBinder">
+            <!-- Launcher icon hidden; access via GLauncher settings or floating button -->
+            <!--
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            -->
 
             <intent-filter
                 android:priority="999"
@@ -140,6 +142,7 @@
         <service
             android:name=".BootAccessibilityService"
             android:exported="true"
+            android:label="@string/launcher_name"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
@@ -153,7 +156,7 @@
             android:name=".MediaNotificationListenerService"
             android:exported="true"
             android:foregroundServiceType="mediaPlayback"
-            android:label="Media Listener Service"
+            android:label="@string/launcher_name"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
                 <action android:name="android.service.notification.NotificationListenerService" />
@@ -177,6 +180,11 @@
 
         <service
             android:name=".features.launcher.LauncherOverlayService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
+
+        <service
+            android:name=".FloatingButtonService"
             android:exported="false"
             android:foregroundServiceType="mediaPlayback" />
 

@@ -5,6 +5,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -16,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -58,7 +61,10 @@ fun RowScope.RenderLauncherMainToolbar(
     onAddClick: (Offset) -> Unit,
     onToggleLock: () -> Unit,
     onSettingsClick: () -> Unit,
-    onCloseClick: () -> Unit
+    onCloseClick: () -> Unit,
+    adbConnected: Boolean = false,
+    rootAvailable: Boolean = false,
+    onConnectionStatusClick: (() -> Unit)? = null
 ) {
     Row(
         modifier = Modifier
@@ -181,6 +187,58 @@ fun RowScope.RenderLauncherMainToolbar(
     }
 
     Spacer(Modifier.width(14.dp))
+    
+    // Connection status indicator
+    if (onConnectionStatusClick != null) {
+        val (bgColor, borderColor, textColor, statusText) = when {
+            rootAvailable -> listOf(
+                AppTheme.colors.greenAccent.copy(alpha = 0.2f),
+                AppTheme.colors.greenAccent,
+                AppTheme.colors.greenAccent,
+                "Root"
+            )
+            adbConnected -> listOf(
+                AppTheme.colors.greenAccent.copy(alpha = 0.2f),
+                AppTheme.colors.greenAccent,
+                AppTheme.colors.greenAccent,
+                "ADB"
+            )
+            else -> listOf(
+                AppTheme.colors.contentPrimary.copy(alpha = 0.1f),
+                AppTheme.colors.contentPrimary.copy(alpha = 0.3f),
+                AppTheme.colors.contentPrimary.copy(alpha = 0.5f),
+                "Off"
+            )
+        }
+        
+        Row(
+            modifier = Modifier
+                .clip(RoundedCornerShape(12.dp))
+                .background(bgColor as androidx.compose.ui.graphics.Color)
+                .border(1.dp, borderColor as androidx.compose.ui.graphics.Color, RoundedCornerShape(12.dp))
+                .clickable(onClick = onConnectionStatusClick)
+                .padding(horizontal = 8.dp, vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(6.dp)
+                    .clip(CircleShape)
+                    .background(textColor as androidx.compose.ui.graphics.Color)
+            )
+            Spacer(Modifier.width(4.dp))
+            Text(
+                text = statusText as String,
+                style = AppTheme.typography.overlayLauncherIconTitle.copy(
+                    fontSize = 11.sp,
+                    lineHeight = 11.sp
+                ),
+                color = textColor as androidx.compose.ui.graphics.Color
+            )
+        }
+        Spacer(Modifier.width(8.dp))
+    }
+    
     IconButton(
         modifier = Modifier
             .size(LAUNCHER_TOOLBAR_HEIGHT.dp),

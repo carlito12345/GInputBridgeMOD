@@ -33,6 +33,17 @@ object LauncherPrefs {
     val LAUNCHER_AUTO_LIGHT_THEME_START = intPreferencesKey("LAUNCHER_AUTO_LIGHT_THEME_START")
     val LAUNCHER_AUTO_LIGHT_THEME_END = intPreferencesKey("LAUNCHER_AUTO_LIGHT_THEME_END")
     val LAUNCHER_SHOW_FROZEN_APPS = booleanPreferencesKey("LAUNCHER_SHOW_FROZEN_APPS")
+
+    val LAUNCHER_HIDDEN_PACKAGES = stringPreferencesKey("LAUNCHER_HIDDEN_PACKAGES")
+    val LAUNCHER_SHOW_HIDDEN_APPS = booleanPreferencesKey("LAUNCHER_SHOW_HIDDEN_APPS")
+    val FLOAT_BUTTON_ENABLED = booleanPreferencesKey("FLOAT_BUTTON_ENABLED")
+    val FLOAT_BUTTON_GESTURES = stringPreferencesKey("FLOAT_BUTTON_GESTURES")
+    val FLOAT_BUTTON_SIZE = intPreferencesKey("FLOAT_BUTTON_SIZE")
+    val FLOAT_BUTTON_ALPHA = floatPreferencesKey("FLOAT_BUTTON_ALPHA")
+    val FLOAT_BUTTON_PET_MODE = booleanPreferencesKey("FLOAT_BUTTON_PET_MODE")
+    val ADB_HOST = stringPreferencesKey("ADB_HOST")
+    val ADB_PORT = intPreferencesKey("ADB_PORT")
+
     val LAUNCHER_ALLOW_SYSTEM_APP_UNINSTALL =
         booleanPreferencesKey("LAUNCHER_ALLOW_SYSTEM_APP_UNINSTALL")
 
@@ -65,6 +76,15 @@ object LauncherPrefs {
             LAUNCHER_AUTO_LIGHT_THEME_START,
             LAUNCHER_AUTO_LIGHT_THEME_END,
             LAUNCHER_SHOW_FROZEN_APPS,
-            LAUNCHER_ALLOW_SYSTEM_APP_UNINSTALL
+            LAUNCHER_ALLOW_SYSTEM_APP_UNINSTALL,
+            LAUNCHER_HIDDEN_PACKAGES,
+            LAUNCHER_SHOW_HIDDEN_APPS,
+            FLOAT_BUTTON_ENABLED,
+            FLOAT_BUTTON_GESTURES,
+            FLOAT_BUTTON_SIZE,
+            FLOAT_BUTTON_ALPHA,
+            FLOAT_BUTTON_PET_MODE,
+            ADB_HOST,
+            ADB_PORT
         )
 }

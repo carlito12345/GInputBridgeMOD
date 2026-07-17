@@ -69,7 +69,7 @@ class MainViewModel @Inject constructor(
             if (!BuildConfig.DEBUG) guard.verify()
         } */
         viewModelScope.launch {
-            checkAppUpdate()
+            // checkAppUpdate() // disabled
             launch {
                 Timber.d("Temp files deleted: ${clearDownloadedFilesUseCase.execute()}")
             }

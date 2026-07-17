@@ -11,6 +11,7 @@ import android.media.MediaMetadata
 import android.media.session.MediaController
 import android.media.session.PlaybackState
 import android.os.Bundle
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.view.KeyEvent
@@ -117,6 +118,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -399,6 +401,23 @@ class App : Application(), ImageLoaderFactory {
             initVisibleAppCollector() // Accessibility event bridge
             handleToggleLauncher()
             handleAdbActions()
+            handleFloatingButton()
+
+            // Startup ADB and Root detection after 3s delay
+            launch {
+                delay(3000L)
+                val adbEnabled = dataStore.getValueFlow(GeneralPrefs.ENABLE_ADB_HELPER, false).first()
+                if (adbEnabled) {
+                    if (adb.connectionState.value is AdbConnectionState.Disconnected || 
+                        adb.connectionState.value is AdbConnectionState.Error) {
+                        Timber.d("[APP] ADB was enabled at startup, triggering reconnect")
+                        val port = dataStore.getValueFlow(GeneralPrefs.ADB_HELPER_PORT, 5555).first()
+                        adb.connect(if (BuildConfig.DEBUG) "10.0.2.2" else "localhost", port)
+                    }
+                }
+                val rootOk = adb.isRootAvailable()
+                Timber.d("[APP] Root available at startup: %s", rootOk)
+            }
 
             // Start API init
             initOneOSApiManager()
@@ -2000,10 +2019,38 @@ class App : Application(), ImageLoaderFactory {
         }
     }
 
+    private fun CoroutineScope.handleFloatingButton() = launch {
+        dataStore.getValueFlow(LauncherPrefs.FLOAT_BUTTON_ENABLED, false).collect { enabled ->
+            if (enabled) {
+                if (!FloatingButtonService.isAlive && !FloatingButtonService.isStarting) {
+                    FloatingButtonService.isStarting = true
+                    val intent = Intent(this@App, FloatingButtonService::class.java)
+                    try {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            startForegroundService(intent)
+                        } else {
+                            startService(intent)
+                        }
+                    } catch (e: Exception) {
+                        Timber.e(e, "[FLOAT] Failed to start FloatingButtonService")
+                        FloatingButtonService.isStarting = false
+                    }
+                }
+            } else {
+                if (FloatingButtonService.isAlive || FloatingButtonService.isStarting) {
+                    runCatching { stopService(Intent(this@App, FloatingButtonService::class.java)) }
+                }
+            }
+        }
+    }
+
     private fun CoroutineScope.handleAdbActions() = launch {
         var stopDimByLaunch: Job? = null
 
-        dataStore.getValueFlow(GeneralPrefs.ENABLE_ADB_HELPER, false).collect { enabled ->
+        combine(
+            dataStore.getValueFlow(GeneralPrefs.ENABLE_ADB_HELPER, false),
+            dataStore.getValueFlow(GeneralPrefs.ROOT_MODE_ENABLED, false)
+        ) { adbEnabled, rootEnabled -> adbEnabled || rootEnabled }.collect { enabled ->
             adbIsEnabled = enabled
 
             stopDimByLaunch?.cancel()

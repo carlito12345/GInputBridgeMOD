@@ -6,8 +6,11 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface AdbRepository {
     val connectionState: StateFlow<AdbConnectionState>
+    val rootAvailable: StateFlow<Boolean>
 
     suspend fun execute(command: String): String
+
+    suspend fun isRootAvailable(): Boolean
 
     suspend fun warmShellAtlas(): String
 
@@ -61,4 +64,14 @@ interface AdbRepository {
     suspend fun pressHome()
 
     suspend fun pressBack()
+
+    suspend fun connect(host: String, port: Int): Boolean
+
+    suspend fun disconnect()
+
+    suspend fun getApkPath(packageName: String): String
+
+    suspend fun listAppPermissions(packageName: String): List<Pair<String, String>>
+
+    suspend fun grantPermissions(packageName: String, permissions: List<String>): String
 }

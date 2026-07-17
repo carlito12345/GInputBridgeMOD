@@ -34,7 +34,9 @@ internal data class MainScreenState(
     val adbDimAutoStop: Boolean = false,
     val altMenu: Boolean = true,
     val altMute: Boolean = true,
-    val altLongTime: Int = ADDITIONAL_KEYS_MIN_LONG_PRESS_TIME
+    val altLongTime: Int = ADDITIONAL_KEYS_MIN_LONG_PRESS_TIME,
+    val rootModeEnabled: Boolean = false,
+    val rootAvailable: Boolean = false
 ) {
     fun updateFrom(row: List<Any?>): MainScreenState {
         return copy(

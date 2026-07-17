@@ -15,5 +15,6 @@ data class DisplayLauncherApp(
     val launcherActivity: String? = null,
     val availableActivity: List<String> = emptyList(),
     val isFrozen: Boolean = false,
-    val isSystem: Boolean = false
+    val isSystem: Boolean = false,
+    val isHidden: Boolean = false
 )

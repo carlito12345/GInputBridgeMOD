@@ -38,6 +38,7 @@ object GeneralPrefs {
     val APP_UI_SCALE = floatPreferencesKey("APP_UI_SCALE")
     val ENABLE_ADB_HELPER = booleanPreferencesKey("ENABLE_ADB_HELPER")
     val ADB_HELPER_PORT = intPreferencesKey("ADB_HELPER_PORT")
+    val ROOT_MODE_ENABLED = booleanPreferencesKey("ROOT_MODE_ENABLED")
     val ADB_DIM_AUTO_STOP = booleanPreferencesKey("ADB_DIM_AUTO_STOP")
     val ALT_MUTE = booleanPreferencesKey("ALT_MUTE")
     val ALT_MENU = booleanPreferencesKey("ALT_MENU")
@@ -78,6 +79,7 @@ object GeneralPrefs {
             APP_UI_SCALE,
             ENABLE_ADB_HELPER,
             ADB_HELPER_PORT,
+            ROOT_MODE_ENABLED,
             ADB_DIM_AUTO_STOP,
             ALT_MUTE,
             ALT_MENU,

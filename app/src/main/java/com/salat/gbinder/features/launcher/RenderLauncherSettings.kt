@@ -10,10 +10,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
@@ -23,10 +26,16 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import android.content.Intent
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,7 +46,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.salat.gbinder.BuildConfig
+import com.salat.gbinder.MainActivity
 import com.salat.gbinder.R
 import com.salat.gbinder.components.toast
 import com.salat.gbinder.datastore.LauncherPrefs
@@ -47,6 +58,8 @@ import com.salat.gbinder.entity.DisplayLauncherConfig
 import com.salat.gbinder.entity.DisplayLauncherItemType
 import com.salat.gbinder.entity.SegmentTogglerItem
 import com.salat.gbinder.ui.RangeValueSlider
+import com.salat.gbinder.ui.RenderListButton
+import com.salat.gbinder.ui.clickableNoRipple
 import com.salat.gbinder.ui.RenderSwitcher
 import com.salat.gbinder.ui.SegmentToggler
 import com.salat.gbinder.ui.ValueSlider
@@ -57,7 +70,8 @@ import kotlinx.coroutines.launch
 fun ColumnScope.RenderLauncherSettings(
     items: List<DisplayLauncherApp>,
     config: DisplayLauncherConfig,
-    storage: LauncherStorageRepository
+    storage: LauncherStorageRepository,
+    onFloatingButtonClick: () -> Unit = {}
 ) = Column(
     modifier = Modifier
         .fillMaxWidth()
@@ -66,6 +80,9 @@ fun ColumnScope.RenderLauncherSettings(
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    val floatButtonEnabled by storage.dataStore
+        .getValueFlow(LauncherPrefs.FLOAT_BUTTON_ENABLED, false)
+        .collectAsStateWithLifecycle(initialValue = false)
 
     Spacer(Modifier.height(36.dp))
 
@@ -929,6 +946,54 @@ fun ColumnScope.RenderLauncherSettings(
 
     RenderSwitcher(
         modifier = Modifier.padding(horizontal = 18.dp),
+        title = stringResource(R.string.floating_button),
+        subtitle = stringResource(R.string.floating_button_desc),
+        value = floatButtonEnabled,
+        enable = true,
+        groupDivider = false,
+        subtitleColor = AppTheme.colors.contentPrimary.copy(.7f),
+        titleStyle = AppTheme.typography.overlayLauncherSettingsTitle,
+        subtitleStyle = AppTheme.typography.overlayLauncherSettingsSubtitle,
+        onChange = {
+            scope.launch {
+                storage.dataStore.saveValue(LauncherPrefs.FLOAT_BUTTON_ENABLED, it)
+            }
+        }
+    )
+
+    if (floatButtonEnabled) {
+        Spacer(Modifier.height(12.dp))
+        RenderListButton(
+            modifier = Modifier.padding(horizontal = 20.dp),
+            title = stringResource(R.string.floating_button_settings),
+            subtitle = "配置悬浮按钮手势和外观",
+            onClick = onFloatingButtonClick
+        )
+    }
+
+    Spacer(Modifier.height(26.dp))
+
+    RenderSwitcher(
+        modifier = Modifier.padding(horizontal = 18.dp),
+        title = stringResource(R.string.show_hidden_apps),
+        subtitle = stringResource(R.string.show_hidden_apps_desc),
+        value = config.showHiddenApps,
+        enable = true,
+        groupDivider = false,
+        subtitleColor = AppTheme.colors.contentPrimary.copy(.7f),
+        titleStyle = AppTheme.typography.overlayLauncherSettingsTitle,
+        subtitleStyle = AppTheme.typography.overlayLauncherSettingsSubtitle,
+        onChange = {
+            scope.launch {
+                storage.dataStore.saveValue(LauncherPrefs.LAUNCHER_SHOW_HIDDEN_APPS, it)
+            }
+        }
+    )
+
+    Spacer(Modifier.height(26.dp))
+
+    RenderSwitcher(
+        modifier = Modifier.padding(horizontal = 18.dp),
         title = stringResource(R.string.allow_system_app_uninstall),
         subtitle = stringResource(R.string.allow_system_app_uninstall_desc),
         value = config.allowSystemAppUninstall,
@@ -944,6 +1009,43 @@ fun ColumnScope.RenderLauncherSettings(
             }
         }
     )
+
+    // Open GIB Settings
+    val gibContext = LocalContext.current
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp, vertical = 12.dp)
+            .clickableNoRipple {
+                try {
+                    val intent = Intent(gibContext, MainActivity::class.java).apply {
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }
+                    gibContext.startActivity(intent)
+                } catch (_: Exception) {}
+            },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = "GInputBridge Settings",
+                style = AppTheme.typography.overlayLauncherSettingsTitle,
+                color = AppTheme.colors.contentPrimary
+            )
+            Spacer(Modifier.height(4.dp))
+            Text(
+                text = "打开 GIB 主配置界面",
+                style = AppTheme.typography.overlayLauncherSettingsSubtitle,
+                color = AppTheme.colors.contentPrimary.copy(.7f)
+            )
+        }
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+            contentDescription = null,
+            tint = AppTheme.colors.contentPrimary.copy(.5f),
+            modifier = Modifier.size(20.dp)
+        )
+    }
 
     Spacer(Modifier.height(64.dp))
 }

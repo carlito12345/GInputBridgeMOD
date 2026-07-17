@@ -49,6 +49,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -100,6 +101,7 @@ import com.salat.gbinder.R
 import com.salat.gbinder.adb.data.entity.AdbConnectionState
 import com.salat.gbinder.adb.domain.repository.AdbRepository
 import com.salat.gbinder.components.ComposeWindowLifecycleOwner
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import com.salat.gbinder.components.inMainToast
 import com.salat.gbinder.components.launchApp
 import com.salat.gbinder.components.launchStringIntent
@@ -400,6 +402,8 @@ class LauncherOverlayService : Service() {
         )
 
         var allAppItemMenu by remember { mutableStateOf<AllAppMenuItem?>(null) }
+        var permissionManagerApp by remember { mutableStateOf<Pair<String, String>?>(null) }
+        var permissionManagerAutoGrant by remember { mutableStateOf(false) }
         fun onOpenAllAppMenu(item: DisplayLauncherApp, offset: Offset) =
             serviceScope.launch(Dispatchers.Default) {
                 data.myAppsItems.value?.let { myApps ->
@@ -414,9 +418,7 @@ class LauncherOverlayService : Service() {
                             y = offset.y.toInt()
                         ),
                         inMyApps = inMyApps != null,
-                        launchedStatus = if (!config.enableAdbHelper) {
-                            AppLaunchedState.NO_DETECT
-                        } else if (adb.isAppLaunched(item.packageName)) {
+                        launchedStatus = if (adb.isAppLaunched(item.packageName)) {
                             AppLaunchedState.LAUNCHED
                         } else AppLaunchedState.NO
                     )
@@ -434,9 +436,7 @@ class LauncherOverlayService : Service() {
                             y = offset.y.toInt()
                         ),
                         appData = apps.find { it.packageName == item.packageName },
-                        launchedStatus = if (!config.enableAdbHelper) {
-                            AppLaunchedState.NO_DETECT
-                        } else if (adb.isAppLaunched(item.packageName)) {
+                        launchedStatus = if (adb.isAppLaunched(item.packageName)) {
                             AppLaunchedState.LAUNCHED
                         } else AppLaunchedState.NO
                     )
@@ -659,28 +659,48 @@ class LauncherOverlayService : Service() {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         when (screen) {
-                            LauncherScreen.MAIN -> RenderLauncherMainToolbar(
-                                isLock = lockMode,
-                                isShort = config.windowHorizontalSpace > SHORT_TOOLBAR_THRESHOLD,
-                                pagerState = pagerState,
-                                onAddClick = { offset ->
-                                    addMenu = IntOffset(
-                                        x = offset.x.toInt(),
-                                        y = offset.y.toInt()
-                                    )
-                                },
-                                onToggleLock = { lockMode = !lockMode },
-                                onSettingsClick = { screen = LauncherScreen.SETTINGS },
-                                onCloseClick = { hideLauncherOverlay() }
-                            )
-
-                            LauncherScreen.SETTINGS -> RenderLauncherSettingsToolbar {
-                                screen = LauncherScreen.MAIN
+                            LauncherScreen.MAIN -> {
+                                val adbState by adb.connectionState.collectAsStateWithLifecycle(
+                                    initialValue = AdbConnectionState.Disconnected
+                                )
+                                val rootAvailable by adb.rootAvailable.collectAsStateWithLifecycle(initialValue = false)
+                                
+                                RenderLauncherMainToolbar(
+                                    isLock = lockMode,
+                                    isShort = config.windowHorizontalSpace > SHORT_TOOLBAR_THRESHOLD,
+                                    pagerState = pagerState,
+                                    onAddClick = { offset ->
+                                        addMenu = IntOffset(
+                                            x = offset.x.toInt(),
+                                            y = offset.y.toInt()
+                                        )
+                                    },
+                                    onToggleLock = { lockMode = !lockMode },
+                                    onSettingsClick = { screen = LauncherScreen.SETTINGS },
+                                    onCloseClick = { hideLauncherOverlay() },
+                                    adbConnected = adbState is AdbConnectionState.Connected,
+                                    rootAvailable = rootAvailable,
+                                    onConnectionStatusClick = {
+                                        // Open GIB settings
+                                        val intent = Intent(this@LauncherOverlayService, com.salat.gbinder.MainActivity::class.java).apply {
+                                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                        }
+                                        startActivity(intent)
+                                    }
+                                )
                             }
+
+                            LauncherScreen.SETTINGS -> RenderLauncherSettingsToolbar(
+                                onCloseClick = { screen = LauncherScreen.MAIN }
+                            )
 
                             LauncherScreen.ADD_APPS -> RenderLauncherAddAppsToolbar {
                                 screen = LauncherScreen.MAIN
                             }
+
+                            LauncherScreen.FLOATING_BUTTON_SETTINGS -> RenderLauncherSettingsToolbar(
+                                onCloseClick = { screen = LauncherScreen.SETTINGS }
+                            )
                         }
                     }
 
@@ -818,10 +838,35 @@ class LauncherOverlayService : Service() {
                             LauncherScreen.SETTINGS -> {
                                 val list by data.allApps.collectAsStateWithLifecycle()
 
+                                // ADB status indicator
+                                val adbState by adb.connectionState.collectAsStateWithLifecycle(
+                                    initialValue = AdbConnectionState.Disconnected
+                                )
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    val (adbLabel, adbColor) = when (adbState) {
+                                        is AdbConnectionState.Connected -> stringResource(R.string.connected) to AppTheme.colors.greenAccent
+                                        is AdbConnectionState.Connecting -> stringResource(R.string.connecting) to AppTheme.colors.contentWarning
+                                        is AdbConnectionState.Error -> stringResource(R.string.error) to AppTheme.colors.deleteButton
+                                        else -> stringResource(R.string.disconnected) to AppTheme.colors.contentPrimary.copy(.5f)
+                                    }
+                                    Text(
+                                        text = "ADB: $adbLabel",
+                                        color = adbColor,
+                                        style = AppTheme.typography.overlayLauncherSettingsSubtitle,
+                                        fontSize = 12.sp
+                                    )
+                                }
+
                                 RenderLauncherSettings(
                                     items = list,
                                     config = config,
-                                    storage = storage
+                                    storage = storage,
+                                    onFloatingButtonClick = { screen = LauncherScreen.FLOATING_BUTTON_SETTINGS }
                                 )
                             }
 
@@ -833,14 +878,20 @@ class LauncherOverlayService : Service() {
                                     myApps = items,
                                     config = config
                                 ) { newMyApps ->
-                                    // App scope - save must survive overlay close
                                     ioScope.launch {
-                                        // Save new dataset
                                         data.saveMyApps(newMyApps)
-                                        // Back to main
                                         screen = LauncherScreen.MAIN
                                     }
                                 }
+                            }
+
+                            LauncherScreen.FLOATING_BUTTON_SETTINGS -> {
+                                val list by data.allApps.collectAsStateWithLifecycle()
+
+                                RenderFloatingButtonSettings(
+                                    allApps = list,
+                                    storage = storage
+                                )
                             }
                         }
                     }
@@ -925,7 +976,7 @@ class LauncherOverlayService : Service() {
                         packageName = item.app.packageName,
                         isFrozen = item.app.isFrozen,
                         canUninstall = config.allowSystemAppUninstall || !item.app.isSystem,
-                        enableAdbHelper = config.enableAdbHelper,
+                        enableAdbHelper = true,
                         launchedStatus = item.launchedStatus,
                         onOpen = { launchMyApp(item.app) },
                         onForceStop = {
@@ -967,7 +1018,7 @@ class LauncherOverlayService : Service() {
                 RenderAppLabelAndIconMenu(
                     packageName = item.app.packageName,
                     isFrozen = item.app.isFrozen,
-                    enableAdbHelper = config.enableAdbHelper,
+                    enableAdbHelper = true,
                     onRename = {
                         minimizeOverlayForSystemDialog()
                         stateKeeper.sendLauncherOverlaySignal(
@@ -1000,10 +1051,57 @@ class LauncherOverlayService : Service() {
 
                 if (item.app.type == DisplayLauncherItemType.APP && item.app.iconRef != null) {
                     RenderMenuDivider()
+                    // Hide from all apps
+                    OptionsMenuItem(
+                        icon = R.drawable.ic_hide,
+                        title = stringResource(R.string.hide_app),
+                        textColor = Color.White,
+                        scale = .97f
+                    ) {
+                        ioScope.launch {
+                            item.app.packageName.takeIf { it.isNotBlank() }?.let { pkg ->
+                                data.setAppHidden(pkg, true)
+                            }
+                        }
+                        myAppItemMenu = null
+                    }
+
+                    RenderMenuDivider()
                     RenderSystemActionsMenu(item.app.packageName) {
                         myAppItemMenu = null
                     }
                 }
+            }
+        }
+
+        // Permission manager dialog
+        permissionManagerApp?.let { (pkg, name) ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = .5f))
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) {
+                        permissionManagerApp = null
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                RenderPermissionManagerDialog(
+                    packageName = pkg,
+                    appName = name,
+                    adb = adb,
+                    scope = serviceScope,
+                    onDismiss = { permissionManagerApp = null },
+                    onResult = { result ->
+                        serviceScope.launch(Dispatchers.Main) {
+                            inMainToast("Permission result: $result")
+                        }
+                        permissionManagerApp = null
+                    },
+                    autoGrant = permissionManagerAutoGrant
+                )
             }
         }
 
@@ -1021,7 +1119,7 @@ class LauncherOverlayService : Service() {
                     packageName = item.app.packageName,
                     isFrozen = liveAllApp.isFrozen,
                     canUninstall = config.allowSystemAppUninstall || !liveAllApp.isSystem,
-                    enableAdbHelper = config.enableAdbHelper,
+                    enableAdbHelper = true,
                     launchedStatus = item.launchedStatus,
                     onOpen = { launchAllApp(item.app) },
                     onForceStop = {
@@ -1074,7 +1172,7 @@ class LauncherOverlayService : Service() {
                 RenderAppLabelAndIconMenu(
                     packageName = item.app.packageName,
                     isFrozen = liveAllApp.isFrozen,
-                    enableAdbHelper = config.enableAdbHelper,
+                    enableAdbHelper = true,
                     onChangeIcon = {
                         skipCloseOnNextOnPause = true
                         minimizeOverlayForSystemDialog()
@@ -1095,14 +1193,77 @@ class LauncherOverlayService : Service() {
                     }
                 )
 
-                if (showAddInMyApps || showActivities) RenderMenuDivider()
+                // Hide/Unhide
+                val isHidden = data.isPackageHidden(item.app.packageName)
+                OptionsMenuItem(
+                    icon = if (isHidden) R.drawable.ic_show else R.drawable.ic_hide,
+                    title = stringResource(if (isHidden) R.string.unhide_app else R.string.hide_app),
+                    textColor = Color.White,
+                    scale = .97f
+                ) {
+                    ioScope.launch {
+                        data.setAppHidden(item.app.packageName, !isHidden)
+                    }
+                    allAppItemMenu = null
+                }
+
+                // Freeze/Unfreeze
+                if (item.app.packageName.isNotBlank()) {
+                    OptionsMenuItem(
+                        icon = if (liveAllApp.isFrozen) R.drawable.ic_unlock else R.drawable.ic_lock,
+                        title = stringResource(if (liveAllApp.isFrozen) R.string.unfreeze_app else R.string.freeze_app),
+                        textColor = if (liveAllApp.isFrozen) AppTheme.colors.greenAccent else AppTheme.colors.deleteButton,
+                        iconColor = if (liveAllApp.isFrozen) AppTheme.colors.greenAccent else AppTheme.colors.deleteButton,
+                        scale = .97f
+                    ) {
+                        requestTogglePackageFreeze(
+                            packageName = liveAllApp.packageName,
+                            isFrozen = liveAllApp.isFrozen,
+                            isSystem = liveAllApp.isSystem
+                        )
+                        allAppItemMenu = null
+                    }
+                }
+
+                if (showAddInMyApps || showActivities || item.app.packageName.isNotBlank()) RenderMenuDivider()
+
+                // Permission management
+                if (item.app.packageName.isNotBlank()) {
+                    OptionsMenuItem(
+                        icon = R.drawable.ic_info,
+                        title = stringResource(R.string.permission_management),
+                        textColor = Color.White,
+                        scale = .97f
+                    ) {
+                        permissionManagerApp = item.app.packageName to item.app.appName
+                        permissionManagerAutoGrant = false
+                        allAppItemMenu = null
+                    }
+
+                    // One-click grant all
+                    OptionsMenuItem(
+                        icon = R.drawable.ic_unlock,
+                        title = stringResource(R.string.grant_all_permissions),
+                        textColor = Color.White,
+                        scale = .97f
+                    ) {
+                        permissionManagerApp = item.app.packageName to item.app.appName
+                        permissionManagerAutoGrant = true
+                        allAppItemMenu = null
+                    }
+
+                    RenderMenuDivider()
+                }
 
                 RenderSystemActionsMenu(item.app.packageName) {
                     allAppItemMenu = null
                 }
             }
         }
+
     }
+
+
 
     override fun onDestroy() {
         isAlive = false
@@ -1363,7 +1524,7 @@ class LauncherOverlayService : Service() {
             initialValue = AdbConnectionState.Disconnected
         )
         val adbConnected = adbState is AdbConnectionState.Connected
-        val showUnfreeze = isFrozen && adbConnected && onToggleFreeze != null
+        val showUnfreeze = isFrozen && onToggleFreeze != null
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -1447,7 +1608,7 @@ class LauncherOverlayService : Service() {
                 }
             }
 
-            if (enableAdbHelper) {
+            if (true) {
                 Spacer(
                     Modifier
                         .fillMaxHeight()
@@ -1457,7 +1618,7 @@ class LauncherOverlayService : Service() {
                 )
 
                 val isLaunched = launchedStatus == AppLaunchedState.LAUNCHED
-                val actionEnabled = showUnfreeze || (isLaunched && adbConnected)
+                val actionEnabled = showUnfreeze || isLaunched
                 Column(
                     modifier = Modifier
                         .weight(1f)
@@ -1773,8 +1934,8 @@ class LauncherOverlayService : Service() {
         val adbState by adb.connectionState.collectAsStateWithLifecycle(
             initialValue = AdbConnectionState.Disconnected
         )
-        val showFreeze = enableAdbHelper && packageName.isNotBlank() &&
-                adbState is AdbConnectionState.Connected && onToggleFreeze != null &&
+        val showFreeze = packageName.isNotBlank() &&
+                onToggleFreeze != null &&
                 !isFrozen // show only "freeze" action, "unfreeze" in header
         var expanded by remember { mutableStateOf(false) }
         val editIcon = rememberVectorPainter(image = Icons.Filled.Build)

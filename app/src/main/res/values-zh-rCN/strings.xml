@@ -1,0 +1,726 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GInputBridge</string>
+    <string name="launcher_name">GLauncher</string>
+    <string name="dpi_low" translatable="false">LOW</string>
+    <string name="dpi_medium" translatable="false">MEDIUM</string>
+    <string name="dpi_tv" translatable="false">TV</string>
+    <string name="dpi_high" translatable="false">HIGH</string>
+    <string name="dpi_xhigh" translatable="false">XHIGH</string>
+    <string name="dpi_xxhigh" translatable="false">XXHIGH</string>
+    <string name="dpi_xxxhigh" translatable="false">XXXHIGH</string>
+    <string name="tracking">跟踪</string>
+    <string name="device">设备</string>
+    <string name="data_collection">数据收集</string>
+    <string name="settings_shortcuts">设置快捷方式</string>
+    <string name="about_device">关于设备</string>
+    <string name="developer_options">开发者选项</string>
+    <string name="battery_optimization">电池优化</string>
+    <string name="device_information">设备信息</string>
+    <string name="show_all">显示全部</string>
+    <string name="car_function">车辆功能</string>
+    <string name="sensor">传感器</string>
+    <string name="last_action">最后操作：</string>
+    <string name="all_applications">所有应用</string>
+    <string name="filter">筛选</string>
+    <string name="sort_by_recent_changes">按最近更改排序</string>
+    <string name="show_the_unknowns">显示未知项</string>
+    <string name="gmediaproxy_found">已找到 GMediaProxy</string>
+    <string name="enable_accessibility">要使用此应用，请启用无障碍功能</string>
+    <string name="grant_notification_access">为了正常运行，请授予应用"通知访问权限"</string>
+    <string name="accessibility_features">无障碍功能</string>
+    <string name="settings">设置</string>
+    <string name="binder_active">按键监听器已启用</string>
+    <string name="binder_disabled">按键监听器已禁用</string>
+    <string name="enable">启用</string>
+    <string name="key_binder_sync">按键监听器</string>
+    <string name="refresh_rate">刷新率</string>
+    <string name="media_source">媒体源</string>
+    <string name="car_media_source_assumption">车辆将认为音乐正在从此音源播放</string>
+    <string name="subtitle_placeholder">副标题占位符</string>
+    <string name="remove_unknown_artist">当未指定音乐作者时，移除系统显示的“未知艺术家”标签。</string>
+    <string name="es_explorer_warning">您安装了"ES文件管理器"。该程序可能与本应用不兼容，建议在使用前卸载。作为替代，您可以使用"File Manager+"。</string>
+    <string name="uninstall">卸载</string>
+    <string name="ok">确定</string>
+    <string name="notification_volume">通知音量</string>
+    <string name="grant_file_access">点击此处授予应用额外的文件管理权限。这是必要的，因为系统可能会阻止访问公共目录中的封面缓存。否则应用无法自行清理文件和释放磁盘空间。</string>
+    <string name="force_update">强制更新</string>
+    <string name="update_all_media_data">每次同步时更新所有媒体数据，包括自上次更新以来可能未发生变化的数据</string>
+    <string name="debug_mode">调试模式</string>
+    <string name="show_touch_logs">显示触摸日志</string>
+    <string name="broadcast_intents">广播意图</string>
+    <string name="broadcast_intents_desc">若禁用，则仅将点击事件发送到MacroDroid</string>
+    <string name="track_keycode_event">跟踪KeyEvent</string>
+    <string name="low_level_key_events">底层按键事件</string>
+    <string name="custom_long_press_timing">自定义长按时长</string>
+    <string name="custom_long_press_timing_desc">在指定时间后触发长按事件。适用于发送 KeyEvent 的按钮。如果按钮不发送 KeyEvent，则使用标准长按处理程序。</string>
+    <string name="long_press_trigger_timing">长按触发时机</string>
+    <string name="alt_long_press_trigger_timing">Alt 长按触发时机</string>
+    <string name="detect_double_tap">检测双击</string>
+    <string name="double_click_description">单次短按后，会有一个短暂的停顿以等待第二次点击。如果在时间窗口内发生第二次点击，则触发双击事件</string>
+    <string name="double_tap_window_timing">双击时间窗口</string>
+    <string name="custom_short_press_timing">自定义短按时长</string>
+    <string name="custom_short_press_timing_desc">防止在自定义长按期间触发并发的短按。</string>
+    <string name="scanning_installed_apps">正在扫描已安装的应用</string>
+    <string name="select_default_media_app">选择默认媒体应用</string>
+    <string name="next">下一个</string>
+    <string name="default_">默认</string>
+    <string name="back">返回</string>
+    <string name="show_documentation">显示 API</string>
+    <string name="hide_documentation">隐藏 API</string>
+    <string name="detect_multi_long">检测多重长按</string>
+    <string name="multi_long_trigger">如果在长按期间还按住了其他按钮，则会触发多重长按事件，而非普通长按。</string>
+    <string name="suppression_mode">抑制模式</string>
+    <string name="suppression_mode_desc">阻止发送意图，仅记录日志。用于测试按键操作而不触发实际按钮动作。</string>
+    <string name="media_control">媒体控制</string>
+    <string name="media_control_desc">启用此功能后，可使用方向盘按钮进行切歌、暂停和播放。当打开其他媒体应用时，控制权会自动切换到该应用。</string>
+    <string name="media_apps">媒体应用</string>
+    <string name="media_apps_desc">选择出现在屏幕上时接管媒体控制的应用</string>
+    <string name="radio_bt_control_title">控制收音机和蓝牙</string>
+    <string name="radio_bt_control_subtitle">与原生音频源配合的高级控制</string>
+    <string name="disable_on_climate">空调界面打开时禁用</string>
+    <string name="disable_on_climate_desc">当系统空调设置窗口出现在屏幕上时，自动禁用媒体控制。</string>
+    <string name="configure_media_apps">配置媒体应用</string>
+    <string name="hide_media_widget">在主屏幕上隐藏媒体小组件</string>
+    <string name="hide_media_widget_desc">使用系统 API 功能在主屏幕上隐藏小组件。允许在主屏幕上向左滑动以访问标准应用菜单</string>
+    <string name="send_media_session_data">发送媒体会话数据</string>
+    <string name="send_media_session_data_desc">发送包含当前播放曲目和播放状态信息的意图</string>
+    <string name="state_logs">状态日志</string>
+    <string name="state_logs_desc">显示初始化和状态变化的详细日志</string>
+    <string name="confirm_delete_title">删除</string>
+    <string name="confirm_delete_message">确定要删除此按键绑定吗？</string>
+    <string name="add_keybind_button">添加按键绑定</string>
+    <string name="kbd_title_keys">按钮</string>
+    <string name="kbd_title_action">操作</string>
+    <string name="kbd_title_app">应用</string>
+    <string name="kbd_desc_bind_keys">按照您希望绑定的方式按下按钮或组合键</string>
+    <string name="kbd_desc_select_action">选择触发时要执行的操作</string>
+    <string name="kbd_desc_select_app">选择要启动的应用</string>
+    <string name="kbd_hint_press_buttons">按下按键</string>
+    <string name="kbd_pattern_double">双击</string>
+    <string name="kbd_pattern_long">长按</string>
+    <string name="kbd_pattern_multi">多重长按</string>
+    <string name="kbd_pattern_short">单击</string>
+    <string name="kbd_pattern_double2">双击</string>
+    <string name="kbd_pattern_long2">长按</string>
+    <string name="kbd_pattern_multi2">多重长按</string>
+    <string name="kbd_pattern_short2">单击</string>
+    <string name="kbd_edit_title">编辑</string>
+    <string name="kbd_edit_subtitle">选择您要更改的内容</string>
+    <string name="kbd_edit_keys_title">触发按钮</string>
+    <string name="kbd_edit_keys_desc">我想将此操作移至其他按钮</string>
+    <string name="kbd_edit_action_title">操作</string>
+    <string name="kbd_edit_action_desc">我想在按下时执行其他操作</string>
+    <string name="kbd_edit_params_title">参数</string>
+    <string name="kbd_edit_params_desc">我想更改操作内部的值</string>
+    <string name="kbd_action_launch_title">启动应用</string>
+    <string name="kbd_action_launch_desc">触发时将启动所选应用</string>
+    <string name="kbd_app_carousel_action_title">应用轮播</string>
+    <string name="kbd_app_carousel_action_desc">触发时将按顺序启动列表中的应用</string>
+    <string name="kbd_navi_media_switch_title">媒体/导航切换</string>
+    <string name="kbd_navi_media_switch_desc">在最后活动的媒体应用和最后使用的导航应用间切换</string>
+    <string name="kbd_title_navi_media_pick">主导航应用</string>
+    <string name="kbd_desc_navi_media_pick">选择要打开的主导航应用</string>
+    <string name="kbd_navi_media_no_app">未安装受支持的导航应用</string>
+    <string name="kbd_title_app_carousel_pick">应用轮播</string>
+    <string name="kbd_desc_app_carousel_pick">选择要启动的应用</string>
+    <string name="kbd_title_app_carousel_order">启动顺序</string>
+    <string name="kbd_desc_app_carousel_order">拖动项目以设置轮播应用的启动顺序</string>
+    <string name="kbd_title_app_carousel_autoplay">自动播放</string>
+    <string name="kbd_desc_app_carousel_autoplay">选择打开后自动开始播放的播放器。</string>
+    <string name="app_carousel_switching_list">应用轮播：%s</string>
+    <string name="key_service_operation">按键服务操作</string>
+    <string name="key_listener_active">按键监听器已启用</string>
+    <string name="launch_delay">启动延迟</string>
+    <string name="launch_shortcut">启动快捷方式</string>
+    <string name="launch_shortcut_desc">触发时将启动所选快捷方式</string>
+    <string name="press_buttons">按下按键</string>
+    <string name="shortcut">快捷方式</string>
+    <string name="shortcut_desc">选择触发绑定时要启动的其他应用的快捷方式</string>
+    <string name="selected_shortcut">已选快捷方式</string>
+    <string name="selected_shortcut_desc">触发绑定时将启动此快捷方式</string>
+    <string name="_import">导入</string>
+    <string name="import_data_prompt">是否要导入此数据？</string>
+    <string name="not_found">未找到</string>
+    <string name="no_such_app">您没有此应用</string>
+    <string name="no_such_shortcut">您没有此快捷方式</string>
+    <string name="disable_during_calls">通话期间禁用</string>
+    <string name="disable_during_calls_desc">在来电或拨出电话期间自动禁用媒体控制。</string>
+    <string name="assign_action_star">分配操作 *</string>
+    <string name="warning_disclaimer">您在此部分进行的所有操作均由您自行承担风险。随意更改参数和数值可能会对您的车辆造成损害。这里有一些命令可能会使您的主机进入恢复模式。请谨慎操作，三思而后行。愿上帝保佑您。</string>
+    <string name="im_scared_but_ready">我很害怕，但我已准备好</string>
+    <string name="not_that_interested">我不感兴趣</string>
+    <string name="configurator">配置器</string>
+    <string name="search">搜索</string>
+    <string name="no_search_results">没有找到应用</string>
+    <string name="favorites_display">添加到“收藏夹”的功能将显示在此处</string>
+    <string name="nothing_found">未找到任何内容</string>
+    <string name="driving_mode">驾驶模式</string>
+    <string name="driving_mode_change">驾驶模式切换</string>
+    <string name="driving_mode_switch">在所选驾驶模式间切换</string>
+    <string name="driving_mode_order_desc">Drag up the modes you want to switch between. The order is also taken into account.</string>
+    <string name="confirm_block_button_actions">确定要阻止按钮操作吗？</string>
+    <string name="audio_source_change">音频源切换</string>
+    <string name="audio_source_switching">在所选音频源间切换</string>
+    <string name="audio_source_switching_list">切换音频：%s</string>
+    <string name="audio_source_bt">蓝牙</string>
+    <string name="audio_source_bt_desc">从已配对的手机和其他蓝牙设备播放</string>
+    <string name="audio_source_radio">收音机</string>
+    <string name="audio_source_radio_desc">The vehicle\'s built-in tuner</string>
+    <string name="audio_source_usb">USB</string>
+    <string name="audio_source_usb_desc">从 USB 驱动器播放</string>
+    <string name="audio_source_cpaa">CarPlay</string>
+    <string name="audio_source_cpaa_desc">iPhone 连接；车机上的 Apple CarPlay 界面</string>
+    <string name="audio_source_online">媒体会话</string>
+    <string name="audio_source_online_desc">其他 Android 和系统音乐播放器（媒体会话和音频焦点）</string>
+    <string name="audio_source_carousel_subtitle">按顺序拖动要切换的音频源。</string>
+    <string name="remember_driving_mode">记住驾驶模式</string>
+    <string name="remember_driving_mode_desc">系统重启后将恢复上次使用的驾驶模式</string>
+    <string name="restore_mode">恢复模式</string>
+    <string name="restore_mode_desc">选择车辆启动后应恢复的模式</string>
+    <string name="driving_mode_persistence">车辆关闭时选择的驾驶模式会被保存，并在下次启动时自动恢复。</string>
+    <string name="supported">支持</string>
+    <string name="possibly_supported">可能支持</string>
+    <string name="driving_mode_change_sound">驾驶模式切换提示音</string>
+    <string name="driving_mode_change_sound_desc">切换驾驶模式时，头枕会发出短暂的提示音。</string>
+    <string name="loading">加载中</string>
+    <string name="select_driving_mode_sound">选择切换时播放通知音的驾驶模式</string>
+    <string name="no">否</string>
+    <string name="select_switch_sound">选择切换提示音</string>
+    <string name="additional">附加参数</string>
+    <string name="switching">切换中</string>
+    <string name="switching_desc">激活时设置所选驾驶模式。再次激活则返回上一模式。</string>
+    <string name="carousel">轮播</string>
+    <string name="carousel_desc">按顺序在所选驾驶模式间切换。</string>
+    <string name="driving_mode_switch_type">驾驶模式切换方式</string>
+    <string name="switch_to_mode_and_back">切换到 %s 模式并返回</string>
+    <string name="turn_on_ignition">打开点火开关</string>
+    <string name="driving_mode_switch_error">驾驶模式切换错误</string>
+    <string name="drag_modes_to_switch">上拉并按顺序排列要切换的模式</string>
+    <string name="active_modes">已启用的模式</string>
+    <string name="active_audio_sources">活跃音频源</string>
+    <string name="drag_up">上拉</string>
+    <string name="driving_mode_switching">切换驾驶模式：%s</string>
+    <string name="export_settings">导出设置</string>
+    <string name="export_settings_desc">保存设置的完整备份，但不包括所选媒体应用。</string>
+    <string name="import_settings_prompt">Do you want to import a full backup of settings? Your current settings will be lost. You will need to confirm the required permissions before applying.</string>
+    <string name="display_driving_mode">在屏幕上显示所选驾驶模式</string>
+    <string name="display_driving_mode_desc">在平板屏幕上显示所选驾驶模式，包括自定义模式</string>
+    <string name="drive_mode_normal_desc">适合日常驾驶的平衡设置：标准牵引力和舒适转向。</string>
+    <string name="drive_mode_comfort_desc">平顺的牵引力和轻盈的转向，带来轻松舒适的旅程。</string>
+    <string name="drive_mode_eco_desc">燃油/能源效率：油门响应平顺，换挡积极。</string>
+    <string name="drive_mode_dynamic_desc">运动响应：更灵敏的油门、更长的档位保持和更重的转向。</string>
+    <string name="drive_mode_sport_plus_desc">增强运动模式：最大响应速度和保持低档位（可用性取决于车型）。</string>
+    <string name="drive_mode_power_desc">最大性能模式：动力系统提供最大牵引力（混动车型中为内燃机和电动机联合驱动）。</string>
+    <string name="drive_mode_adaptive_desc">自适应模式：根据驾驶风格和路况自动选择经济/舒适/运动模式；在混动车型中，还会决定何时启动内燃机。</string>
+    <string name="drive_mode_custom_desc">自定义模式：保存您对牵引力、转向和悬架（如有）的偏好设置。</string>
+    <string name="drive_mode_pure_desc">纯电模式：内燃机仅在高负载或低电量时启动。</string>
+    <string name="drive_mode_hybrid_desc">默认混动模式：系统自动平衡内燃机和电动机，以优化牵引力和能效。</string>
+    <string name="drive_mode_save_desc">Battery preservation: maintains battery level at a set value (PHEV "hold" mode).</string>
+    <string name="drive_mode_eco_hev_phev_desc">混动经济模式：优先使用电力驱动，响应平顺，空调功率适中，以达到最低能耗。</string>
+    <string name="drive_mode_phev_desc">Plug-in hybrid mode: focuses on hybrid logic (battery maintenance/discharge); on some models, identical to "Hybrid".</string>
+    <string name="drive_mode_awd_desc">永久全轮驱动/离合器预紧：在湿滑路面上提供稳定性和牵引力。</string>
+    <string name="drive_mode_eawd_desc">电动四驱：通过电动机驱动后轴，实现即时牵引力和稳定性。</string>
+    <string name="drive_mode_offroad_desc">越野模式：针对不平坦地形重新配置牵引力、传动和稳定系统。</string>
+    <string name="drive_mode_snow_desc">雪地/冰面模式：柔和的油门、平顺的起步和增强的牵引力控制。</string>
+    <string name="drive_mode_sand_desc">沙地模式：保持速度并允许车轮打滑以避免陷车。</string>
+    <string name="drive_mode_mud_desc">泥地模式：增加低端牵引力并允许一定程度的打滑以保持动力。</string>
+    <string name="drive_mode_rock_desc">岩石模式：在低速攀爬时提供极其平顺的牵引力输出。</string>
+    <string name="drive_mode_hdc_desc">陡坡缓降控制：通过对单个车轮制动，在陡坡上保持低速行驶。</string>
+    <string name="drive_mode_start_type_desc">Service start preset (calibration/diagnostics); not a user mode.</string>
+    <string name="drive_mode_xc_desc">Internal designation (no public description); likely off-road/long-distance calibration.</string>
+    <string name="function_status_disclaimer">Even if a function has a negative status, it may remain operational and supported. Similarly, a positive status does not always guarantee the function\'s correct operation. The status reflects how the system classifies the current function. The actual functionality must be verified experimentally.</string>
+    <string name="attention">注意</string>
+    <string name="delegated_to_debugm">通过 DebugM 工作</string>
+    <string name="custom_driving_modes_warning">非标准驾驶模式的使用及其对车辆部件和总成的影响尚未得到充分研究。使用风险自负。</string>
+    <string name="driving_mode_restore_warning">如果您已经在使用 DebugM 或 MConfig 进行模式恢复，建议只使用其中一种。GLauncher 恢复模式的速度可能略快，这可能会干扰 DebugM 中的模式恢复逻辑。</string>
+    <string name="overlay_size">叠加层大小</string>
+    <string name="vertical_offset">垂直偏移</string>
+    <string name="steering_wheel_buttons">方向盘按钮</string>
+    <string name="playback_control">播放控制</string>
+    <string name="audio_control">音频控制</string>
+    <string name="general">通用</string>
+    <string name="public_notes">公开笔记</string>
+    <string name="changes_saved">更改已保存</string>
+    <string name="save_failed">无法保存</string>
+    <string name="public_notes_desc">您可以在此留下关于该功能的有用信息：它接受哪些值、有何特点、哪些功能正常、哪些不正常，等等。</string>
+    <string name="data_fetch_failed">获取数据失败。请检查网络连接。</string>
+    <string name="public_notes_info">笔记对所有人可见，任何人都可以编辑。请友善对待。</string>
+    <string name="create_int_macro">创建 INT 检索宏</string>
+    <string name="create_float_macro">创建 FLOAT 检索宏</string>
+    <string name="create_int_listener">创建 INT 监听器</string>
+    <string name="create_float_listener">创建 FLOAT 监听器</string>
+    <string name="system_values">系统值</string>
+    <string name="current_values">当前值</string>
+    <string name="assumed_values">预设值</string>
+    <string name="set_value">设置值（默认区域 = main）</string>
+    <string name="unknown">未知</string>
+    <string name="status">状态</string>
+    <string name="type">类型</string>
+    <string name="function">功能</string>
+    <string name="single_sensor">传感器</string>
+    <string name="info">信息</string>
+    <string name="set_int">设置整数值</string>
+    <string name="set_float">设置浮点值</string>
+    <string name="in_md">在 MacroDroid 中</string>
+    <string name="active">已启用</string>
+    <string name="inactive">未启用</string>
+    <string name="not_available">不可用</string>
+    <string name="error">错误</string>
+    <string name="value">值</string>
+    <string name="sensor_listeners_disclaimer">监听器并非对所有传感器都有效；功能需通过实验验证。</string>
+    <string name="new_version_available">有新版本可用</string>
+    <string name="link">链接</string>
+    <string name="details">详情</string>
+    <string name="download">下载</string>
+    <string name="call">呼叫</string>
+    <string name="call_number_desc">拨打指定号码</string>
+    <string name="enter_phone_number">输入要拨打的电话号码</string>
+    <string name="enter_number">输入数字</string>
+    <string name="last">上一个</string>
+    <string name="import_settings">导入设置</string>
+    <string name="import_settings_desc">选择要导入所有设置的文件。您当前的设置将会丢失。</string>
+    <string name="import_export_settings">导入和导出设置</string>
+    <string name="free_button_action_title">要释放按钮操作以便通过 GLauncher 进行绑定：</string>
+    <string name="standard_system_actions">标准系统操作：</string>
+    <string name="cut_system_actions">系统快捷操作：</string>
+    <string name="standard">标准</string>
+    <string name="circle_cameras">360度全景摄像头</string>
+    <string name="circle_cameras_desc">启用和禁用360度环视摄像头</string>
+    <string name="kbd_carplay_launch_title">CarPlay</string>
+    <string name="kbd_carplay_launch_desc">如果 CarPlay 隐藏则打开，如果已打开则隐藏。仅在 CarPlay 连接时有效。</string>
+    <string name="kbd_title_carplay_screen">CarPlay 屏幕</string>
+    <string name="kbd_desc_carplay_screen">选择要打开的 CarPlay 屏幕</string>
+    <string name="kbd_carplay_screen_main">主屏幕</string>
+    <string name="kbd_carplay_screen_main_desc">CarPlay 主屏幕，与默认启动相同</string>
+    <string name="kbd_carplay_screen_music">音乐</string>
+    <string name="kbd_carplay_screen_music_desc">浏览和播放音乐</string>
+    <string name="kbd_carplay_screen_now_playing">正在播放</string>
+    <string name="kbd_carplay_screen_now_playing_desc">当前曲目和播放</string>
+    <string name="kbd_carplay_bind_summary">CarPlay：%s</string>
+    <string name="headlight_mode">大灯模式</string>
+    <string name="headlight_mode_desc">按顺序切换所选外部照明模式。</string>
+    <string name="headlight_off">关</string>
+    <string name="headlight_parking">示廓灯</string>
+    <string name="headlight_low_beam">近光灯</string>
+    <string name="headlight_auto">自动</string>
+    <string name="headlight_off_desc">大灯完全关闭。</string>
+    <string name="headlight_parking_desc">仅示廓灯开启。</string>
+    <string name="headlight_low_beam_desc">近光灯已开启。</string>
+    <string name="headlight_auto_desc">自动大灯开启模式。</string>
+    <string name="headlight_mode_switching">切换大灯模式：%s</string>
+    <string name="headlight">大灯</string>
+    <string name="headlight_settings">大灯</string>
+    <string name="system_parameters">系统参数</string>
+    <string name="free_button_action_custom">要为自定义绑定释放按钮操作，请选择一个绿色的（自定义）操作。之后，该按钮操作将在 GLauncher 中可用。对于 Atlas，还需要执行额外步骤才能禁用。</string>
+    <string name="turn_signal_volume">转向灯提示音量</string>
+    <string name="low">低</string>
+    <string name="medium">中</string>
+    <string name="high">高</string>
+    <string name="cannot_open_file">无法打开文件</string>
+    <string name="launcher_title">应用启动器</string>
+    <string name="app_launcher_toggle_desc">打开内置应用启动器。重复激活将关闭启动器。</string>
+    <string name="my_apps">我的应用</string>
+    <string name="all">全部</string>
+    <string name="all_apps">All apps</string>
+    <string name="about_app">关于应用</string>
+    <string name="notifications">通知</string>
+    <string name="icons_and_grid">图标和网格</string>
+    <string name="icon_quality">图标质量</string>
+    <string name="icon_quality_performance_desc">图标图像质量越高，所需内存越多，加载速度越慢。</string>
+    <string name="window_edge_padding">窗口边缘到图标的边距</string>
+    <string name="icon_spacing">图标间距</string>
+    <string name="icon_size">图标大小</string>
+    <string name="icon_corner_radius">图标圆角半径</string>
+    <string name="show_app_names">显示应用名称</string>
+    <string name="app_name_text_size">应用名称文字大小</string>
+    <string name="icon_name_spacing">图标与名称间距</string>
+    <string name="add">添加</string>
+    <string name="empty_grid_message">这里目前还没有内容。请按顶部面板上的“添加”按钮。\n\n锁定按钮可启用或禁用自由移动模式，在此模式下您可以拖动并按所需顺序排列图标。</string>
+    <string name="default_tab">默认标签页</string>
+    <string name="launcher_and_app_window">启动器与应用窗口</string>
+    <string name="launcher_format">启动器布局</string>
+    <string name="icon_view_preview">这是自定义图标外观的预览</string>
+    <string name="app_icon_preview">应用图标预览</string>
+    <string name="apps">应用</string>
+    <string name="divider">分隔线</string>
+    <string name="display_mode">显示模式</string>
+    <string name="window">窗口</string>
+    <string name="fullscreen">全屏</string>
+    <string name="window_border">窗口边框</string>
+    <string name="horizontal_padding">水平边距</string>
+    <string name="vertical_padding">垂直边距</string>
+    <string name="other">其他</string>
+    <string name="show_available_activities">显示可用活动</string>
+    <string name="hide_available_activities">隐藏可用活动</string>
+    <string name="select_apps">选择应用</string>
+    <string name="save">保存</string>
+    <string name="other_activities">其他活动</string>
+    <string name="my">我的</string>
+    <string name="window_transparency">窗口透明度</string>
+    <string name="open_optimization_settings">打开优化设置菜单</string>
+    <string name="optimization_settings_desc">Hidden system settings menu where you can enable or disable system cleanup (on Preface, downloaded maps and music will be preserved).</string>
+    <string name="appearance">外观</string>
+    <string name="theme">主题</string>
+    <string name="light_theme">浅色</string>
+    <string name="dark_theme">深色</string>
+    <string name="create_divider">创建分隔线</string>
+    <string name="divider_description">这是显示在启动器图标之间的标题，用于逻辑上分隔应用、活动和快捷方式的子组。</string>
+    <string name="enter_title">输入标题</string>
+    <string name="rename">重命名</string>
+    <string name="show_shortcut_type_icons">显示快捷方式类型的图标</string>
+    <string name="shortcut_type_icon_size">快捷方式类型图标大小</string>
+    <string name="attention_warning">Attention!</string>
+    <string name="system_dialog_warning_desc">After opening this system dialog in the standard settings (black with a car), an additional non-localized button may appear. It can only be removed by resetting to factory settings. Also, if you disable automatic cleanup, ensure that the device\'s memory does not become full, otherwise the tablet may fail to boot.</string>
+    <string name="add_to_my_apps">添加到我的应用</string>
+    <string name="enter_new_title_my_apps">输入要在“我的应用”标签页中显示的新标题</string>
+    <string name="change_icon">更改图标</string>
+    <string name="launcher_context_edit">编辑</string>
+    <string name="freeze_app">冻结</string>
+    <string name="unfreeze_app">解冻</string>
+    <string name="confirm_freeze_app_message">确定要冻结此应用吗？冻结后将无法启动。</string>
+    <string name="confirm_freeze_system_app_message">警告，这是一个系统应用。禁用可能导致系统运行异常！确定要冻结此应用吗？冻结后将无法启动。</string>
+    <string name="yes">是</string>
+    <string name="divider_current_view">您的分隔线当前显示效果如下</string>
+    <string name="divider_title_preview">测试区域标题预览</string>
+    <string name="divider_text_size">分隔线文字大小</string>
+    <string name="bold_font">粗体</string>
+    <string name="allow_app_name_wrapping">允许应用名称换行</string>
+    <string name="select_action">选择操作</string>
+    <string name="toggle_glauncher">显示/隐藏 GLauncher</string>
+    <string name="select_settings_to_import">选择要导入的设置部分。应用前，您需要确认所需的权限。</string>
+    <string name="general_settings">常规设置</string>
+    <string name="select_settings_to_export">选择要导出的设置部分。导入时，您可以指定要恢复哪些部分。</string>
+    <string name="show_recent_apps">显示最近应用</string>
+    <string name="show_recent_apps_desc">启动器底部将显示之前启动过的应用历史记录。此功能需要启用无障碍服务。</string>
+    <string name="show_frozen_apps">显示已冻结的应用</string>
+    <string name="show_frozen_apps_desc">在“所有应用”网格中显示无法启动的应用。</string>
+    <string name="app_frozen_launch_blocked">应用已冻结</string>
+    <string name="confirm_unfreeze_launch_prefix">是否解冻并启动</string>
+    <string name="allow_system_app_uninstall">允许卸载系统应用</string>
+    <string name="allow_system_app_uninstall_desc">仅在您清楚自己在做什么的情况下启用。这是为了防止系统内发生危险操作而设置的安全措施。</string>
+    <string name="recent_apps">Recent apps</string>
+    <string name="accessibility_service_disabled">无障碍服务已禁用</string>
+    <string name="close">关闭</string>
+    <string name="no_recent_apps">没有最近的应用</string>
+    <string name="app_not_installed">似乎 %s 应用未安装</string>
+    <string name="select">选择</string>
+    <string name="clear">清除</string>
+    <string name="change">更改</string>
+    <string name="light_theme_schedule">浅色主题从 %1$s 到 %2$s</string>
+    <string name="auto">自动</string>
+    <string name="interface_scale">界面缩放</string>
+    <string name="control_type">控制类型</string>
+    <string name="connection_port">连接端口</string>
+    <string name="enter_your_port">输入端口号</string>
+    <string name="off">关</string>
+    <string name="connected">已连接</string>
+    <string name="connecting">正在连接</string>
+    <string name="disconnected">已断开</string>
+    <string name="launcher_extra_features_desc">在启动器中提供额外功能：检测应用在系统中的状态（运行中/未运行）、强制停止等功能。</string>
+    <string name="stop_dim_interaction_on_boot_title">系统启动时停止 DIM 交互</string>
+    <string name="stop_dim_interaction_on_boot_desc">每次系统启动时自动停止 DIM 交互服务（该服务会阻止登录并干扰某些应用）。</string>
+    <string name="rear_wiper_auto_title">后雨刮器自动模式</string>
+    <string name="rear_wiper_auto_desc">禁用此功能可防止挂入倒挡（R）时后雨刮器自动启动。</string>
+    <string name="open">打开</string>
+    <string name="stop">停止</string>
+    <string name="back_action_simulation">Simulate system "Back" action</string>
+    <string name="home">主页</string>
+    <string name="home_action_simulation">Simulate system "Home" action</string>
+    <string name="recents">最近应用/任务切换器</string>
+    <string name="recents_action_description">将 Windows 风格的 Alt+Tab 菜单与 Android 最近任务结合。多次激活可在应用间循环切换。您可以通过向上滑动或点击叉号手动关闭正在运行的任务。</string>
+    <string name="adb_required_title">此功能需要启用 ADB 才能正常工作。</string>
+    <string name="additional_press_processing">附加按键处理</string>
+    <string name="alternative_menu_detection">备用菜单键检测</string>
+    <string name="alternative_menu_detection_desc">如果检测不到菜单按钮的长按操作，请尝试启用此按钮的备用检测方式。</string>
+    <string name="alternative_mute_detection">备用静音键检测</string>
+    <string name="alternative_mute_detection_desc">如果检测不到静音按钮的长按操作，请尝试启用此按钮的备用检测方式。</string>
+    <string name="return_to_previous_app">返回上一个应用</string>
+    <string name="return_to_previous_app_desc">展开之前打开的应用（如果它未关闭）</string>
+    <string name="media_control_mode_full_title">完全控制</string>
+    <string name="media_control_mode_full_subtitle">控制所有音源：Android、收音机和蓝牙。所有操作均通过本应用处理。</string>
+    <string name="media_control_mode_session_title">媒体会话</string>
+    <string name="media_control_mode_session_subtitle">仅控制当前活动的 Android 媒体会话。收音机和蓝牙由固件处理。</string>
+    <string name="exceptions">例外情况</string>
+    <string name="audio_control_exceptions_desc">选择在前台运行时自动禁用媒体控制的应用</string>
+    <string name="stock_launcher_title">原生启动器</string>
+    <string name="stock_launcher_subtitle">管理默认系统启动器中的应用。选择要显示的应用及其显示顺序。</string>
+    <string name="install_gappstorage_first">需要 GAppStorage，请先安装它。</string>
+    <string name="launcher_order_unavailable">1) 无法设置启动器中应用的顺序，因为原生启动器在显示之前会使用 HashMap 打乱顺序。\n2) 从启动器中移除所有应用后，需要重启车机才能使更改生效。</string>
+    <string name="stock_launcher_restart_warning">原生启动器的使用方式与普通设备上的启动器不同。更新启动器中显示的应用时（以及其他某些情况下），它可能工作异常——某些应用可能从列表中消失。通常重启启动器或重启设备即可解决此问题。确定要重启原生启动器吗？</string>
+    <string name="restart_launcher">重启启动器</string>
+    <string name="api_text_launcher"><![CDATA[<strong>Launcher Control</strong>
+<br>
+<br>
+Show/hide launcher:
+<br>
+In MacroDroid: Actions -> Send Intent
+<br>
+<strong>Target</strong>: Broadcast<br>
+<strong>Action:</strong> com.salat.gbinder.TOGGLE_LAUNCHER<br>
+<strong>Package</strong>: com.salat.gbinder
+]]></string>
+    <string name="api_text"><![CDATA[<strong>Receiving Key Press Events</strong>
+<br>
+In MacroDroid: Triggers -> Intent Received
+<br>
+<br>
+<strong>Actions</strong>:
+<br>\"com.salat.gbinder.SHORT_CLICK\"
+<br>\"com.salat.gbinder.LONG_PRESS\"
+<br>\"com.salat.gbinder.MULTI_LONG_PRESS\"
+<br>\"com.salat.gbinder.DOUBLE_CLICK\"
+<br>\"com.salat.gbinder.HOLD_START\"
+<br>\"com.salat.gbinder.HOLD_STOP\"
+<br>\"com.salat.gbinder.KEY_EVENT\"
+<br>
+<br>
+<strong>Additional</strong>:
+<br>\"code\" -> keyCode of the key.
+<br>for KEY_EVENT additionally: \"event\" -> [0|1|3] where 0 = DOWN, 1 = UP, 3 = CANCEL <br>and \"func\" -> system function code
+<br>
+<br>for MULTI_LONG_PRESS, the \"code\" parameter is received in the format -> 119+200087 with key codes, the code is formed from the smaller number to the larger
+]]></string>
+    <string name="api_text2"><![CDATA[<strong>Working with Audio Sources</strong>
+<br>
+<br>
+To listen for changes in audio sources on the head unit:
+<br>
+In MacroDroid: Triggers -> Intent Received
+<br>
+<strong>Action</strong>: com.salat.gbinder.AUDIO_SOURCE_CHANGED<br>
+<strong>Additional</strong>: source=[USB|BT|RADIO|CPAA|ONLINE|OTHER|YUNTING|UNKNOWN]
+<br>
+<br>
+To change the current audio source of the head unit:
+<br>
+In MacroDroid: Actions -> Send Intent
+<br>
+<strong>Target</strong>: Broadcast<br>
+<strong>Action</strong>: com.salat.gbinder.SET_AUDIO_SOURCE<br>
+<strong>Package</strong>: com.salat.gbinder<br>
+<strong>Additional 1</strong>: target=[USB|BT|RADIO|CPAA|ONLINE|OTHER|YUNTING|UNKNOWN]<br>
+<strong>Additional 2</strong>: optional source=[UNKNOWN|WECARFLOW|KUWO|KUGOU|NETEASE_CLOUD|SOHU|JINRI|QYS|OTHER|FANDENG|TENCENT_VIDEO|XMLY|GC|HUOSHAN|BILIBILI|THUNDER_VOICE|CMVIDEO_VOICE]<br>
+<strong>Additional 3</strong>: optional autoplay=[1|0]
+]]></string>
+    <string name="api_text3"><![CDATA[<strong>Media Control</strong>
+<br>
+<br>
+Enabling and disabling media control:
+<br>
+In MacroDroid: Actions -> Send Intent
+<br>
+<strong>Target</strong>: Broadcast<br><br>
+<strong>Action:</strong> com.salat.gbinder.TEMPORARY_DISABLE_MEDIA_CONTROL<br>
+<strong>Additional:</strong> duration -> Duration of disabling in seconds<br><br>
+<strong>Other actions:</strong>
+<br>com.salat.gbinder.ENABLE_MEDIA_CONTROL
+<br>com.salat.gbinder.SMART_ENABLE_MEDIA_CONTROL
+<br>com.salat.gbinder.DISABLE_MEDIA_CONTROL<br><br>
+<strong>Package</strong>: com.salat.gbinder<br>
+"SMART" - Enables only if it was previously enabled manually
+]]></string>
+    <string name="api_text4"><![CDATA[<strong>Receiving Active Media Session Data</strong>
+<br>
+<br>
+Playback status information:<br>
+<strong>Action:</strong> com.salat.gbinder.PLAYBACK_STATE<br>
+<strong>Additional:</strong> isPlaying=[0|1] -> 1 playback is active, 0 nothing is playing
+<br>
+<br>
+Current track data:<br>
+<strong>Action:</strong> com.salat.gbinder.PLAYBACK_METADATA
+<br><strong>Additional 1:</strong> id -> unique track identifier
+<br><strong>Additional 2:</strong> packageName -> package name of the app playing the media session
+<br><strong>Additional 3:</strong> appName -> application name
+<br><strong>Additional 4:</strong> title -> title
+<br><strong>Additional 5:</strong> artist -> artist
+<br><strong>Additional 6:</strong> album -> album name
+<br><strong>Additional 7:</strong> uri -> track URI
+<br><strong>Additional 8:</strong> coverUri -> cover art URI
+<br>
+<br>
+Intents are sent only when media data changes; you can manually request them via an outgoing broadcast:<br>
+<strong>Action:</strong> com.salat.gbinder.REQUEST_PLAYBACK_INFO
+]]></string>
+    <string name="api_text5"><![CDATA[<strong>Working with Phone Calls</strong>
+<br>
+<br>
+In MacroDroid: Actions -> Send Intent
+<br>
+<br>
+Make a phone call<br>
+<strong>Action 1:</strong> com.salat.gbinder.PHONE_CALL
+<br><strong>Additional:</strong> number -> phone number (specify the variable type as "string", otherwise the "+" in the number will be lost)
+<br>
+<br>
+Answer a call<br>
+<strong>Action 2:</strong> com.salat.gbinder.ANSWER_CALL
+<br>
+<br>
+Reject a call<br>
+<strong>Action 3:</strong> com.salat.gbinder.REJECT_CALL
+<br>
+<br>
+Disconnect a call<br>
+<strong>Action 5:</strong> com.salat.gbinder.DISCONNECT_CALL
+]]></string>
+    <string name="api_text6"><![CDATA[<strong>Camera Control</strong>
+<br>
+<br>
+Show/hide 360 cameras:
+<br>
+In MacroDroid: Actions -> Send Intent
+<br>
+<strong>Target</strong>: Broadcast<br>
+<strong>Actions:</strong>
+<br>com.salat.gbinder.TOGGLE_CAMERA<br>
+<strong>Package</strong>: com.salat.gbinder
+]]></string>
+    <string name="api_text7"><![CDATA[<strong>Setting Configurator Value</strong>
+<br>
+<br>
+In MacroDroid: Actions -> Send Intent
+<br>
+<strong>Target</strong>: Broadcast<br>
+<strong>Action1:</strong> com.salat.gbinder.SET_INT_PROPERTY<br>
+<strong>Action2:</strong> com.salat.gbinder.SET_FLOAT_PROPERTY<br>
+<strong>Package</strong>: com.salat.gbinder<br><br>
+<strong>Additional1:</strong> id -> parameter identifier<br>
+<strong>Additional2:</strong> value -> new value<br>
+<strong>Additional3:</strong> area -> scope of application (optional)
+]]></string>
+    <string name="api_text8"><![CDATA[<strong>Retrieving Values and Subscribing to Value Changes</strong>
+<br>
+<br>
+In MacroDroid: Actions -> Send Intent
+<br>
+<strong>Target</strong>: Broadcast<br>
+<strong>Action1:</strong> com.salat.gbinder.GET_INT_PROPERTY<br>
+<strong>Action2:</strong> com.salat.gbinder.GET_FLOAT_PROPERTY<br>
+<strong>Action3:</strong> com.salat.gbinder.LISTEN_PROPERTY_CHANGES<br> - subscribe once, and then an action will be received for each change of the specified function
+<strong>Package</strong>: com.salat.gbinder<br><br>
+<strong>Additional1:</strong> id -> parameter identifier<br>
+<strong>Additional2:</strong> area -> scope of application (optional)
+<br><br>
+In response to GET_*, the action com.salat.gbinder.PROPERTY_VALUE_RESULT is received<br>
+In response to LISTEN_*, the action com.salat.gbinder.PROPERTY_VALUE_CHANGED is received<br>
+<strong>Additional1</strong>: id = function identifier<br>
+<strong>Additional2</strong>: area = scope of application<br>
+<strong>Additional3</strong>: value = current value
+]]></string>
+    <string name="api_text9"><![CDATA[<strong>Retrieving Sensor Values and Subscribing to Sensor Value Changes</strong>
+<br>
+<br>
+In MacroDroid: Actions -> Send Intent
+<br>
+<strong>Target</strong>: Broadcast<br>
+<strong>Package</strong>: com.salat.gbinder<br><br>
+<strong>Action1:</strong> com.salat.gbinder.GET_INT_SENSOR<br>
+<strong>Action2:</strong> com.salat.gbinder.GET_FLOAT_SENSOR<br>
+<strong>Action3:</strong> com.salat.gbinder.LISTEN_SENSOR_CHANGES<br>
+ - subscribe once, and then an action will be received for each sensor change. Not all sensors are supported; functionality is determined experimentally.<br>
+<strong>Additional:</strong> id -> parameter identifier<br><br>
+In response to GET_*_SENSOR, the action com.salat.gbinder.SENSOR_*_RESULT is received<br>
+In response to LISTEN_SENSOR_*, the action com.salat.gbinder.SENSOR_VALUE_CHANGED (for FLOAT values)<br>
+and com.salat.gbinder.SENSOR_*_CHANGED is received<br>
+<strong>Additional1</strong>: id = sensor identifier<br>
+<strong>Additional2</strong>: value = current value
+]]></string>
+    <string name="api_text10"><![CDATA[<strong>Retrieving Info Parameter Values</strong>
+<br>
+<br>
+In MacroDroid: Actions -> Send Intent
+<br>
+<strong>Target</strong>: Broadcast<br>
+<strong>Package</strong>: com.salat.gbinder<br><br>
+<strong>Action1:</strong> com.salat.gbinder.GET_INT_INFO<br>
+<strong>Action2:</strong> com.salat.gbinder.GET_FLOAT_INFO<br>
+<strong>Action3:</strong> com.salat.gbinder.GET_STRING_INFO<br><br>
+In response to GET_*_INFO, the action com.salat.gbinder.INFO_VALUE_RESULT is received<br>
+<strong>Additional1</strong>: id = parameter identifier<br>
+<strong>Additional2</strong>: value = current value
+]]></string>
+    <string name="apply">应用</string>
+    <string name="geely_launcher_empty_grid">按 + 添加</string>
+    <string name="geely_launcher_add_apps">启动器应用</string>
+    <string name="geely_launcher_add_apps_desc">选择要在原生启动器网格中显示的应用。</string>
+    <string name="geely_launcher_applying">应用中…</string>
+    <string name="geely_launcher_apply_success">启动器应用已成功更新</string>
+    <string name="geely_launcher_apply_error">更新启动器应用失败</string>
+    <string name="cluster_bg_title">仪表盘主题定制</string>
+    <string name="cluster_bg_subtitle">备份、恢复和替换仪表盘主题背景。逐字节修改存储仪表盘 PNG 图片的 KZB 固件资源文件，将其替换为您自己的图像。</string>
+    <string name="cluster_bg_warning">Modifications to QNX are risky and irreversible without a full flash dump. Always make a backup first. Make sure the car is RUNNING and will not lose power. Do not turn off the car during the writing process. Do not leave this window and wait until all operations are completed. By pressing the buttons below, you accept all risks of possible loss of warranty and failure of your car\'s systems. All operations are performed at your own risk.</string>
+    <string name="cluster_bg_backup">备份主题</string>
+    <string name="cluster_bg_backup_desc">从仪表盘中提取 background.kzb 并分享</string>
+    <string name="cluster_bg_restore">恢复主题备份</string>
+    <string name="cluster_bg_restore_desc">选择一个已保存的 background.kzb 文件并将其写回，然后重启仪表盘</string>
+    <string name="cluster_bg_install">安装背景</string>
+    <string name="cluster_bg_install_desc">选择一张图片并替换一个主题，保持精确的字节大小</string>
+    <string name="cluster_bg_pick_slot">选择要替换的主题</string>
+    <string name="cluster_bg_slot_label">主题 %1$d (%2$s)</string>
+    <string name="cluster_bg_status_checking">正在检查…</string>
+    <string name="cluster_bg_status_checking_desc">正在探测仪表盘连接</string>
+    <string name="cluster_bg_status_ready">仪表盘已连接并准备就绪</string>
+    <string name="cluster_bg_status_ready_desc">备份和安装可用</string>
+    <string name="cluster_bg_status_unreachable">QNX 仪表盘不可达</string>
+    <string name="cluster_bg_status_unreachable_desc">点击重试</string>
+    <string name="cluster_bg_status_no_shell">ADB 助手不可用</string>
+    <string name="cluster_bg_status_no_shell_desc">请先启用</string>
+    <string name="cluster_bg_busy_generic">工作中…</string>
+    <string name="cluster_bg_busy_backup">正在备份…</string>
+    <string name="cluster_bg_busy_download">正在读取仪表盘…</string>
+    <string name="cluster_bg_busy_install">正在安装…</string>
+    <string name="cluster_bg_confirm_restore_title">恢复此备份？</string>
+    <string name="cluster_bg_confirm_install_title">安装此背景？</string>
+    <string name="cluster_bg_confirm_danger_message">此操作会写入 QNX 仪表盘并重启它。写入过程中断电可能会永久损坏仪表盘，无法恢复。当前文件会先进行备份。是否继续？</string>
+    <string name="cluster_bg_done_backup">备份已创建</string>
+    <string name="cluster_bg_done_reboot">已写入并验证 — 仪表盘正在重启</string>
+    <string name="cluster_bg_err_read_file">无法读取所选文件</string>
+    <string name="cluster_bg_err_no_shell">ADB 助手不可用</string>
+    <string name="cluster_bg_err_no_shared">共享文件夹不可写</string>
+    <string name="cluster_bg_err_unreachable">QNX 仪表盘不可达</string>
+    <string name="cluster_bg_err_target_missing">在仪表盘上未找到 background.kzb 文件</string>
+    <string name="cluster_bg_err_transfer">文件传输失败</string>
+    <string name="cluster_bg_err_verify">校验和不匹配 — 更改已回滚</string>
+    <string name="cluster_bg_err_remount">无法重新挂载仪表盘分区</string>
+    <string name="cluster_bg_err_checksum">仪表盘上无校验和工具 — 无法验证</string>
+    <string name="cluster_bg_err_too_large">图片对于此主题槽位过于复杂 — 请简化图片或选择更大的槽位</string>
+    <string name="cluster_bg_err_invalid_image">无法准备图像</string>
+    <string name="cluster_bg_err_invalid_file">不是有效的 background.kzb 文件</string>
+    <string name="cluster_bg_err_no_slots">文件中未找到背景槽位</string>
+    <string name="cluster_bg_err_no_file">未加载仪表盘文件</string>
+    <string name="cluster_bg_err_unknown">出错了</string>
+    <string name="cluster_theme_replacement_desc">此功能会替换预装的仪表盘主题。如果您的系统无法切换主题，则尝试替换它们毫无意义。</string>
+    <string name="floating_button">悬浮按钮</string>
+    <string name="floating_button_desc">在屏幕上显示一个悬浮快捷按钮</string>
+    <string name="floating_button_settings">悬浮按钮设置</string>
+    <string name="gesture_single_click">单击</string>
+    <string name="gesture_double_click">双击</string>
+    <string name="gesture_triple_click">三击</string>
+    <string name="gesture_long_press">长按</string>
+    <string name="gesture_swipe_up">向上滑动</string>
+    <string name="gesture_swipe_down">向下滑动</string>
+    <string name="gesture_swipe_left">向左滑动</string>
+    <string name="gesture_swipe_right">向右滑动</string>
+    <string name="gesture_none">无</string>
+    <string name="gesture_toggle_launcher">切换启动器</string>
+    <string name="gesture_launch_app">启动应用</string>
+    <string name="permission_management">权限管理</string>
+    <string name="permission_management_desc">通过ADB查看和管理应用权限</string>
+    <string name="grant_all_permissions">一键授予所有权限</string>
+    <string name="grant_all_permissions_desc">为所选应用授予所有可用的运行时权限</string>
+    <string name="grant">授权</string>
+    <string name="granting">授权中...</string>
+    <string name="select_all">全选</string>
+    <string name="deselect_all">取消全选</string>
+    <string name="select_app">选择应用</string>
+    <string name="hide_app">隐藏</string>
+    <string name="unhide_app">取消隐藏</string>
+    <string name="show_hidden_apps">显示已隐藏应用</string>
+    <string name="show_hidden_apps_desc">在所有应用网格中显示之前隐藏的应用</string>
+    <string name="app_hidden">应用已隐藏</string>
+    <string name="root_mode">Root 模式</string>
+    <string name="root_mode_desc">通过 su 直接执行命令，无需 ADB 连接。需要 root 权限。</string>
+
+</resources>
