@@ -494,4 +494,326 @@
     <string name="cluster_bg_err_unknown">出错了</string>
     <string name="cluster_theme_replacement_desc">此功能会替换预装的仪表盘主题。如果您的系统无法切换主题，则尝试替换它们毫无意义。</string>
 
+    <string name="api_text"><![CDATA[<strong>接收按键事件</strong>
+<br>
+在 MacroDroid 中:触发器 -> 收到 Intent
+<br>
+<br>
+<strong>操作</strong>:
+<br>"com.salat.gbinder.SHORT_CLICK"
+<br>"com.salat.gbinder.LONG_PRESS"
+<br>"com.salat.gbinder.MULTI_LONG_PRESS"
+<br>"com.salat.gbinder.DOUBLE_CLICK"
+<br>"com.salat.gbinder.HOLD_START"
+<br>"com.salat.gbinder.HOLD_STOP"
+<br>"com.salat.gbinder.KEY_EVENT"
+<br>
+<br>
+<strong>附加</strong>:
+<br>"code" -> 按键的 keyCode。
+<br>对于 KEY_EVENT 额外:"event" -> [0|1|3],其中 0 = 按下,1 = 抬起,3 = 取消 <br>以及 "func" -> 系统功能代码
+<br>
+<br>对于 MULTI_LONG_PRESS,"code" 参数以 -> 119+200087 的格式接收,代码从小到大排列
+]]></string>
+    <string name="api_text10"><![CDATA[<strong>获取信息参数值</strong>
+<br>
+<br>
+在 MacroDroid 中:操作 -> 发送 Intent
+<br>
+<strong>目标</strong>:广播<br>
+<strong>包名</strong>:com.salat.gbinder<br><br>
+<strong>操作1:</strong> com.salat.gbinder.GET_INT_INFO<br>
+<strong>操作2:</strong> com.salat.gbinder.GET_FLOAT_INFO<br>
+<strong>操作3:</strong> com.salat.gbinder.GET_STRING_INFO<br><br>
+响应 GET_*_INFO 时,会收到操作 com.salat.gbinder.INFO_VALUE_RESULT<br>
+<strong>附加1</strong>:id = 参数标识符<br>
+<strong>附加2</strong>:value = 当前值
+]]></string>
+    <string name="api_text11"><![CDATA[<strong>可见应用控制</strong>
+<br>
+<br>
+手动设置可见应用,例如无障碍服务无法检测到的悬浮窗:
+<br>
+在 MacroDroid 中:操作 -> 发送 Intent
+<br>
+<strong>目标</strong>:广播<br>
+<strong>操作:</strong> com.salat.gbinder.SET_VISIBLE_PACKAGE<br>
+<strong>包名</strong>:com.salat.gbinder<br><br>
+<strong>附加1:</strong> pkg -> 要设为可见的包名<br>
+<strong>附加2:</strong> release=[1|0] -> 1 释放保持,可不带 pkg 发送<br>
+<strong>附加3:</strong> history=[1|0] -> 1 同时将包添加到最近任务(可选)<br>
+<strong>附加4:</strong> timeout -> 自动释放秒数,默认 45,0 = 保持直到释放(可选)<br><br>
+悬浮窗打开时发送 pkg,关闭时始终发送 release = 1,否则包检测会一直冻结直到超时
+]]></string>
+    <string name="api_text2"><![CDATA[<strong>使用音频源</strong>
+<br>
+<br>
+监听车机音频源变化:
+<br>
+在 MacroDroid 中:触发器 -> 收到 Intent
+<br>
+<strong>操作</strong>:com.salat.gbinder.AUDIO_SOURCE_CHANGED<br>
+<strong>附加</strong>:source=[USB|BT|RADIO|CPAA|ONLINE|OTHER|YUNTING|UNKNOWN]
+<br>
+<br>
+更改车机当前音频源:
+<br>
+在 MacroDroid 中:操作 -> 发送 Intent
+<br>
+<strong>目标</strong>:广播<br>
+<strong>操作</strong>:com.salat.gbinder.SET_AUDIO_SOURCE<br>
+<strong>包名</strong>:com.salat.gbinder<br>
+<strong>附加 1</strong>:target=[USB|BT|RADIO|CPAA|ONLINE|OTHER|YUNTING|UNKNOWN]<br>
+<strong>附加 2</strong>:可选 source=[UNKNOWN|WECARFLOW|KUWO|KUGOU|NETEASE_CLOUD|SOHU|JINRI|QYS|OTHER|FANDENG|TENCENT_VIDEO|XMLY|GC|HUOSHAN|BILIBILI|THUNDER_VOICE|CMVIDEO_VOICE]<br>
+<strong>附加 3</strong>:可选 autoplay=[1|0]
+]]></string>
+    <string name="api_text3"><![CDATA[<strong>媒体控制</strong>
+<br>
+<br>
+启用和禁用媒体控制:
+<br>
+在 MacroDroid 中:操作 -> 发送 Intent
+<br>
+<strong>目标</strong>:广播<br><br>
+<strong>操作:</strong> com.salat.gbinder.TEMPORARY_DISABLE_MEDIA_CONTROL<br>
+<strong>附加:</strong> duration -> 禁用时长(秒)<br><br>
+<strong>其他操作:</strong>
+<br>com.salat.gbinder.ENABLE_MEDIA_CONTROL
+<br>com.salat.gbinder.SMART_ENABLE_MEDIA_CONTROL
+<br>com.salat.gbinder.DISABLE_MEDIA_CONTROL<br><br>
+<strong>包名</strong>:com.salat.gbinder<br>
+"SMART" - 仅当之前手动启用过时才启用
+]]></string>
+    <string name="api_text4"><![CDATA[<strong>接收活动媒体会话数据</strong>
+<br>
+<br>
+播放状态信息:<br>
+<strong>操作:</strong> com.salat.gbinder.PLAYBACK_STATE<br>
+<strong>附加:</strong> isPlaying=[0|1] -> 1 正在播放,0 无播放
+<br>
+<br>
+当前曲目数据:<br>
+<strong>操作:</strong> com.salat.gbinder.PLAYBACK_METADATA
+<br><strong>附加 1:</strong> id -> 唯一曲目标识符
+<br><strong>附加 2:</strong> packageName -> 播放媒体会话的应用包名
+<br><strong>附加 3:</strong> appName -> 应用名称
+<br><strong>附加 4:</strong> title -> 标题
+<br><strong>附加 5:</strong> artist -> 艺术家
+<br><strong>附加 6:</strong> album -> 专辑名
+<br><strong>附加 7:</strong> uri -> 曲目 URI
+<br><strong>附加 8:</strong> coverUri -> 封面 URI
+<br>
+<br>
+仅当媒体数据变化时发送 Intent;可通过发出广播手动请求:<br>
+<strong>操作:</strong> com.salat.gbinder.REQUEST_PLAYBACK_INFO
+]]></string>
+    <string name="api_text5"><![CDATA[<strong>使用电话</strong>
+<br>
+<br>
+在 MacroDroid 中:操作 -> 发送 Intent
+<br>
+<br>
+拨打电话<br>
+<strong>操作 1:</strong> com.salat.gbinder.PHONE_CALL
+<br><strong>附加:</strong> number -> 电话号码(请将变量类型设为"字符串",否则号码中的"+"会丢失)
+<br>
+<br>
+接听电话<br>
+<strong>操作 2:</strong> com.salat.gbinder.ANSWER_CALL
+<br>
+<br>
+拒接电话<br>
+<strong>操作 3:</strong> com.salat.gbinder.REJECT_CALL
+<br>
+<br>
+挂断电话<br>
+<strong>操作 5:</strong> com.salat.gbinder.DISCONNECT_CALL
+]]></string>
+    <string name="api_text6"><![CDATA[<strong>摄像头控制</strong>
+<br>
+<br>
+显示/隐藏 360 摄像头:
+<br>
+在 MacroDroid 中:操作 -> 发送 Intent
+<br>
+<strong>目标</strong>:广播<br>
+<strong>操作:</strong>
+<br>com.salat.gbinder.TOGGLE_CAMERA<br>
+<strong>包名</strong>:com.salat.gbinder
+]]></string>
+    <string name="api_text7"><![CDATA[<strong>设置配置器值</strong>
+<br>
+<br>
+在 MacroDroid 中:操作 -> 发送 Intent
+<br>
+<strong>目标</strong>:广播<br>
+<strong>操作1:</strong> com.salat.gbinder.SET_INT_PROPERTY<br>
+<strong>操作2:</strong> com.salat.gbinder.SET_FLOAT_PROPERTY<br>
+<strong>包名</strong>:com.salat.gbinder<br><br>
+<strong>附加1:</strong> id -> 参数标识符<br>
+<strong>附加2:</strong> value -> 新值<br>
+<strong>附加3:</strong> area -> 应用范围(可选)
+]]></string>
+    <string name="api_text8"><![CDATA[<strong>获取值并订阅值变化</strong>
+<br>
+<br>
+在 MacroDroid 中:操作 -> 发送 Intent
+<br>
+<strong>目标</strong>:广播<br>
+<strong>操作1:</strong> com.salat.gbinder.GET_INT_PROPERTY<br>
+<strong>操作2:</strong> com.salat.gbinder.GET_FLOAT_PROPERTY<br>
+<strong>操作3:</strong> com.salat.gbinder.LISTEN_PROPERTY_CHANGES<br> - 订阅一次,之后每次指定功能变化都会收到操作
+<strong>包名</strong>:com.salat.gbinder<br><br>
+<strong>附加1:</strong> id -> 参数标识符<br>
+<strong>附加2:</strong> area -> 应用范围(可选)
+<br><br>
+响应 GET_*,会收到操作 com.salat.gbinder.PROPERTY_VALUE_RESULT<br>
+响应 LISTEN_*,会收到操作 com.salat.gbinder.PROPERTY_VALUE_CHANGED<br>
+<strong>附加1</strong>:id = 功能标识符<br>
+<strong>附加2</strong>:area = 应用范围<br>
+<strong>附加3</strong>:value = 当前值
+]]></string>
+    <string name="api_text9"><![CDATA[<strong>获取传感器值并订阅传感器值变化</strong>
+<br>
+<br>
+在 MacroDroid 中:操作 -> 发送 Intent
+<br>
+<strong>目标</strong>:广播<br>
+<strong>包名</strong>:com.salat.gbinder<br><br>
+<strong>操作1:</strong> com.salat.gbinder.GET_INT_SENSOR<br>
+<strong>操作2:</strong> com.salat.gbinder.GET_FLOAT_SENSOR<br>
+<strong>操作3:</strong> com.salat.gbinder.LISTEN_SENSOR_CHANGES<br>
+ - 订阅一次,之后每次传感器变化都会收到操作。并非所有传感器都受支持,功能需实验确定。<br>
+<strong>附加:</strong> id -> 参数标识符<br><br>
+响应 GET_*_SENSOR,会收到操作 com.salat.gbinder.SENSOR_*_RESULT<br>
+响应 LISTEN_SENSOR_*,会收到操作 com.salat.gbinder.SENSOR_VALUE_CHANGED(针对 FLOAT 值)
+以及 com.salat.gbinder.SENSOR_*_CHANGED<br>
+<strong>附加1</strong>:id = 传感器标识符<br>
+<strong>附加2</strong>:value = 当前值
+]]></string>
+    <string name="api_text_launcher"><![CDATA[<strong>启动器控制</strong>
+<br>
+<br>
+显示/隐藏启动器:
+<br>
+在 MacroDroid 中:操作 -> 发送 Intent
+<br>
+<strong>目标</strong>:广播<br>
+<strong>操作:</strong> com.salat.gbinder.TOGGLE_LAUNCHER<br>
+<strong>包名</strong>:com.salat.gbinder
+]]></string>
+    <string name="backup_from_earlier_version">此设置集是在较早版本的 GIB 上保存的</string>
+    <string name="backup_from_later_version">此设置集是在较新版本的 GIB 上创建的。请更新应用,否则部分设置可能丢失或导入出错</string>
+    <string name="car_fn_antibuks">牵引力控制</string>
+    <string name="car_fn_antibuks_desc">开关切换</string>
+    <string name="car_fn_climate_menu">空调菜单</string>
+    <string name="car_fn_climate_menu_desc">在屏幕上显示系统空调菜单</string>
+    <string name="car_fn_default_level_title">默认档位</string>
+    <string name="car_fn_driver_heat">主驾座椅加热</string>
+    <string name="car_fn_driver_heat_desc">循环切换加热档位</string>
+    <string name="car_fn_driver_vent">主驾座椅通风</string>
+    <string name="car_fn_driver_vent_desc">循环切换通风档位</string>
+    <string name="car_fn_front_defrost">前挡风玻璃</string>
+    <string name="car_fn_front_defrost_desc">开关前挡风玻璃除霜</string>
+    <string name="car_fn_light">大灯</string>
+    <string name="car_fn_light_desc">切换大灯模式</string>
+    <string name="car_fn_max_defrost">最大风量</string>
+    <string name="car_fn_max_defrost_desc">开关切换</string>
+    <string name="car_fn_me_cold">我冷</string>
+    <string name="car_fn_me_cold_desc">开启最大座椅和方向盘加热。再次按下关闭</string>
+    <string name="car_fn_me_cooled">我凉快了</string>
+    <string name="car_fn_me_hot">我热</string>
+    <string name="car_fn_me_hot_desc">开启空调、内循环、最低温度、大风量和座椅通风。再次按下切换为适中模式</string>
+    <string name="car_fn_me_warmed">我暖和了</string>
+    <string name="car_fn_mirrors">后视镜</string>
+    <string name="car_fn_mirrors_desc">折叠 / 展开</string>
+    <string name="car_fn_passenger_heat">副驾座椅加热</string>
+    <string name="car_fn_passenger_heat_desc">循环切换加热档位</string>
+    <string name="car_fn_passenger_vent">副驾座椅通风</string>
+    <string name="car_fn_passenger_vent_desc">循环切换通风档位</string>
+    <string name="car_fn_rear_defrost">后挡风玻璃</string>
+    <string name="car_fn_rear_defrost_desc">开关后挡风玻璃除霜</string>
+    <string name="car_fn_recirculation">内循环</string>
+    <string name="car_fn_recirculation_desc">开关切换</string>
+    <string name="car_fn_seat_memory">座椅记忆</string>
+    <string name="car_fn_seat_memory_desc">打开座椅记忆设置</string>
+    <string name="car_fn_toast_antibuks">牵引力控制</string>
+    <string name="car_fn_toast_antibuks_off">牵引力控制已关闭</string>
+    <string name="car_fn_toast_antibuks_on">牵引力控制已开启</string>
+    <string name="car_fn_toast_driver_heat">主驾座椅加热</string>
+    <string name="car_fn_toast_driver_heat_level">主驾座椅加热 %1$d</string>
+    <string name="car_fn_toast_driver_heat_off">正在关闭主驾座椅加热</string>
+    <string name="car_fn_toast_driver_vent">主驾座椅通风</string>
+    <string name="car_fn_toast_driver_vent_level">主驾座椅通风 %1$d</string>
+    <string name="car_fn_toast_driver_vent_off">正在关闭主驾座椅通风</string>
+    <string name="car_fn_toast_fan">风扇</string>
+    <string name="car_fn_toast_front_off">前挡风玻璃已关闭</string>
+    <string name="car_fn_toast_front_on">前挡风玻璃</string>
+    <string name="car_fn_toast_light_auto">自动大灯</string>
+    <string name="car_fn_toast_light_low">近光灯</string>
+    <string name="car_fn_toast_light_off">正在关闭大灯</string>
+    <string name="car_fn_toast_light_pos">示廓灯</string>
+    <string name="car_fn_toast_light_title">灯光</string>
+    <string name="car_fn_toast_max_defrost_off">最大风量已关闭</string>
+    <string name="car_fn_toast_max_defrost_on">最大风量</string>
+    <string name="car_fn_toast_me_cold">我冷</string>
+    <string name="car_fn_toast_me_cooled">我凉快了</string>
+    <string name="car_fn_toast_me_hot">我热</string>
+    <string name="car_fn_toast_me_warmed">我暖和了</string>
+    <string name="car_fn_toast_mirrors">后视镜</string>
+    <string name="car_fn_toast_mirrors_fold">正在折叠后视镜</string>
+    <string name="car_fn_toast_mirrors_folding">折叠中</string>
+    <string name="car_fn_toast_mirrors_unfold">后视镜</string>
+    <string name="car_fn_toast_mirrors_unfolding">展开中</string>
+    <string name="car_fn_toast_passenger_heat">副驾座椅加热</string>
+    <string name="car_fn_toast_passenger_heat_level">副驾座椅加热 %1$d</string>
+    <string name="car_fn_toast_passenger_heat_off">正在关闭副驾座椅加热</string>
+    <string name="car_fn_toast_passenger_vent">副驾座椅通风</string>
+    <string name="car_fn_toast_passenger_vent_level">副驾座椅通风 %1$d</string>
+    <string name="car_fn_toast_passenger_vent_off">正在关闭副驾座椅通风</string>
+    <string name="car_fn_toast_rear_off">后挡风玻璃已关闭</string>
+    <string name="car_fn_toast_rear_on">后挡风玻璃</string>
+    <string name="car_fn_toast_recirculation_off">正在关闭内循环</string>
+    <string name="car_fn_toast_recirculation_on">内循环</string>
+    <string name="car_fn_toast_status_off_f">关闭</string>
+    <string name="car_fn_toast_status_off_m">关闭</string>
+    <string name="car_fn_toast_status_off_n">关闭</string>
+    <string name="car_fn_toast_status_on_m">开启</string>
+    <string name="car_fn_toast_temperature">温度</string>
+    <string name="car_fn_toast_trunk_close">后备箱</string>
+    <string name="car_fn_toast_trunk_closing">关闭中</string>
+    <string name="car_fn_toast_trunk_open">后备箱</string>
+    <string name="car_fn_toast_wheel_heat">方向盘加热</string>
+    <string name="car_fn_toast_wheel_heat_level">方向盘加热 %1$d</string>
+    <string name="car_fn_toast_wheel_heat_off">正在关闭方向盘加热</string>
+    <string name="car_fn_trunk">后备箱</string>
+    <string name="car_fn_trunk_desc">打开后备箱</string>
+    <string name="car_fn_wheel_heat">方向盘加热</string>
+    <string name="car_fn_wheel_heat_desc">循环切换加热档位</string>
+    <string name="car_fn_wipers">雨刮器</string>
+    <string name="car_fn_wipers_desc">将雨刮器移动到保养位置并返回</string>
+    <string name="drive_mode_show_toast">显示彩蛋</string>
+    <string name="drive_mode_toast_adaptive">开了两年车
+到现在也不知道 Smart 是啥</string>
+    <string name="drive_mode_toast_comfort">舒适?
+那还不给点油!</string>
+    <string name="drive_mode_toast_eco">龟速模式已开启!</string>
+    <string name="drive_mode_toast_power">别吓尿裤子!</string>
+    <string name="drive_mode_toast_snow">下雪了!
+你轮胎行不行啊?</string>
+    <string name="drive_mode_toast_sport">还运动,根本跑不动!</string>
+    <string name="drive_mode_toast_sport_plus">走,去羞辱 1.5L 长安!</string>
+    <string name="free_button_action_unbind">解除绑定(自定义)</string>
+    <string name="kbd_car_functions_desc">空调、加热、灯光及其他车辆控制</string>
+    <string name="kbd_car_functions_title">车辆功能</string>
+    <string name="kbd_desc_select_car_function">选择要触发的车辆功能</string>
+    <string name="kbd_fullscreen_to_split_desc">将最后一个导航和媒体应用发送到 Zapuskator 进行分屏</string>
+    <string name="kbd_fullscreen_to_split_title">全屏转分屏</string>
+    <string name="kbd_title_car_function">车辆功能</string>
+    <string name="key_label_next">前进</string>
+    <string name="key_label_previous">后退</string>
+    <string name="key_label_star">星号</string>
+    <string name="key_label_voice">语音</string>
+    <string name="running_apps">正在运行的应用</string>
+    <string name="running_apps_desc">打开原厂吉利最近应用界面</string>
 </resources>
