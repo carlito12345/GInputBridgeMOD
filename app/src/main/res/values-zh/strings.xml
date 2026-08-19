@@ -350,10 +350,7 @@
     <string name="save">保存</string>
     <string name="other_activities">其他活动</string>
     <string name="my">我的</string>
-    <string name="window_transparency">窗口透明度</string>
-    <string name="open_optimization_settings">打开优化设置菜单</string>
-    <string name="optimization_settings_desc">Hidden system settings menu where you can enable or disable system cleanup (on Preface, downloaded maps and music will be preserved).</string>
-    <string name="appearance">外观</string>
+    <string name="window_transparency">窗口透明度</string>    <string name="appearance">外观</string>
     <string name="theme">主题</string>
     <string name="light_theme">浅色</string>
     <string name="dark_theme">深色</string>
@@ -362,10 +359,7 @@
     <string name="enter_title">输入标题</string>
     <string name="rename">重命名</string>
     <string name="show_shortcut_type_icons">显示快捷方式类型的图标</string>
-    <string name="shortcut_type_icon_size">快捷方式类型图标大小</string>
-    <string name="attention_warning">Attention!</string>
-    <string name="system_dialog_warning_desc">After opening this system dialog in the standard settings (black with a car), an additional non-localized button may appear. It can only be removed by resetting to factory settings. Also, if you disable automatic cleanup, ensure that the device\'s memory does not become full, otherwise the tablet may fail to boot.</string>
-    <string name="add_to_my_apps">添加到我的应用</string>
+    <string name="shortcut_type_icon_size">快捷方式类型图标大小</string>    <string name="add_to_my_apps">添加到我的应用</string>
     <string name="enter_new_title_my_apps">输入要在“我的应用”标签页中显示的新标题</string>
     <string name="change_icon">更改图标</string>
     <string name="launcher_context_edit">编辑</string>
