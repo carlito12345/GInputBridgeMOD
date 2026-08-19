@@ -24,7 +24,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,7 +35,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.salat.gbinder.BuildConfig
 import com.salat.gbinder.ConfiguratorPresetsViewModel
 import com.salat.gbinder.R
 import com.salat.gbinder.car.data.CarPropertyValue
@@ -52,7 +50,6 @@ import com.salat.gbinder.ui.theme.AppTheme
 fun RenderSystemParams(
     uiScaleState: Float? = null,
     enableAdbHelper: Boolean,
-    adbTelnetEnabled: Boolean,
     adbDimAutoStop: Boolean,
     onAdbDimAutoStopChanged: (Boolean) -> Unit,
     onNavigateToGeelyLauncherSettings: () -> Unit,
@@ -62,9 +59,6 @@ fun RenderSystemParams(
     onClose: () -> Unit
 ) {
     val viewModel: ConfiguratorPresetsViewModel = hiltViewModel()
-    LaunchedEffect(Unit) {
-        viewModel.warmUpAdbSessionIfNeeded()
-    }
 
     BackHandler(onBack = onClose)
 
@@ -76,7 +70,6 @@ fun RenderSystemParams(
         RenderConfiguratorPresetsContent(
             uiScaleState = uiScaleState,
             enableAdbHelper = enableAdbHelper,
-            adbTelnetEnabled = adbTelnetEnabled,
             adbDimAutoStop = adbDimAutoStop,
             onAdbDimAutoStopChanged = onAdbDimAutoStopChanged,
             onNavigateToGeelyLauncherSettings = onNavigateToGeelyLauncherSettings,
@@ -128,7 +121,6 @@ private fun RenderConfiguratorPresetsToolbar(
 private fun ColumnScope.RenderConfiguratorPresetsContent(
     uiScaleState: Float?,
     enableAdbHelper: Boolean,
-    adbTelnetEnabled: Boolean,
     adbDimAutoStop: Boolean,
     onAdbDimAutoStopChanged: (Boolean) -> Unit,
     onNavigateToGeelyLauncherSettings: () -> Unit,
@@ -137,7 +129,7 @@ private fun ColumnScope.RenderConfiguratorPresetsContent(
     onNavigateToGMPSettings: () -> Unit,
     viewModel: ConfiguratorPresetsViewModel
 ) {
-    val canRearWiperAuto by viewModel.canRearWiperAuto.collectAsStateWithLifecycle()
+    val isAtlas by viewModel.isAtlas.collectAsStateWithLifecycle()
     val rearWiperAuto by viewModel.rearWiperAuto.collectAsStateWithLifecycle()
 
     Box(
@@ -183,7 +175,7 @@ private fun ColumnScope.RenderConfiguratorPresetsContent(
 
                 Spacer(Modifier.height(12.dp))
 
-                if (canRearWiperAuto) {
+                if (isAtlas) {
                     RearWiperAutoSwitcher(
                         value = rearWiperAuto == true,
                         onChange = { viewModel.setrearWiperAuto(it) }

@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -43,6 +44,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -64,6 +66,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -80,7 +83,11 @@ import com.salat.gbinder.components.extractPackageName
 import com.salat.gbinder.components.inMainToast
 import com.salat.gbinder.components.onlyDigitsAndLeadingPlus
 import com.salat.gbinder.components.requireDisplayOverlay
+import com.salat.gbinder.datastore.DataStoreRepository
+import com.salat.gbinder.datastore.GeneralPrefs
 import com.salat.gbinder.datastore.KeyBindStorageRepository
+import com.salat.gbinder.entity.CarFunction
+import com.salat.gbinder.entity.CarModel
 import com.salat.gbinder.entity.DISPLAY_AUDIO_SOURCES
 import com.salat.gbinder.entity.DISPLAY_DRIVE_MODES
 import com.salat.gbinder.entity.DISPLAY_LAMP_MODES
@@ -96,7 +103,7 @@ import com.salat.gbinder.entity.KeyBindConfig
 import com.salat.gbinder.entity.KeyBindPattern
 import com.salat.gbinder.entity.parseAppCarouselValueSegment
 import com.salat.gbinder.features.launcher.NAVI_PKGS
-import com.salat.gbinder.mappers.keyCodeMap
+import com.salat.gbinder.mappers.resolveKeyCodeLabel
 import com.salat.gbinder.mappers.toAllDisplay
 import com.salat.gbinder.ui.reordable.ReorderableItem
 import com.salat.gbinder.ui.reordable.rememberReorderableLazyListState
@@ -104,6 +111,7 @@ import com.salat.gbinder.ui.theme.AppTheme
 import com.salat.gbinder.util.SystemAppsLightRepository
 import com.salat.gbinder.util.rememberIsLandscape
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -112,6 +120,7 @@ private enum class KeyBindingDialogStep {
     EDIT_CHOOSE,
     SET_KEY_BIND,
     SET_ACTION,
+    SET_CAR_FUNCTION,
     SET_APP,
     SET_LINK,
     SET_CALL_PHONE_NUMBER,
@@ -129,9 +138,11 @@ private enum class KeyBindingDialogStep {
 }
 
 private enum class KeyBindingDialogActions {
+    CAR_FUNCTIONS,
     APP_LAUNCH,
     APP_CAROUSEL,
     NAVI_MEDIA_SWITCH,
+    FULLSCREEN_TO_SPLIT,
     LINK_LAUNCH,
     APP_LAUNCHER,
     DRIVE_MODE_CHOOSE,
@@ -141,6 +152,7 @@ private enum class KeyBindingDialogActions {
     CARPLAY_LAUNCH,
     CAR_LAMP,
     TASK_MANAGER,
+    RECENTS,
     ANDROID_BACK,
     ANDROID_HOME,
     NAVIGATE_TO_PAST_APP
@@ -178,6 +190,8 @@ fun KeyBindingDialog(
     uiScaleState: Float? = null,
     systemApps: SystemAppsLightRepository,
     keyBindStorage: KeyBindStorageRepository,
+    dataStore: DataStoreRepository,
+    carModel: CarModel? = null,
     editBind: EditKeyBindParams? = null,
     onDismiss: () -> Unit = {}
 ) = BaseDialog(uiScaleState = uiScaleState, onDismiss = onDismiss) {
@@ -201,25 +215,35 @@ fun KeyBindingDialog(
     var paramsEntryStep by remember { mutableStateOf<KeyBindingDialogStep?>(null) }
     // Carousel id of the edited APP_CAROUSEL bind, preserved on save
     var editAppCarouselId by remember { mutableStateOf<Int?>(null) }
+    var naviMediaPickAction by remember { mutableStateOf(KeyBindAction.NAVI_MEDIA_SWITCH) }
     val actions = remember {
-        listOf(
-            KeyBindingDialogActions.APP_LAUNCH,
-            KeyBindingDialogActions.LINK_LAUNCH,
-            KeyBindingDialogActions.APP_LAUNCHER,
-            KeyBindingDialogActions.APP_CAROUSEL,
-            KeyBindingDialogActions.NAVI_MEDIA_SWITCH,
-            KeyBindingDialogActions.DRIVE_MODE_CHOOSE,
-            KeyBindingDialogActions.AUDIO_SOURCE_CHOOSE,
-            KeyBindingDialogActions.CAR_LAMP,
-            KeyBindingDialogActions.PHONE_CALL,
-            KeyBindingDialogActions.CAMERAS_360,
-            KeyBindingDialogActions.CARPLAY_LAUNCH,
+        buildList {
+            add(KeyBindingDialogActions.CAR_FUNCTIONS)
+            add(KeyBindingDialogActions.APP_LAUNCH)
+            add(KeyBindingDialogActions.LINK_LAUNCH)
+            add(KeyBindingDialogActions.APP_LAUNCHER)
+            add(KeyBindingDialogActions.APP_CAROUSEL)
+            add(KeyBindingDialogActions.NAVI_MEDIA_SWITCH)
+            if (systemApps.isPackageInstalled("ru.zapuskator")) {
+                add(KeyBindingDialogActions.FULLSCREEN_TO_SPLIT)
+            }
+            if (systemApps.isPackageInstalled("com.geely.recents")) {
+                add(KeyBindingDialogActions.RECENTS)
+            }
+            add(KeyBindingDialogActions.DRIVE_MODE_CHOOSE)
+            add(KeyBindingDialogActions.AUDIO_SOURCE_CHOOSE)
+            add(KeyBindingDialogActions.CAR_LAMP)
+            add(KeyBindingDialogActions.PHONE_CALL)
+            add(KeyBindingDialogActions.CAMERAS_360)
+            add(KeyBindingDialogActions.CARPLAY_LAUNCH)
             // KeyBindingDialogActions.TASK_MANAGER,
-            KeyBindingDialogActions.NAVIGATE_TO_PAST_APP,
-            KeyBindingDialogActions.ANDROID_BACK,
-            KeyBindingDialogActions.ANDROID_HOME,
-        )
+            add(KeyBindingDialogActions.NAVIGATE_TO_PAST_APP)
+            add(KeyBindingDialogActions.ANDROID_BACK)
+            add(KeyBindingDialogActions.ANDROID_HOME)
+        }
     }
+    val carFunctions = remember(carModel) { CarFunction.availableFor(carModel) }
+    var defaultLevelFunction by remember { mutableStateOf<CarFunction?>(null) }
     val dmActions = remember {
         listOf(
             DriveModeAction.SWITCHING,
@@ -299,6 +323,7 @@ fun KeyBindingDialog(
             }
 
             KeyBindAction.NAVI_MEDIA_SWITCH -> {
+                naviMediaPickAction = KeyBindAction.NAVI_MEDIA_SWITCH
                 paramsEntryStep = KeyBindingDialogStep.SET_NAVI_MEDIA_PICK
                 step = KeyBindingDialogStep.SET_NAVI_MEDIA_PICK
             }
@@ -428,13 +453,20 @@ fun KeyBindingDialog(
                 step = KeyBindingDialogStep.SET_APP_CAROUSEL_PICK
             }
 
+            KeyBindAction.CAR_FUNCTION -> {
+                paramsEntryStep = KeyBindingDialogStep.SET_CAR_FUNCTION
+                step = KeyBindingDialogStep.SET_CAR_FUNCTION
+            }
+
             // No detail step for this action - fall back to action selection
             KeyBindAction.APP_LAUNCHER,
             KeyBindAction.CAMERAS_360,
             KeyBindAction.TASK_MANAGER,
+            KeyBindAction.RECENTS,
             KeyBindAction.ANDROID_BACK,
             KeyBindAction.ANDROID_HOME,
-            KeyBindAction.NAVIGATE_TO_PAST_APP -> {
+            KeyBindAction.NAVIGATE_TO_PAST_APP,
+            KeyBindAction.FULLSCREEN_TO_SPLIT -> {
                 step = KeyBindingDialogStep.SET_ACTION
             }
         }
@@ -457,7 +489,7 @@ fun KeyBindingDialog(
                     keyBindStorage.saveBinds(
                         name,
                         KeyBindConfig(
-                            action = KeyBindAction.NAVI_MEDIA_SWITCH,
+                            action = naviMediaPickAction,
                             value = candidates.single().packageName
                         )
                     )
@@ -477,7 +509,7 @@ fun KeyBindingDialog(
             // Edit mode - preselect the app stored in the edited bind
             apps = if (editBind != null && editBind.config.action in listOf(
                     KeyBindAction.LAUNCH_APP,
-                    KeyBindAction.NAVI_MEDIA_SWITCH
+                    KeyBindAction.NAVI_MEDIA_SWITCH,
                 )
             ) {
                 loaded.map { it.copy(isSelected = it.packageName == editBind.config.value) }
@@ -518,6 +550,7 @@ fun KeyBindingDialog(
                 KeyBindingDialogStep.EDIT_CHOOSE -> stringResource(R.string.kbd_edit_title)
                 KeyBindingDialogStep.SET_KEY_BIND -> stringResource(R.string.kbd_title_keys)
                 KeyBindingDialogStep.SET_ACTION -> stringResource(R.string.kbd_title_action)
+                KeyBindingDialogStep.SET_CAR_FUNCTION -> stringResource(R.string.kbd_title_car_function)
                 KeyBindingDialogStep.SET_APP -> stringResource(R.string.kbd_title_app)
                 KeyBindingDialogStep.SET_LINK -> stringResource(R.string.selected_shortcut)
                 KeyBindingDialogStep.DRIVE_MODE_WARNING -> stringResource(R.string.attention)
@@ -552,6 +585,7 @@ fun KeyBindingDialog(
                     KeyBindingDialogStep.EDIT_CHOOSE -> stringResource(R.string.kbd_edit_subtitle)
                     KeyBindingDialogStep.SET_KEY_BIND -> stringResource(R.string.kbd_desc_bind_keys)
                     KeyBindingDialogStep.SET_ACTION -> stringResource(R.string.kbd_desc_select_action)
+                    KeyBindingDialogStep.SET_CAR_FUNCTION -> stringResource(R.string.kbd_desc_select_car_function)
                     KeyBindingDialogStep.SET_APP -> stringResource(R.string.kbd_desc_select_app)
                     KeyBindingDialogStep.SET_LINK -> stringResource(R.string.selected_shortcut_desc)
                     KeyBindingDialogStep.DRIVE_MODE_WARNING -> ""
@@ -590,7 +624,7 @@ fun KeyBindingDialog(
                         .verticalScroll(rememberScrollState())
                 ) {
                     val editOptions = remember {
-                        listOf(EditOption.KEYS, EditOption.ACTION, EditOption.PARAMS)
+                        listOf(EditOption.KEYS, EditOption.ACTION)
                     }
 
                     editOptions.forEach { option ->
@@ -797,6 +831,10 @@ fun KeyBindingDialog(
                             .background(AppTheme.colors.surfaceMenu)
                             .clickable {
                                 when (action) {
+                                    KeyBindingDialogActions.CAR_FUNCTIONS -> {
+                                        step = KeyBindingDialogStep.SET_CAR_FUNCTION
+                                    }
+
                                     KeyBindingDialogActions.APP_LAUNCH -> {
                                         step = KeyBindingDialogStep.SET_APP
                                     }
@@ -809,6 +847,7 @@ fun KeyBindingDialog(
                                     }
 
                                     KeyBindingDialogActions.NAVI_MEDIA_SWITCH -> {
+                                        naviMediaPickAction = KeyBindAction.NAVI_MEDIA_SWITCH
                                         val appList = apps
                                         if (appList == null) {
                                             step = KeyBindingDialogStep.SET_NAVI_MEDIA_PICK
@@ -820,6 +859,20 @@ fun KeyBindingDialog(
                                                 }
                                             }
                                         }
+                                    }
+
+                                    KeyBindingDialogActions.FULLSCREEN_TO_SPLIT -> scope.launch(Dispatchers.IO) {
+                                        val name = bind?.bind
+                                            ?.let { keyBindStorage.getBindName(it) }
+                                            ?: ""
+
+                                        keyBindStorage.saveBinds(
+                                            name, KeyBindConfig(
+                                                action = KeyBindAction.FULLSCREEN_TO_SPLIT,
+                                                value = ""
+                                            )
+                                        )
+                                        onDismiss()
                                     }
 
                                     KeyBindingDialogActions.LINK_LAUNCH -> runCatching {
@@ -886,6 +939,20 @@ fun KeyBindingDialog(
                                         onDismiss()
                                     }
 
+                                    KeyBindingDialogActions.RECENTS -> scope.launch(Dispatchers.IO) {
+                                        val name = bind?.bind
+                                            ?.let { keyBindStorage.getBindName(it) }
+                                            ?: ""
+
+                                        keyBindStorage.saveBinds(
+                                            name, KeyBindConfig(
+                                                action = KeyBindAction.RECENTS,
+                                                value = ""
+                                            )
+                                        )
+                                        onDismiss()
+                                    }
+
                                     KeyBindingDialogActions.ANDROID_BACK -> scope.launch(Dispatchers.IO) {
                                         val name = bind?.bind
                                             ?.let { keyBindStorage.getBindName(it) }
@@ -944,11 +1011,14 @@ fun KeyBindingDialog(
                             Text(
                                 modifier = Modifier.padding(horizontal = 23.dp),
                                 text = when (action) {
+                                    KeyBindingDialogActions.CAR_FUNCTIONS -> stringResource(R.string.kbd_car_functions_title)
                                     KeyBindingDialogActions.APP_LAUNCH -> stringResource(R.string.kbd_action_launch_title)
 
                                     KeyBindingDialogActions.APP_CAROUSEL -> stringResource(R.string.kbd_app_carousel_action_title)
 
                                     KeyBindingDialogActions.NAVI_MEDIA_SWITCH -> stringResource(R.string.kbd_navi_media_switch_title)
+
+                                    KeyBindingDialogActions.FULLSCREEN_TO_SPLIT -> stringResource(R.string.kbd_fullscreen_to_split_title)
 
                                     KeyBindingDialogActions.LINK_LAUNCH -> stringResource(R.string.launch_shortcut)
 
@@ -966,6 +1036,8 @@ fun KeyBindingDialog(
 
                                     KeyBindingDialogActions.TASK_MANAGER -> "[ADB] ${stringResource(R.string.recents)}"
 
+                                    KeyBindingDialogActions.RECENTS -> stringResource(R.string.running_apps)
+
                                     KeyBindingDialogActions.ANDROID_BACK -> stringResource(R.string.back)
 
                                     KeyBindingDialogActions.ANDROID_HOME -> stringResource(R.string.home)
@@ -982,11 +1054,14 @@ fun KeyBindingDialog(
 
                             Text(
                                 text = when (action) {
+                                    KeyBindingDialogActions.CAR_FUNCTIONS -> stringResource(R.string.kbd_car_functions_desc)
                                     KeyBindingDialogActions.APP_LAUNCH -> stringResource(R.string.kbd_action_launch_desc)
 
                                     KeyBindingDialogActions.APP_CAROUSEL -> stringResource(R.string.kbd_app_carousel_action_desc)
 
                                     KeyBindingDialogActions.NAVI_MEDIA_SWITCH -> stringResource(R.string.kbd_navi_media_switch_desc)
+
+                                    KeyBindingDialogActions.FULLSCREEN_TO_SPLIT -> stringResource(R.string.kbd_fullscreen_to_split_desc)
 
                                     KeyBindingDialogActions.LINK_LAUNCH -> stringResource(R.string.launch_shortcut_desc)
 
@@ -1003,6 +1078,8 @@ fun KeyBindingDialog(
                                     KeyBindingDialogActions.CARPLAY_LAUNCH -> stringResource(R.string.kbd_carplay_launch_desc)
 
                                     KeyBindingDialogActions.TASK_MANAGER -> stringResource(R.string.recents_action_description)
+
+                                    KeyBindingDialogActions.RECENTS -> stringResource(R.string.running_apps_desc)
 
                                     KeyBindingDialogActions.ANDROID_BACK -> stringResource(R.string.back_action_simulation)
 
@@ -1024,6 +1101,102 @@ fun KeyBindingDialog(
                         Spacer(Modifier.height(10.dp))
                     }
                 }
+            }
+
+            KeyBindingDialogStep.SET_CAR_FUNCTION -> Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 20.dp)
+            ) {
+                fun saveCarFunction(function: CarFunction) {
+                    scope.launch(Dispatchers.IO) {
+                        val name = bind?.bind
+                            ?.let { keyBindStorage.getBindName(it) }
+                            ?: ""
+
+                        keyBindStorage.saveBinds(
+                            name, KeyBindConfig(
+                                action = KeyBindAction.CAR_FUNCTION,
+                                value = function.name
+                            )
+                        )
+                        onDismiss()
+                    }
+                }
+
+                Spacer(Modifier.height(10.dp))
+
+                carFunctions.forEach { function ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 10.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(AppTheme.colors.surfaceMenu)
+                            .height(IntrinsicSize.Min)
+                            .clickable { saveCarFunction(function) },
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(horizontal = 23.dp, vertical = 16.dp)
+                        ) {
+                            Text(
+                                text = stringResource(function.titleRes),
+                                color = AppTheme.colors.contentPrimary,
+                                style = AppTheme.typography.screenTitle,
+                                overflow = TextOverflow.Ellipsis,
+                                maxLines = 2
+                            )
+
+                            function.descRes?.let {
+                                Spacer(Modifier.height(5.dp))
+
+                                Text(
+                                    text = stringResource(it),
+                                    color = AppTheme.colors.contentPrimary.copy(.4f),
+                                    style = AppTheme.typography.dialogSubtitle
+                                )
+                            }
+                        }
+
+                        if (function.hasConfigurableDefaultLevel()) {
+                            Spacer(
+                                Modifier
+                                    .fillMaxHeight()
+                                    .width(1.dp)
+                                    .padding(vertical = 20.dp)
+                                    .background(AppTheme.colors.contentPrimary.copy(.04f))
+                            )
+
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .width(80.dp)
+                                    .clickable { defaultLevelFunction = function },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    painter = painterResource(
+                                        R.drawable.ic_arrow_right_circle_outline
+                                    ),
+                                    contentDescription = stringResource(
+                                        R.string.car_fn_default_level_title
+                                    ),
+                                    tint = AppTheme.colors.contentAccent,
+                                    modifier = Modifier.size(30.dp)
+                                )
+                            }
+                        } else {
+                            Spacer(Modifier.width(20.dp))
+                        }
+                    }
+                }
+
+                Spacer(Modifier.height(10.dp))
             }
 
             KeyBindingDialogStep.SET_APP -> if (apps == null || apps?.isEmpty() == true) {
@@ -1634,7 +1807,8 @@ fun KeyBindingDialog(
                 color = AppTheme.colors.contentPrimary
             )
 
-            KeyBindingDialogStep.SET_DRIVE_MODE_CHOOSE_METHOD -> dmActions.forEach { dmAction ->
+            KeyBindingDialogStep.SET_DRIVE_MODE_CHOOSE_METHOD -> Column(Modifier.fillMaxWidth()) {
+                dmActions.forEach { dmAction ->
                 if (dmAction == dmActions.first()) {
                     Spacer(Modifier.height(10.dp))
                 }
@@ -1690,6 +1864,9 @@ fun KeyBindingDialog(
                 if (dmAction == dmActions.last()) {
                     Spacer(Modifier.height(10.dp))
                 }
+            }
+
+                DriveModeToastPrefRow(dataStore = dataStore)
             }
 
             KeyBindingDialogStep.SET_TOGGLE_DRIVE_MODE -> {
@@ -2378,6 +2555,9 @@ fun KeyBindingDialog(
                                 KeyBindingDialogStep.EDIT_CHOOSE
                             } else KeyBindingDialogStep.SET_KEY_BIND
 
+                            KeyBindingDialogStep.SET_CAR_FUNCTION -> step =
+                                KeyBindingDialogStep.SET_ACTION
+
                             KeyBindingDialogStep.SET_APP -> step = KeyBindingDialogStep.SET_ACTION
                             KeyBindingDialogStep.SET_NAVI_MEDIA_PICK -> step =
                                 KeyBindingDialogStep.SET_ACTION
@@ -2425,6 +2605,7 @@ fun KeyBindingDialog(
                         } else android.R.string.cancel
 
                         KeyBindingDialogStep.SET_ACTION -> R.string.back
+                        KeyBindingDialogStep.SET_CAR_FUNCTION -> R.string.back
                         KeyBindingDialogStep.SET_APP -> R.string.back
                         KeyBindingDialogStep.SET_NAVI_MEDIA_PICK -> R.string.back
                         KeyBindingDialogStep.SET_CARPLAY_SCREEN -> R.string.back
@@ -2450,6 +2631,7 @@ fun KeyBindingDialog(
                         KeyBindingDialogStep.EDIT_CHOOSE -> false
                         KeyBindingDialogStep.SET_KEY_BIND -> bind != null
                         KeyBindingDialogStep.SET_ACTION -> true
+                        KeyBindingDialogStep.SET_CAR_FUNCTION -> false
                         KeyBindingDialogStep.SET_APP -> apps?.any { it.isSelected } == true
                         KeyBindingDialogStep.SET_NAVI_MEDIA_PICK ->
                             apps?.any { it.packageName in NAVI_PKGS && it.isSelected } == true
@@ -2472,6 +2654,7 @@ fun KeyBindingDialog(
             if (step !in listOf(
                     KeyBindingDialogStep.EDIT_CHOOSE,
                     KeyBindingDialogStep.SET_ACTION,
+                    KeyBindingDialogStep.SET_CAR_FUNCTION,
                     KeyBindingDialogStep.SET_DRIVE_MODE_CHOOSE_METHOD
                 )
             ) {
@@ -2509,6 +2692,8 @@ fun KeyBindingDialog(
                                     step = KeyBindingDialogStep.SET_APP
                                 }
 
+                                KeyBindingDialogStep.SET_CAR_FUNCTION -> Unit
+
                                 KeyBindingDialogStep.SET_APP -> {
                                     scope.launch(Dispatchers.IO) {
                                         try {
@@ -2542,7 +2727,7 @@ fun KeyBindingDialog(
                                             keyBindStorage.saveBinds(
                                                 name,
                                                 KeyBindConfig(
-                                                    action = KeyBindAction.NAVI_MEDIA_SWITCH,
+                                                    action = naviMediaPickAction,
                                                     value = pkg
                                                 )
                                             )
@@ -2795,6 +2980,7 @@ fun KeyBindingDialog(
                             } else R.string.next
 
                             KeyBindingDialogStep.SET_ACTION -> R.string.next
+                            KeyBindingDialogStep.SET_CAR_FUNCTION -> R.string.next
                             KeyBindingDialogStep.SET_APP -> android.R.string.ok
                             KeyBindingDialogStep.SET_NAVI_MEDIA_PICK -> android.R.string.ok
                             KeyBindingDialogStep.SET_CARPLAY_SCREEN -> android.R.string.ok
@@ -2816,6 +3002,172 @@ fun KeyBindingDialog(
                         AppTheme.colors.contentAccent
                     } else AppTheme.colors.contentPrimary.copy(.3f)
                 )
+            }
+        }
+    }
+
+    defaultLevelFunction?.let { function ->
+        CarFunctionDefaultLevelDialog(
+            uiScaleState = uiScaleState,
+            function = function,
+            dataStore = dataStore,
+            onLevelSelected = { level ->
+                scope.launch(Dispatchers.IO) {
+                    function.defaultLevelPrefKey()?.let { prefKey ->
+                        dataStore.saveValue(prefKey, level)
+                    }
+                    val name = bind?.bind
+                        ?.let { keyBindStorage.getBindName(it) }
+                        ?: ""
+                    keyBindStorage.saveBinds(
+                        name,
+                        KeyBindConfig(
+                            action = KeyBindAction.CAR_FUNCTION,
+                            value = function.name
+                        )
+                    )
+                    withContext(Dispatchers.Main) {
+                        defaultLevelFunction = null
+                        onDismiss()
+                    }
+                }
+            },
+            onDismiss = { defaultLevelFunction = null }
+        )
+    }
+}
+
+@Composable
+private fun DriveModeToastPrefRow(
+    dataStore: DataStoreRepository,
+) {
+    val scope = rememberCoroutineScope()
+    val showToast by dataStore
+        .getValueFlow(GeneralPrefs.DRIVE_MODE_TOAST, false)
+        .collectAsState(initial = false)
+
+    Column(modifier = Modifier.padding(top = 10.dp, bottom = 4.dp)) {
+        Text(
+            text = stringResource(R.string.drive_mode_show_toast),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp),
+            color = AppTheme.colors.contentAccent,
+            style = AppTheme.typography.confirmDialogTitle,
+            textAlign = TextAlign.Center,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 2
+        )
+
+        Spacer(modifier = Modifier.height(18.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            listOf(true to R.string.yes, false to R.string.no).forEach { (value, labelRes) ->
+                val selected = showToast == value
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(
+                            if (selected) AppTheme.colors.contentAccent.copy(alpha = 0.25f)
+                            else AppTheme.colors.surfaceMenu
+                        )
+                        .border(
+                            width = if (selected) 2.dp else 0.dp,
+                            color = if (selected) AppTheme.colors.contentAccent
+                            else Color.Transparent,
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .clickable {
+                            scope.launch(Dispatchers.IO) {
+                                dataStore.saveValue(GeneralPrefs.DRIVE_MODE_TOAST, value)
+                            }
+                        }
+                        .padding(vertical = 18.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = stringResource(labelRes),
+                        color = AppTheme.colors.contentPrimary,
+                        style = AppTheme.typography.screenTitle,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun CarFunctionDefaultLevelDialog(
+    uiScaleState: Float?,
+    function: CarFunction,
+    dataStore: DataStoreRepository,
+    onLevelSelected: (Int) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    val prefKey = function.defaultLevelPrefKey()
+    val selectedLevel by remember(prefKey) {
+        prefKey?.let { dataStore.getValueFlow(it, CarFunction.DEFAULT_HEAT_VENT_LEVEL) }
+            ?: flowOf(CarFunction.DEFAULT_HEAT_VENT_LEVEL)
+    }.collectAsState(initial = CarFunction.DEFAULT_HEAT_VENT_LEVEL)
+
+    BaseDialog(
+        uiScaleState = uiScaleState,
+        maxWidth = 420,
+        onDismiss = onDismiss
+    ) {
+        Column(modifier = Modifier.padding(top = 22.dp, bottom = 18.dp)) {
+            Text(
+                text = stringResource(R.string.car_fn_default_level_title),
+                modifier = Modifier.padding(horizontal = 24.dp),
+                color = AppTheme.colors.contentPrimary,
+                style = AppTheme.typography.confirmDialogTitle,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 2
+            )
+
+            Spacer(modifier = Modifier.height(18.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                (1..3).forEach { level ->
+                    val selected = selectedLevel == level
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(
+                                if (selected) AppTheme.colors.contentAccent.copy(alpha = 0.25f)
+                                else AppTheme.colors.surfaceMenu
+                            )
+                            .border(
+                                width = if (selected) 2.dp else 0.dp,
+                                color = if (selected) AppTheme.colors.contentAccent
+                                else Color.Transparent,
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .clickable { onLevelSelected(level) }
+                            .padding(vertical = 18.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = level.toString(),
+                            color = AppTheme.colors.contentPrimary,
+                            style = AppTheme.typography.screenTitle,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
             }
         }
     }

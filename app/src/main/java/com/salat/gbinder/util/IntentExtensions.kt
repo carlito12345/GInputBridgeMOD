@@ -15,6 +15,9 @@ fun Intent.getSafeInt(name: String): Int {
     }
 }
 
+fun Intent.getSafeFlag(name: String): Boolean =
+    getSafeInt(name) == 1 || getBooleanExtra(name, false)
+
 fun Intent.getSafeFloat(name: String): Float {
     // 先检查 extra 实际类型,避免触发 Bundle 类型检查异常/警告
     return when (val raw = getExtras()?.get(name)) {

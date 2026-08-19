@@ -32,6 +32,8 @@ object GeneralPrefs {
     val REMEMBERED_DRIVE_MODE = intPreferencesKey("REMEMBERED_DRIVE_MODE")
     val TARGET_RECOVERY_DRIVE_MODE = intPreferencesKey("TARGET_RECOVERY_DRIVE_MODE")
     val DRIVE_MODE_OVERLAY = booleanPreferencesKey("DRIVE_MODE_OVERLAY")
+    val DRIVE_MODE_TOAST = booleanPreferencesKey("DRIVE_MODE_TOAST")
+    val DRIVE_MODE_TOAST_OFF_MIGRATION = booleanPreferencesKey("DRIVE_MODE_TOAST_OFF_MIGRATION")
     val DM_OVERLAY_SCALE = floatPreferencesKey("DM_OVERLAY_SCALE")
     val DM_OVERLAY_OFFSET = floatPreferencesKey("DM_OVERLAY_OFFSET")
     val TOGGLE_DM_TASK = stringPreferencesKey("TOGGLE_DM_TASK")
@@ -43,6 +45,21 @@ object GeneralPrefs {
     val ALT_MENU = booleanPreferencesKey("ALT_MENU")
     val ALT_LONG_TIME = intPreferencesKey("ALT_LONG_TIME")
     val IGNORE_MEDIA_APPS = stringPreferencesKey("IGNORE_MEDIA_APPS")
+    val CAR_FN_DEFAULT_WHEEL_HEAT = intPreferencesKey("CAR_FN_DEFAULT_WHEEL_HEAT")
+    val CAR_FN_DEFAULT_DRIVER_HEAT = intPreferencesKey("CAR_FN_DEFAULT_DRIVER_HEAT")
+    val CAR_FN_DEFAULT_PASSENGER_HEAT = intPreferencesKey("CAR_FN_DEFAULT_PASSENGER_HEAT")
+    val CAR_FN_DEFAULT_DRIVER_VENT = intPreferencesKey("CAR_FN_DEFAULT_DRIVER_VENT")
+    val CAR_FN_DEFAULT_PASSENGER_VENT = intPreferencesKey("CAR_FN_DEFAULT_PASSENGER_VENT")
+
+    // Not in ALL_KEYS - import restores these keys only when the backup contains them
+    val ENABLED_MEDIA_APPS = stringPreferencesKey("ENABLED_MEDIA_APPS")
+    val DEFAULT_MEDIA_APP = stringPreferencesKey("DEFAULT_MEDIA_APP")
+
+    val MEDIA_APPS_BACKUP_KEYS
+        get() = listOf(
+            ENABLED_MEDIA_APPS,
+            DEFAULT_MEDIA_APP
+        )
 
     val ALL_KEYS
         get() = listOf(
@@ -72,6 +89,7 @@ object GeneralPrefs {
             REMEMBERED_DRIVE_MODE,
             TARGET_RECOVERY_DRIVE_MODE,
             DRIVE_MODE_OVERLAY,
+            DRIVE_MODE_TOAST,
             DM_OVERLAY_SCALE,
             DM_OVERLAY_OFFSET,
             TOGGLE_DM_TASK,
@@ -83,6 +101,11 @@ object GeneralPrefs {
             ALT_MENU,
             ALT_LONG_TIME,
             IGNORE_MEDIA_APPS,
+            CAR_FN_DEFAULT_WHEEL_HEAT,
+            CAR_FN_DEFAULT_DRIVER_HEAT,
+            CAR_FN_DEFAULT_PASSENGER_HEAT,
+            CAR_FN_DEFAULT_DRIVER_VENT,
+            CAR_FN_DEFAULT_PASSENGER_VENT,
         )
 
     val DYNAMIC_PREFIX_KEYS

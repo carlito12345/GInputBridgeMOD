@@ -122,7 +122,102 @@
     <string name="kbd_app_carousel_action_title">Карусель приложений</string>
     <string name="kbd_app_carousel_action_desc">При срабатывании будет последовательно запускать приложения из списка</string>
     <string name="kbd_navi_media_switch_title">Смена медиа/навигатор</string>
-    <string name="kbd_navi_media_switch_desc">Переключение между последним активным медиаприложением и последним навигатором</string>
+    <string name="kbd_navi_media_switch_desc">Переключение между медиа и навигатором. Если в этой сессии был GSplit — восстанавливает сплит</string>
+    <string name="kbd_fullscreen_to_split_title">Переход из полного экрана в сплит</string>
+    <string name="kbd_fullscreen_to_split_desc">Переключает последние навигатор + медиа в сплит</string>
+    <string name="kbd_car_functions_title">Функции авто</string>
+    <string name="kbd_car_functions_desc">Климат, подогревы и другие функции автомобиля</string>
+    <string name="kbd_title_car_function">Функция авто</string>
+    <string name="kbd_desc_select_car_function">Выберите функцию автомобиля</string>
+    <string name="car_fn_climate_menu">Меню климата</string>
+    <string name="car_fn_seat_memory">Память сиденья</string>
+    <string name="car_fn_wheel_heat">Подогрев руля</string>
+    <string name="car_fn_driver_heat">Подогрев водителя</string>
+    <string name="car_fn_passenger_heat">Подогрев пассажира</string>
+    <string name="car_fn_driver_vent">Вентиляция водителя</string>
+    <string name="car_fn_passenger_vent">Вентиляция пассажира</string>
+    <string name="car_fn_recirculation">Рециркуляция</string>
+    <string name="car_fn_antibuks">Антибукс</string>
+    <string name="car_fn_light">Фары</string>
+    <string name="car_fn_front_defrost">Лобовое стекло</string>
+    <string name="car_fn_max_defrost">Максимальный обдув</string>
+    <string name="car_fn_rear_defrost">Заднее стекло</string>
+    <string name="car_fn_me_hot">Мне жарко</string>
+    <string name="car_fn_me_cooled">Я остыл</string>
+    <string name="car_fn_me_cold">Я замёрз</string>
+    <string name="car_fn_me_warmed">Я согрелся</string>
+    <string name="car_fn_mirrors">Зеркала</string>
+    <string name="car_fn_trunk">Багажник</string>
+    <string name="car_fn_wipers">Дворники</string>
+    <string name="car_fn_climate_menu_desc">Показать системное меню климата на экране. Повторное нажатие скроет климат</string>
+    <string name="car_fn_seat_memory_desc">Открыть настройки памяти сидений</string>
+    <string name="car_fn_wheel_heat_desc">Поочерёдно переключает уровень подогрева</string>
+    <string name="car_fn_driver_heat_desc">Поочерёдно переключает уровень подогрева</string>
+    <string name="car_fn_passenger_heat_desc">Поочерёдно переключает уровень подогрева</string>
+    <string name="car_fn_driver_vent_desc">Поочерёдно переключает уровень вентиляции</string>
+    <string name="car_fn_passenger_vent_desc">Поочерёдно переключает уровень вентиляции</string>
+    <string name="car_fn_recirculation_desc">Переключение функции</string>
+    <string name="car_fn_antibuks_desc">Переключение функции</string>
+    <string name="car_fn_light_desc">Переключение режима фар</string>
+    <string name="car_fn_front_defrost_desc">Переключение обогрева стекла</string>
+    <string name="car_fn_max_defrost_desc">Переключение функции</string>
+    <string name="car_fn_rear_defrost_desc">Переключение обогрева стекла</string>
+    <string name="car_fn_me_hot_desc">Включает кондиционер, рециркуляцию, минимальную температуру, сильный обдув и вентиляцию сиденья. Повторное нажатие - умеренный режим</string>
+    <string name="car_fn_me_cold_desc">Включает максимальный подогрев сиденья и руля. Повторное нажатие выключает</string>
+    <string name="car_fn_trunk_desc">Открыть багажник</string>
+    <string name="car_fn_mirrors_desc">Сложить / разложить</string>
+    <string name="car_fn_wipers_desc">Перевести дворники в сервисный режим и обратно</string>
+    <string name="car_fn_default_level_title">Уровень по-умолчанию</string>
+    <string name="drive_mode_show_toast">Показывать пасхалки</string>
+    <string name="car_fn_toast_temperature">Температура</string>
+    <string name="car_fn_toast_status_off_m">выключен</string>
+    <string name="car_fn_toast_status_off_f">выключена</string>
+    <string name="car_fn_toast_status_off_n">выключено</string>
+    <string name="car_fn_toast_status_on_m">включен</string>
+    <string name="car_fn_toast_wheel_heat_off">Выключаю подогрев руля</string>
+    <string name="car_fn_toast_wheel_heat">Подогрев руля</string>
+    <string name="car_fn_toast_wheel_heat_level">Подогрев руля %1$d</string>
+    <string name="car_fn_toast_driver_heat_off">Выключаю подогрев водителя</string>
+    <string name="car_fn_toast_driver_heat">Подогрев водителя</string>
+    <string name="car_fn_toast_driver_heat_level">Подогрев водителя %1$d</string>
+    <string name="car_fn_toast_passenger_heat_off">Выключаю подогрев пассажира</string>
+    <string name="car_fn_toast_passenger_heat">Подогрев пассажира</string>
+    <string name="car_fn_toast_passenger_heat_level">Подогрев пассажира %1$d</string>
+    <string name="car_fn_toast_driver_vent_off">Выключаю вентиляцию водителя</string>
+    <string name="car_fn_toast_driver_vent">Вентиляция водителя</string>
+    <string name="car_fn_toast_driver_vent_level">Вентиляция водителя %1$d</string>
+    <string name="car_fn_toast_passenger_vent_off">Выключаю вентиляцию пассажира</string>
+    <string name="car_fn_toast_passenger_vent">Вентиляция пассажира</string>
+    <string name="car_fn_toast_passenger_vent_level">Вентиляция пассажира %1$d</string>
+    <string name="car_fn_toast_recirculation_on">Рециркуляция</string>
+    <string name="car_fn_toast_recirculation_off">Выключаю рециркуляцию</string>
+    <string name="car_fn_toast_antibuks">Антибукс</string>
+    <string name="car_fn_toast_antibuks_off">Выключаю антибукс</string>
+    <string name="car_fn_toast_antibuks_on">Антибукс включен</string>
+    <string name="car_fn_toast_light_pos">Габариты</string>
+    <string name="car_fn_toast_light_low">Ближний</string>
+    <string name="car_fn_toast_light_auto">Автосвет</string>
+    <string name="car_fn_toast_light_title">Свет</string>
+    <string name="car_fn_toast_light_off">Выключаю свет</string>
+    <string name="car_fn_toast_front_on">Лобовое</string>
+    <string name="car_fn_toast_front_off">Выключаю лобовое</string>
+    <string name="car_fn_toast_max_defrost_on">Максимальный обдув</string>
+    <string name="car_fn_toast_max_defrost_off">Выключаю максимальный обдув</string>
+    <string name="car_fn_toast_rear_on">Заднее</string>
+    <string name="car_fn_toast_rear_off">Выключаю заднее</string>
+    <string name="car_fn_toast_me_hot">Мне жарко</string>
+    <string name="car_fn_toast_me_cooled">Я остыл</string>
+    <string name="car_fn_toast_me_cold">Я замёрз</string>
+    <string name="car_fn_toast_me_warmed">Я согрелся</string>
+    <string name="car_fn_toast_trunk_open">Багажник</string>
+    <string name="car_fn_toast_trunk_close">Багажник</string>
+    <string name="car_fn_toast_trunk_closing">закрывается</string>
+    <string name="car_fn_toast_mirrors">зеркала</string>
+    <string name="car_fn_toast_mirrors_fold">Зеркала сложены</string>
+    <string name="car_fn_toast_mirrors_folding">Складываю</string>
+    <string name="car_fn_toast_mirrors_unfold">Раскладываю зеркала</string>
+    <string name="car_fn_toast_mirrors_unfolding">Раскладываю</string>
+    <string name="car_fn_toast_fan">Обдув</string>
     <string name="kbd_title_navi_media_pick">Основной навигатор</string>
     <string name="kbd_desc_navi_media_pick">Выберите свой основной навигатор, который будет открываться первым</string>
     <string name="kbd_navi_media_no_app">Нет установленного навигатора из поддерживаемого списка</string>
@@ -151,6 +246,10 @@
     <string name="disable_during_calls">Отключать во время звонков</string>
     <string name="disable_during_calls_desc">Автоматически отключать медиауправление при входящем или исходящем вызове</string>
     <string name="assign_action_star">Назначить штатное действие ✱</string>
+    <string name="key_label_star">✱</string>
+    <string name="key_label_voice">Голос</string>
+    <string name="key_label_next">Вперёд</string>
+    <string name="key_label_previous">Назад</string>
 
     <string name="warning_disclaimer">Все что вы делаете в этом разделе, вы делаете на свой страх и риск. Неизбирательное изменение параметров и значений может нанести вред вашему авто. Тут есть команды которые могут перевести ваше ГУ в Recovery мод. Будьте внимательны, и думайте прежде чем что-то менять.</string>
     <string name="im_scared_but_ready">Мне страшно, но я готов</string>
@@ -211,8 +310,10 @@
     <string name="drag_up">Перетащите выше</string>
     <string name="driving_mode_switching">Переключение режимов вождения: %s</string>
     <string name="export_settings">Экспорт настроек</string>
-    <string name="export_settings_desc">Создать резервную копию настроек, за исключением выбранных медиаприложений и плеера по умолчанию</string>
+    <string name="export_settings_desc">Создать полную резервную копию настроек</string>
     <string name="import_settings_prompt">Вы хотите импортировать полный бэкап настроек? Ваши текущие настройки будут потеряны. Перед применением вам нужно будет подтвердить необходимые разрешения</string>
+    <string name="backup_from_earlier_version">Этот набор настроек был сохранён на более ранней версии GIB</string>
+    <string name="backup_from_later_version">Этот набор настроек создан на более поздней версии GIB. Обновитесь, иначе часть настроек может потеряться или импортироваться с ошибкой</string>
     <string name="display_driving_mode">Показывать переключение режима вождения</string>
     <string name="display_driving_mode_desc">Отображать на планшете ГУ оверлей с названием режима при переключении, включая нестандартные режимы</string>
 
@@ -223,6 +324,13 @@
     <string name="drive_mode_dynamic_desc">Спортивный отклик: более резкая педаль газа, дольше держит передачи, руль тяжелее.</string>
     <string name="drive_mode_sport_plus_desc">Усиленная спортивная калибровка: максимально быстрый отклик и удержание пониженных передач.</string>
     <string name="drive_mode_power_desc">Максимальная производительность: силовая установка отдаёт пиковую тягу (в гибридах — совместная работа ДВС и электромотора).</string>
+    <string name="drive_mode_toast_sport_plus">Айда унижать 1.5л Чанган!</string>
+    <string name="drive_mode_toast_snow">Снег!\nА резя у тебя нормальная?</string>
+    <string name="drive_mode_toast_sport">Какой спорт, она не едет!</string>
+    <string name="drive_mode_toast_comfort">Комфорт?\nА ну поддай газку!</string>
+    <string name="drive_mode_toast_adaptive">2 года езжу\nдо сих пор не знаю чО такое Smart</string>
+    <string name="drive_mode_toast_eco">Тошниловка подано!</string>
+    <string name="drive_mode_toast_power">В штаны не наложи!</string>
     <string name="drive_mode_adaptive_desc">Адаптивный режим: сам выбирает экономичный/комфортный/спортивный профиль по стилю и дороге.</string>
     <string name="drive_mode_custom_desc">Пользовательский профиль: сохраните свои предпочтения по тяге, рулю и подвеске (если доступно).</string>
 
@@ -336,6 +444,7 @@
     <string name="headlight_settings">Управление фарами</string>
     <string name="system_parameters">Системные параметры</string>
     <string name="free_button_action_custom">Чтобы освободить действие кнопки для пользовательских привязок, выберите одно из зелёных (Custom) действий. После этого действие кнопки станет доступным в GIB. Для Atlas требуются дополнительные шаги для отключения.</string>
+    <string name="free_button_action_unbind">Отвязать (Custom)</string>
     <string name="turn_signal_volume">Громкость звука поворотников</string>
     <string name="low">Низкая</string>
     <string name="medium">Средняя</string>
@@ -381,8 +490,6 @@
     <string name="other_activities">Другие активити</string>
     <string name="my">Мои</string>
     <string name="window_transparency">Непрозрачность окна</string>
-    <string name="open_optimization_settings">Открыть меню настроек оптимизации</string>
-    <string name="optimization_settings_desc">Скрытое меню настроек системы, где можно включить или выключить очистку системы (на Preface будут сохраняться загруженные карты и музыка).</string>
     <string name="appearance">Внешний вид</string>
     <string name="theme">Тема</string>
     <string name="light_theme">Светлая</string>
@@ -393,8 +500,6 @@
     <string name="rename">Переименовать</string>
     <string name="show_shortcut_type_icons">Показывать значки типов ярлыков</string>
     <string name="shortcut_type_icon_size">Размер значков типов ярлыков</string>
-    <string name="attention_warning">Внимание!</string>
-    <string name="system_dialog_warning_desc">После открытия этого системного диалога, в стандартных настройках (чёрные с машиной) может разблокироваться дополнительная кнопка. Убрать её можно будет только сбросом настроек до заводских. Также, если вы отключаете автоматическую очистку, следите за тем, чтобы память устройства не переполнялась, иначе планшет может перестать загружаться.</string>
     <string name="add_to_my_apps">Добавить в мои приложения</string>
     <string name="enter_new_title_my_apps">Введите новый заголовок, который будет отображаться во вкладке «Мои приложения».</string>
     <string name="change_icon">Изменить иконку</string>
@@ -449,6 +554,8 @@
     <string name="stop">Остановить</string>
 
     <string name="back_action_simulation">Симуляция системного действия \"Назад\"</string>
+    <string name="running_apps">Запущенные приложения</string>
+    <string name="running_apps_desc">Показывает недавние приложения как на телефоне</string>
     <string name="home">Домой</string>
     <string name="home_action_simulation">Симуляция системного действия \"Домой\"</string>
     <string name="recents">Переключатель задач</string>
@@ -679,6 +786,22 @@
 В ответ на GET_*_INFO приходит действие com.salat.gbinder.INFO_VALUE_RESULT<br>
 <strong>Дополнение1</strong>: id = идентификатор параметра<br>
 <strong>Дополнение2</strong>: value = текущее значение
+]]></string>
+    <string name="api_text11"><![CDATA[<strong>Управление видимым пакетом</strong>
+<br>
+<br>
+Указать видимое приложение вручную, например оверлей, который не видит служба специальных возможностей:
+<br>
+В MacroDroid: Действия -> Отправить интент
+<br>
+<strong>Цель</strong>: Broadcast<br>
+<strong>Действие:</strong> com.salat.gbinder.SET_VISIBLE_PACKAGE<br>
+<strong>Пакет</strong>: com.salat.gbinder<br><br>
+<strong>Дополнение1:</strong> pkg -> имя пакета, который считать видимым<br>
+<strong>Дополнение2:</strong> release=[1|0] -> 1 снимает удержание, можно слать без pkg<br>
+<strong>Дополнение3:</strong> history=[1|0] -> 1 дополнительно добавляет пакет в недавние (необязательно)<br>
+<strong>Дополнение4:</strong> timeout -> автоснятие в секундах, по умолчанию 45, 0 = держать до release (необязательно)<br><br>
+Отправляйте pkg при открытии оверлея и обязательно release = 1 при закрытии, иначе определение пакетов застынет до автоснятия по timeout
 ]]></string>
     <string name="apply">Применить</string>
     <string name="geely_launcher_empty_grid">Нажмите + чтобы добавить</string>

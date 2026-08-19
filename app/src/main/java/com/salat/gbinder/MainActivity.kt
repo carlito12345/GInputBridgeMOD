@@ -93,8 +93,8 @@ import com.salat.gbinder.datastore.DataStoreRepository
 import com.salat.gbinder.datastore.FavoriteStorageRepository
 import com.salat.gbinder.datastore.GeneralPrefs
 import com.salat.gbinder.datastore.KeyBindStorageRepository
-import com.salat.gbinder.datastore.LauncherPrefs
 import com.salat.gbinder.datastore.NoBackupPrefs
+import com.salat.gbinder.entity.CarFunction
 import com.salat.gbinder.entity.DISPLAY_AUDIO_SOURCES
 import com.salat.gbinder.entity.DISPLAY_LAMP_MODES
 import com.salat.gbinder.entity.DeviceLinkInfo
@@ -108,7 +108,6 @@ import com.salat.gbinder.entity.HugeTogglerItem
 import com.salat.gbinder.entity.KeyBindAction
 import com.salat.gbinder.entity.parseAppCarouselValueSegment
 import com.salat.gbinder.entity.UiDownloadState
-import com.salat.gbinder.features.clusterBackground.RenderClusterBackgroundScreen
 import com.salat.gbinder.features.configurator.RenderConfigurator
 import com.salat.gbinder.features.configurator.RenderSystemParams
 import com.salat.gbinder.features.geelyLauncher.RenderGeelyLauncherSettings
@@ -117,7 +116,7 @@ import com.salat.gbinder.features.gmp.RenderGMPSettings
 import com.salat.gbinder.features.launcher.BACKUP_DIVIDER
 import com.salat.gbinder.features.launcher.backupIconsToString
 import com.salat.gbinder.features.launcher.restoreIconsFromString
-import com.salat.gbinder.mappers.keyCodeMap
+import com.salat.gbinder.mappers.resolveKeyCodeLabel
 import com.salat.gbinder.mappers.toAllDisplay
 import com.salat.gbinder.mappers.toDisplayAdbState
 import com.salat.gbinder.mappers.toDisplayIcon
@@ -511,8 +510,6 @@ class MainActivity : ComponentActivity() {
                             RenderSystemParams(
                                 uiScaleState = uiScale,
                                 enableAdbHelper = mainScreenState.enableAdbHelper,
-                                adbTelnetEnabled = mainScreenState.enableAdbHelper &&
-                                    mainScreenState.adbHelperPort == TELNET_HELPER_PORT,
                                 adbDimAutoStop = mainScreenState.adbDimAutoStop,
                                 onAdbDimAutoStopChanged = {
                                     mainScreenState = mainScreenState.copy(adbDimAutoStop = it)
@@ -911,6 +908,8 @@ class MainActivity : ComponentActivity() {
                 uiScaleState = uiScale,
                 systemApps = remember { systemApps },
                 keyBindStorage = remember { keyBindStorage },
+                dataStore = remember { dataStore },
+                carModel = remember { ModelHelper.detectCarModel() },
                 onDismiss = { showBindingDialog = false }
             )
         }
@@ -921,6 +920,8 @@ class MainActivity : ComponentActivity() {
                 uiScaleState = uiScale,
                 systemApps = remember { systemApps },
                 keyBindStorage = remember { keyBindStorage },
+                dataStore = remember { dataStore },
+                carModel = remember { ModelHelper.detectCarModel() },
                 editBind = params,
                 onDismiss = { editBindParams = null }
             )
@@ -2339,15 +2340,13 @@ class MainActivity : ComponentActivity() {
         val importSettingsConfirmDialog by remember { derivedStateOf { settingsImport.isNotEmpty() } }
         if (importSettingsConfirmDialog) {
             var importTask by remember { mutableStateOf<DataStoreBackupTask?>(null) }
+            var backupVersion by remember { mutableStateOf<Int?>(null) }
 
             LaunchedEffect(settingsImport) {
                 scope.launch(Dispatchers.IO) {
                     runCatching {
-                        val params = dataStore.collectBackupParams(settingsImport)
-                        importTask = DataStoreBackupTask(
-                            withGeneral = params.contains(GeneralPrefs.DATA_SYNC_ENABLED.name),
-                            withLauncher = params.contains(LauncherPrefs.LAUNCHER_DATA.name)
-                        )
+                        backupVersion = dataStore.collectBackupVersion(settingsImport)
+                        importTask = dataStore.collectBackupTask(settingsImport)
                     }.onFailure { Timber.e(it) }
                 }
             }
@@ -2427,6 +2426,27 @@ class MainActivity : ComponentActivity() {
                                 .background(AppTheme.colors.surfaceMenuDivider)
                         )
 
+                        val version = backupVersion
+                        when {
+                            version != null && version > BuildConfig.VERSION_CODE -> Text(
+                                text = stringResource(R.string.backup_from_later_version),
+                                color = AppTheme.colors.statusError,
+                                style = AppTheme.typography.dialogSubtitle,
+                                modifier = Modifier
+                                    .padding(horizontal = 24.dp)
+                                    .padding(top = 12.dp)
+                            )
+
+                            version == null || version < BuildConfig.VERSION_CODE -> Text(
+                                text = stringResource(R.string.backup_from_earlier_version),
+                                color = AppTheme.colors.statusSuccess,
+                                style = AppTheme.typography.dialogSubtitle,
+                                modifier = Modifier
+                                    .padding(horizontal = 24.dp)
+                                    .padding(top = 12.dp)
+                            )
+                        }
+
                         Spacer(Modifier.height(12.dp))
                     },
                     onCancel = { onDismissImport() },
@@ -2480,7 +2500,7 @@ class MainActivity : ComponentActivity() {
         return apps.map { (bindName, action) ->
             DisplayKeyBind(
                 bindName = bindName,
-                keyNames = extractInts(bindName).map { keyCodeMap[it] ?: "" },
+                keyNames = extractInts(bindName).map { context.resolveKeyCodeLabel(it) },
                 action = action.action.toDisplayKeyAction(),
                 type = bindName.toBindType(context),
                 app = resolveBindApp(action.action, action.value),
@@ -2490,7 +2510,8 @@ class MainActivity : ComponentActivity() {
                 carplayScreen = resolveBindCarplayScreen(context, action.action, action.value),
                 driveModes = resolveBindDriveModes(action.action, action.value),
                 lampModes = resolveBindLampModes(context, action.action, action.value),
-                audioSources = resolveBindAudioSources(context, action.action, action.value)
+                audioSources = resolveBindAudioSources(context, action.action, action.value),
+                carFunctionTitle = resolveBindCarFunction(context, action.action, action.value),
             )
         }.filter { it.keyNames.isNotEmpty() }
     }
@@ -2498,7 +2519,7 @@ class MainActivity : ComponentActivity() {
     private fun String.toBindType(context: Context): String {
         return when {
             startsWith("sc") -> context.getString(R.string.kbd_pattern_short2)
-            startsWith("ml") -> context.getString(R.string.kbd_pattern_multi2)
+            startsWith("ml") -> ""
             startsWith("lp") -> context.getString(R.string.kbd_pattern_long2)
             startsWith("dc") -> context.getString(R.string.kbd_pattern_double2)
             else -> ""
@@ -2628,10 +2649,21 @@ class MainActivity : ComponentActivity() {
             .joinToString(", ") { keyToLabel[it] ?: it }
     }
 
+    private fun resolveBindCarFunction(
+        context: Context,
+        action: KeyBindAction,
+        value: String
+    ): String? {
+        if (action != KeyBindAction.CAR_FUNCTION) return null
+        val function = CarFunction.fromValue(value) ?: return value
+        return context.getString(function.titleRes)
+    }
+
     private fun KeyBindAction.toDisplayKeyAction() = when (this) {
         KeyBindAction.LAUNCH_APP -> DisplayKeyAction.LAUNCH_APP
         KeyBindAction.APP_CAROUSEL -> DisplayKeyAction.APP_CAROUSEL
         KeyBindAction.NAVI_MEDIA_SWITCH -> DisplayKeyAction.NAVI_MEDIA_SWITCH
+        KeyBindAction.FULLSCREEN_TO_SPLIT -> DisplayKeyAction.FULLSCREEN_TO_SPLIT
         KeyBindAction.LAUNCH_LINK -> DisplayKeyAction.LAUNCH_LINK
         KeyBindAction.APP_LAUNCHER -> DisplayKeyAction.APP_LAUNCHER
         KeyBindAction.TOGGLE_DM -> DisplayKeyAction.TOGGLE_DM
@@ -2642,9 +2674,11 @@ class MainActivity : ComponentActivity() {
         KeyBindAction.CAROUSEL_LAMP -> DisplayKeyAction.CAROUSEL_LAMP
         KeyBindAction.CAROUSEL_AUDIO_SOURCE -> DisplayKeyAction.CAROUSEL_AUDIO_SOURCE
         KeyBindAction.TASK_MANAGER -> DisplayKeyAction.TASK_MANAGER
+        KeyBindAction.RECENTS -> DisplayKeyAction.RECENTS
         KeyBindAction.ANDROID_BACK -> DisplayKeyAction.ANDROID_BACK
         KeyBindAction.ANDROID_HOME -> DisplayKeyAction.ANDROID_HOME
         KeyBindAction.NAVIGATE_TO_PAST_APP -> DisplayKeyAction.NAVIGATE_TO_PAST_APP
+        KeyBindAction.CAR_FUNCTION -> DisplayKeyAction.CAR_FUNCTION
     }
 }
 
