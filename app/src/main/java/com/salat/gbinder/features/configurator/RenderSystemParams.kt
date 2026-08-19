@@ -57,6 +57,8 @@ fun RenderSystemParams(
     onAdbDimAutoStopChanged: (Boolean) -> Unit,
     onNavigateToGeelyLauncherSettings: () -> Unit,
     onNavigateToClusterBackground: () -> Unit,
+    onNavigateToGMHSettings: () -> Unit,
+    onNavigateToGMPSettings: () -> Unit,
     onClose: () -> Unit
 ) {
     val viewModel: ConfiguratorPresetsViewModel = hiltViewModel()
@@ -79,6 +81,8 @@ fun RenderSystemParams(
             onAdbDimAutoStopChanged = onAdbDimAutoStopChanged,
             onNavigateToGeelyLauncherSettings = onNavigateToGeelyLauncherSettings,
             onNavigateToClusterBackground = onNavigateToClusterBackground,
+            onNavigateToGMHSettings = onNavigateToGMHSettings,
+            onNavigateToGMPSettings = onNavigateToGMPSettings,
             viewModel = viewModel
         )
     }
@@ -129,6 +133,8 @@ private fun ColumnScope.RenderConfiguratorPresetsContent(
     onAdbDimAutoStopChanged: (Boolean) -> Unit,
     onNavigateToGeelyLauncherSettings: () -> Unit,
     onNavigateToClusterBackground: () -> Unit,
+    onNavigateToGMHSettings: () -> Unit,
+    onNavigateToGMPSettings: () -> Unit,
     viewModel: ConfiguratorPresetsViewModel
 ) {
     val canRearWiperAuto by viewModel.canRearWiperAuto.collectAsStateWithLifecycle()
@@ -193,6 +199,26 @@ private fun ColumnScope.RenderConfiguratorPresetsContent(
                     title = "[Telnet + QNX] ${stringResource(R.string.cluster_bg_title)}",
                     subtitle = stringResource(R.string.cluster_bg_subtitle),
                     onClick = onNavigateToClusterBackground
+                )
+
+                Spacer(Modifier.height(12.dp))
+
+                RenderListButton(
+                    modifier = Modifier.padding(horizontal = 20.dp),
+                    enable = true,
+                    title = "[GMH] 仪表盘",
+                    subtitle = "查看当前歌曲信息与仪表盘状态",
+                    onClick = onNavigateToGMHSettings
+                )
+
+                Spacer(Modifier.height(12.dp))
+
+                RenderListButton(
+                    modifier = Modifier.padding(horizontal = 20.dp),
+                    enable = true,
+                    title = "[GMP] 在线音乐",
+                    subtitle = "在线音乐服务设置与权限引导",
+                    onClick = onNavigateToGMPSettings
                 )
 
                 Spacer(Modifier.height(90.dp))

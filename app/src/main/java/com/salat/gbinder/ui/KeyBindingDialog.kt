@@ -249,7 +249,7 @@ fun KeyBindingDialog(
 
             val scName = extras
                 ?.getString(Intent.EXTRA_SHORTCUT_NAME)
-                ?: "Unnamed"
+                ?: "未命名"
 
             val iconBitmap = extras
                 ?.getParcelable<Bitmap>(Intent.EXTRA_SHORTCUT_ICON)
@@ -273,7 +273,7 @@ fun KeyBindingDialog(
             scIntent?.let { intent ->
                 runCatching {
                     intent.putExtra("gib_name", scName)
-                    val subtitle = scIntent.extractPackageName(context) ?: "Shortcut"
+                    val subtitle = scIntent.extractPackageName(context) ?: "快捷方式"
                     intent.putExtra("gib_package", subtitle)
                     val uri = intent.toUri(Intent.URI_INTENT_SCHEME)
 
@@ -486,9 +486,9 @@ fun KeyBindingDialog(
         // Debug test bind set, skipped in edit mode to keep the prefilled pattern
         if (BuildConfig.DEBUG && editBind == null) {
             bind = PickedKeyBind(
-                title = "test",
+                title = "测试",
                 bind = DebugKeyBindHarness.shortClickTestPattern,
-                keyTitles = mapOf(DebugKeyBindHarness.STUB_KEY_CODE to "Any key")
+                keyTitles = mapOf(DebugKeyBindHarness.STUB_KEY_CODE to "任意键")
             )
         }
     }
@@ -687,23 +687,23 @@ fun KeyBindingDialog(
                     when (keyBind) {
                         is KeyBindPattern.DoubleClick -> {
                             decorItems[keyBind.keyCode] =
-                                keyCodeMap.getOrDefault(keyBind.keyCode, "Unknown")
+                                keyCodeMap.getOrDefault(keyBind.keyCode, "未知")
                         }
 
                         is KeyBindPattern.LongPress -> {
                             decorItems[keyBind.keyCode] =
-                                keyCodeMap.getOrDefault(keyBind.keyCode, "Unknown")
+                                keyCodeMap.getOrDefault(keyBind.keyCode, "未知")
                         }
 
                         is KeyBindPattern.MultiLong -> {
                             keyBind.keyCodes.forEach { code ->
-                                decorItems[code] = keyCodeMap.getOrDefault(code, "Unknown")
+                                decorItems[code] = keyCodeMap.getOrDefault(code, "未知")
                             }
                         }
 
                         is KeyBindPattern.ShortClick -> {
                             decorItems[keyBind.keyCode] =
-                                keyCodeMap.getOrDefault(keyBind.keyCode, "Unknown")
+                                keyCodeMap.getOrDefault(keyBind.keyCode, "未知")
                         }
                     }
 
@@ -2840,6 +2840,6 @@ private fun KeyBindPattern.toPickedKeyBind(context: Context): PickedKeyBind {
     return PickedKeyBind(
         title = title,
         bind = this,
-        keyTitles = codes.associateWith { keyCodeMap.getOrDefault(it, "Unknown") }
+        keyTitles = codes.associateWith { keyCodeMap.getOrDefault(it, "未知") }
     )
 }

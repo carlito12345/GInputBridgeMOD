@@ -48,7 +48,7 @@ class AdbRepositoryImpl(private val dataStore: DataStoreRepository) : AdbReposit
     }
 
     private val host
-        get() = if (BuildConfig.DEBUG) "10.0.2.2" else "localhost"
+        get() = "localhost"
 
     // Manages IO scope for background tasks.
     private val ioScope by lazy { CoroutineScope(SupervisorJob() + Dispatchers.IO) }

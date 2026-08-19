@@ -592,7 +592,7 @@ private fun EditPropertyDialog(
         runCatching {
             context.cleanupShareTempFiles()
             context.openMacroInMacroDroid(data)
-        }.onFailure { inMainToast("MacroDroid not found") }
+        }.onFailure { inMainToast("未找到MacroDroid") }
     }
 
     fun exportSetAsInt() = scope.launch(Dispatchers.IO) {
@@ -698,7 +698,7 @@ private fun EditPropertyDialog(
         runCatching {
             context.cleanupShareTempFiles()
             context.openMacroInMacroDroid(data)
-        }.onFailure { inMainToast("MacroDroid not found") }
+        }.onFailure { inMainToast("未找到MacroDroid") }
     }
 
     fun exportGetAsInt() = scope.launch(Dispatchers.IO) {
@@ -806,7 +806,7 @@ private fun EditPropertyDialog(
         runCatching {
             context.cleanupShareTempFiles()
             context.openMacroInMacroDroid(data)
-        }.onFailure { inMainToast("MacroDroid not found") }
+        }.onFailure { inMainToast("未找到MacroDroid") }
     }
 
     fun exportListenAsInt() = scope.launch(Dispatchers.IO) {
@@ -953,7 +953,7 @@ private fun EditPropertyDialog(
                     Icon(
                         imageVector = Icons.Outlined.Info,
                         tint = AppTheme.colors.contentPrimary,
-                        contentDescription = "info"
+                        contentDescription = "信息"
                     )
                 }
 
@@ -1154,7 +1154,7 @@ private fun EditPropertyDialog(
                                             innerTextField()
                                             if (zoneTextValue.text.isEmpty()) {
                                                 Text(
-                                                    text = "Zone",
+                                                    text = "区域",
                                                     style = AppTheme.typography.buttonTitle,
                                                     color = AppTheme.colors.contentPrimary.copy(.5f),
                                                     overflow = TextOverflow.Ellipsis,
@@ -1299,7 +1299,7 @@ private fun EditPropertyDialog(
 
                                                 Timber.d("Apply fun value: $value with result $result")
                                                 withContext(Dispatchers.Main) {
-                                                    context.toast(if (result) "SUCCESS" else "FAIL")
+                                                    context.toast(if (result) "成功" else "失败")
                                                 }
                                             }
                                         }
@@ -1388,7 +1388,7 @@ private fun EditPropertyDialog(
 
                                                 Timber.d("Apply fun value: $value with result $result")
                                                 withContext(Dispatchers.Main) {
-                                                    context.toast(if (result) "SUCCESS" else "FAIL")
+                                                    context.toast(if (result) "成功" else "失败")
                                                 }
                                             }
                                         }
@@ -1792,7 +1792,7 @@ private fun EditPropertyDialog(
                                     Icon(
                                         imageVector = Icons.Filled.Done,
                                         tint = AppTheme.colors.contentPrimary,
-                                        contentDescription = "clear",
+                                        contentDescription = "清除",
                                         modifier = Modifier
                                             .padding(6.dp)
                                     )
@@ -1837,7 +1837,7 @@ private fun RenderAddButton(title: String, onClick: () -> Unit) {
                 .size(22.dp),
             imageVector = Icons.Filled.AddCircle,
             tint = AppTheme.colors.contentPrimary,
-            contentDescription = "export"
+            contentDescription = "导出"
         )
 
         Text(

@@ -85,6 +85,7 @@ import com.salat.gbinder.util.SimpleTimer
 import com.salat.gbinder.util.SystemAppsLightRepository
 import com.salat.gbinder.util.SystemAppsLightRepositoryImpl.Companion.GMP_PACKAGE
 import com.salat.gbinder.util.activeMediaControllerFlow
+import com.salat.gbinder.util.broadcastToGMH
 import com.salat.gbinder.util.activeMediaSessionControllerFlow
 import com.salat.gbinder.util.driveModeNotifStore
 import com.salat.gbinder.util.getAudioSourceDisplayLabel
@@ -403,6 +404,53 @@ class App : Application(), ImageLoaderFactory {
             // Start API init
             initOneOSApiManager()
             carManager.create()
+
+            // GMP: 自动启动在线音乐服务 + 初始化 OneOS (后台线程,避免阻塞主线程)
+            try {
+                val appCtx = this@App
+                // OneOS init 放后台线程
+                appScope.launch(Dispatchers.IO) {
+                    runCatching { com.salat.gbinder.gmp.OneOsApiBootstrap.initialize(appCtx) }
+                }
+                // 服务启动必须在主线程
+                appScope.launch(Dispatchers.Main) {
+                    runCatching {
+                        val gmpIntent = Intent(appCtx, com.salat.gbinder.gmp.OnlineMusicService::class.java)
+                        // 使用普通 startService(OnlineMusicService 是后台绑定服务,无需前台通知)
+                        startService(gmpIntent)
+                        Timber.d("[GMP] OnlineMusicService auto-started")
+                    }
+                }
+            } catch (e: Exception) {
+                Timber.e(e, "[GMP] auto-start failed")
+            }
+
+            // GMP: 自动引导通知监听权限(捕获第三方App播放的前提)
+            try {
+                val ctx = this@App
+                if (!com.salat.gbinder.gmp.GmpPermissionHelper.isNotificationAccessGranted(ctx)) {
+                    Timber.d("[GMP] notification access not granted, guiding user")
+                    // 延迟跳转,避免启动时抢占焦点
+                    appScope.launch(Dispatchers.Main) {
+                        delay(3000)
+                        com.salat.gbinder.gmp.GmpPermissionHelper.openNotificationAccessSettings(ctx)
+                    }
+                } else {
+                    Timber.d("[GMP] notification access already granted")
+                }
+            } catch (e: Exception) {
+                Timber.e(e, "[GMP] permission guide failed")
+            }
+        }
+
+        // GMH: 仪表盘广播(不依赖OneOS,随时可用)
+        try {
+            com.salat.gbinder.receiver.DimDashboardPusher.init(this)
+        } catch (e: Exception) {
+            android.util.Log.e("DimPusher", "init failed", e)
+        }
+        appScope.launch {
+            initGMHBroadcast()
         }
 
         // Launcher device packages tracker
@@ -1268,7 +1316,7 @@ class App : Application(), ImageLoaderFactory {
 
                 if (mediaMetadataStateJob?.isActive != true) {
                     mediaMetadataStateJob = launch {
-                        activeMediaControllerFlow().collect { controller ->
+                        applicationContext.activeMediaControllerFlow().collect { controller ->
                             globalActiveMediaController = controller
 
                             // MediaData translation
@@ -1276,6 +1324,8 @@ class App : Application(), ImageLoaderFactory {
                                 // Check and send base media metadata
                                 _playbackMetadataFlow.emit(controller)
                             }
+
+
                         }
                     }
                 }
@@ -1298,6 +1348,56 @@ class App : Application(), ImageLoaderFactory {
             // Set backup source visible app, if accessibility not available
             if (!stateKeeper.canAccessibility.value) {
                 stateKeeper.setVisibleApp(pkg, this@App.packageName == pkg)
+            }
+        }
+    }
+
+    // GMH 仪表盘广播(始终活跃,不依赖媒体控制开关)
+    private fun CoroutineScope.initGMHBroadcast() = launch {
+        android.util.Log.i("GMH", "initGMHBroadcast coroutine STARTED")
+        applicationContext.activeMediaControllerFlow().collect { controller ->
+            android.util.Log.i("GMH", "controller received: pkg=${controller?.packageName} hasMetadata=${controller?.metadata != null}")
+            try {
+                val meta = controller?.metadata ?: run {
+                    android.util.Log.i("GMH", "skip: no metadata for ${controller?.packageName}")
+                    return@collect
+                }
+                val title = meta.getString(android.media.MediaMetadata.METADATA_KEY_TITLE) ?: ""
+                val artist = meta.getString(android.media.MediaMetadata.METADATA_KEY_ARTIST) ?: ""
+                val album = meta.getString(android.media.MediaMetadata.METADATA_KEY_ALBUM) ?: ""
+                val durationMs = meta.getLong(android.media.MediaMetadata.METADATA_KEY_DURATION).coerceAtLeast(0)
+                val positionMs = controller.playbackState?.getPosition()?.toLong() ?: 0L
+                val isPlaying = controller.playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING
+                // 尝试多个封面来源(LX Music不设ALBUM_ART_URI)
+                var coverUrl = meta.getString(android.media.MediaMetadata.METADATA_KEY_ALBUM_ART_URI)
+                if (coverUrl.isNullOrBlank()) coverUrl = meta.getString(android.media.MediaMetadata.METADATA_KEY_ART_URI)
+                if (coverUrl.isNullOrBlank()) coverUrl = meta.getString(android.media.MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI)
+                android.util.Log.i("GMH", "broadcasting: $title - $artist cover=${coverUrl ?: "null"} playing=$isPlaying")
+                applicationContext.broadcastToGMH(title, artist, album, coverUrl, durationMs, positionMs, isPlaying)
+
+                // 直接推送车机仪表盘(ecarx DimInteraction, 绕过广播限制)
+                runCatching {
+                    val coverUri = coverUrl?.let { android.net.Uri.parse(it) }
+                    // 优先用播放器已下载的封面 Bitmap(多播放器通用)
+                    val coverBitmap = meta.getBitmap(android.media.MediaMetadata.METADATA_KEY_ART)
+                        ?: meta.getBitmap(android.media.MediaMetadata.METADATA_KEY_ALBUM_ART)
+                    com.salat.gbinder.receiver.DimDashboardPusher.pushTrackInfo(
+                        com.salat.gbinder.entity.HudTrackInfo(
+                            title = title,
+                            artist = artist,
+                            album = album,
+                            cover = coverUri,
+                            isPlaying = isPlaying,
+                            sourceType = 6,
+                            progress = positionMs,
+                            maxProgress = durationMs
+                        ),
+                        context = applicationContext,
+                        coverBitmap = coverBitmap
+                    )
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("GMH", "broadcast failed", e)
             }
         }
     }
@@ -1938,13 +2038,13 @@ class App : Application(), ImageLoaderFactory {
 
             val displayValue = when (value) {
                 CarPropertyValue.IGNITION_STATE_ACC -> "Acc"
-                CarPropertyValue.IGNITION_STATE_DRIVING -> "Driving"
-                CarPropertyValue.IGNITION_STATE_LOCK -> "Lock"
+                CarPropertyValue.IGNITION_STATE_DRIVING -> "行驶中"
+                CarPropertyValue.IGNITION_STATE_LOCK -> "锁定"
                 CarPropertyValue.IGNITION_STATE_OFF -> "Off"
                 CarPropertyValue.IGNITION_STATE_ON -> "On"
-                CarPropertyValue.IGNITION_STATE_START -> "Start"
-                CarPropertyValue.IGNITION_STATE_UNDEFINED -> "Undefined"
-                else -> "Unknown"
+                CarPropertyValue.IGNITION_STATE_START -> "启动"
+                CarPropertyValue.IGNITION_STATE_UNDEFINED -> "未定义"
+                else -> "未知"
             }
             debugDeepLog("[IGNITION STATE] $displayValue")
         }

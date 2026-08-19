@@ -112,6 +112,8 @@ import com.salat.gbinder.features.clusterBackground.RenderClusterBackgroundScree
 import com.salat.gbinder.features.configurator.RenderConfigurator
 import com.salat.gbinder.features.configurator.RenderSystemParams
 import com.salat.gbinder.features.geelyLauncher.RenderGeelyLauncherSettings
+import com.salat.gbinder.features.gmh.RenderGMHSettings
+import com.salat.gbinder.features.gmp.RenderGMPSettings
 import com.salat.gbinder.features.launcher.BACKUP_DIVIDER
 import com.salat.gbinder.features.launcher.backupIconsToString
 import com.salat.gbinder.features.launcher.restoreIconsFromString
@@ -245,6 +247,8 @@ class MainActivity : ComponentActivity() {
             var showSystemParams by remember { mutableStateOf(false) }
             var showGeelyLauncherSettings by remember { mutableStateOf(false) }
             var showClusterBackground by remember { mutableStateOf(false) }
+            var showGMHSettings by remember { mutableStateOf(false) }
+            var showGMPSettings by remember { mutableStateOf(false) }
 
             var mainScreenState by rememberSaveable(
                 stateSaver = MainScreenState.saver
@@ -495,6 +499,14 @@ class MainActivity : ComponentActivity() {
                                 uiScaleState = uiScale,
                                 onClose = { showClusterBackground = false }
                             )
+                        } else if (showGMHSettings) {
+                            RenderGMHSettings(
+                                onClose = { showGMHSettings = false }
+                            )
+                        } else if (showGMPSettings) {
+                            RenderGMPSettings(
+                                onClose = { showGMPSettings = false }
+                            )
                         } else if (showSystemParams) {
                             RenderSystemParams(
                                 uiScaleState = uiScale,
@@ -513,6 +525,12 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onNavigateToClusterBackground = {
                                     showClusterBackground = true
+                                },
+                                onNavigateToGMHSettings = {
+                                    showGMHSettings = true
+                                },
+                                onNavigateToGMPSettings = {
+                                    showGMPSettings = true
                                 },
                                 onClose = { showSystemParams = false }
                             )
@@ -614,10 +632,6 @@ class MainActivity : ComponentActivity() {
 
         Spacer(Modifier.height(48.dp))
 
-        // App update ui
-        appUpdateInfo?.let { info ->
-            RenderAppUpdate(info, updateDownloadState)
-        }
 
         // is enable
         RenderSwitcher(
@@ -970,7 +984,7 @@ class MainActivity : ComponentActivity() {
                             .size(24.dp),
                         imageVector = Icons.Filled.Share,
                         tint = AppTheme.colors.contentPrimary,
-                        contentDescription = "delete"
+                        contentDescription = "删除"
                     )
                 }
             }
@@ -1291,7 +1305,7 @@ class MainActivity : ComponentActivity() {
                 val targetRecoveryDM = mainScreenState.targetRecoveryDriveMode
                     .getDisplayDriveModeName()
                     .let { name ->
-                        if (name == "Unknown") {
+                        if (name == "未知") {
                             isActive = false
                             stringResource(R.string.last)
                         } else {
@@ -1542,7 +1556,7 @@ class MainActivity : ComponentActivity() {
 
         RenderDocumentationBlock()
 
-        RenderGroupTitle("CLI Gateways")
+        RenderGroupTitle("CLI网关")
 
         Row(
             modifier = Modifier
@@ -1631,7 +1645,7 @@ class MainActivity : ComponentActivity() {
                 HugeTogglerItem(text = "Atlas", subtitle = "5555"),
                 HugeTogglerItem(text = "Preface", subtitle = "7777"),
                 HugeTogglerItem(
-                    text = "Custom",
+                    text = "自定义",
                     subtitle = when {
                         mainScreenState.adbHelperPort != 7777 &&
                                 mainScreenState.adbHelperPort != 5555 &&
@@ -1992,7 +2006,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun Int.toDecimalSecondString(digits: Int = 2) =
-        String.format(Locale.US, "%.${digits}f сек", this / 1000.0)
+        String.format(Locale.US, "%.${digits}f 秒", this / 1000.0)
 
     private fun extractInts(input: String): List<Int> {
         return Regex("\\d+")
@@ -2522,11 +2536,11 @@ class MainActivity : ComponentActivity() {
             )
 
             val title = intent.getStringExtra("gib_name")
-                ?: "Shortcut"
+                ?: "快捷方式"
             val subtitle = intent.getStringExtra("gib_package")
                 ?: intent.component?.packageName
                 ?: intent.action
-                ?: "Shortcut"
+                ?: "快捷方式"
             val appIcon = systemApps
                 .getApps(APP_ICON_ROUND, APP_ICON_QUALITY, subtitle)
                 .firstOrNull()

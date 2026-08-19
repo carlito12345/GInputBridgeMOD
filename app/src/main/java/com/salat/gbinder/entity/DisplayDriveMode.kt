@@ -20,25 +20,25 @@ val DISPLAY_DRIVE_MODES: List<DisplayDriveMode>
         DisplayDriveMode(
             id = 570491158,
             originalName = "DRIVE_MODE_SELECTION_ADAPTIVE",
-            displayName = "Smart",
+            displayName = "智能",
             description = R.string.drive_mode_adaptive_desc
         ),
         DisplayDriveMode(
             id = 570491139,
             originalName = "DRIVE_MODE_SELECTION_DYNAMIC",
-            displayName = "Sport",
+            displayName = "运动",
             description = R.string.drive_mode_dynamic_desc
         ),
         DisplayDriveMode(
             id = 570491138,
             originalName = "DRIVE_MODE_SELECTION_COMFORT",
-            displayName = "Comfort",
+            displayName = "舒适",
             description = R.string.drive_mode_comfort_desc
         ),
         DisplayDriveMode(
             id = 570491137,
             originalName = "DRIVE_MODE_SELECTION_ECO",
-            displayName = "Eco",
+            displayName = "经济",
             description = R.string.drive_mode_eco_desc
         ),
 
@@ -46,13 +46,13 @@ val DISPLAY_DRIVE_MODES: List<DisplayDriveMode>
         DisplayDriveMode(
             id = 570491144,
             originalName = "DRIVE_MODE_SELECTION_POWER",
-            displayName = "Power",
+            displayName = "动力",
             description = R.string.drive_mode_power_desc
         ),
         DisplayDriveMode(
             id = 570491157,
             originalName = "DRIVE_MODE_SPORT_PLUS",
-            displayName = "Sport Plus",
+            displayName = "运动+",
             description = R.string.drive_mode_sport_plus_desc
         ),
 
@@ -60,38 +60,38 @@ val DISPLAY_DRIVE_MODES: List<DisplayDriveMode>
         DisplayDriveMode(
             id = 570491146,
             originalName = "DRIVE_MODE_SELECTION_MUD",
-            displayName = "Mud",
+            displayName = "泥地",
             description = R.string.drive_mode_mud_desc
         ),
         DisplayDriveMode(
             id = 570491155,
             originalName = "DRIVE_MODE_SELECTION_OFFROAD",
-            displayName = "Offroad",
+            displayName = "越野",
             description = R.string.drive_mode_offroad_desc
         ),
         DisplayDriveMode(
             id = 570491147,
             originalName = "DRIVE_MODE_SELECTION_ROCK",
-            displayName = "Rock",
+            displayName = "岩石",
             description = R.string.drive_mode_rock_desc
         ),
         DisplayDriveMode(
             id = 570491149,
             originalName = "DRIVE_MODE_SELECTION_SAND",
-            displayName = "Sand",
+            displayName = "沙地",
             description = R.string.drive_mode_sand_desc
         ),
         DisplayDriveMode(
             id = 570491145,
             originalName = "DRIVE_MODE_SELECTION_SNOW",
-            displayName = "Snow",
+            displayName = "雪地",
             description = R.string.drive_mode_snow_desc
         ),
         // Assist function
         DisplayDriveMode(
             id = 570491141,
             originalName = "DRIVE_MODE_SELECTION_HDC",
-            displayName = "HDC",
+            displayName = "陡坡控制",
             description = R.string.drive_mode_hdc_desc
         ),
 
@@ -99,14 +99,14 @@ val DISPLAY_DRIVE_MODES: List<DisplayDriveMode>
         DisplayDriveMode(
             id = 570491200,
             originalName = "DRIVE_MODE_SELECTION_CUSTOM",
-            displayName = "Custom",
+            displayName = "自定义",
             description = R.string.drive_mode_custom_desc
         ),
         // Baseline "Normal"
         DisplayDriveMode(
             id = 570491153,
             originalName = "DRIVE_MODE_SELECTION_NORMAL",
-            displayName = "Normal",
+            displayName = "标准",
             description = R.string.drive_mode_normal_desc
         ),
 
@@ -114,7 +114,7 @@ val DISPLAY_DRIVE_MODES: List<DisplayDriveMode>
         DisplayDriveMode(
             id = 570491150,
             originalName = "DRIVE_MODE_SELECTION_AWD",
-            displayName = "AWD",
+            displayName = "四驱",
             description = R.string.drive_mode_awd_desc
         ),
 
@@ -122,37 +122,37 @@ val DISPLAY_DRIVE_MODES: List<DisplayDriveMode>
         DisplayDriveMode(
             id = 570491143,
             originalName = "DRIVE_MODE_SELECTION_HYBRID",
-            displayName = "Hybrid",
+            displayName = "混动",
             description = R.string.drive_mode_hybrid_desc
         ),
         DisplayDriveMode(
             id = 570491142,
             originalName = "DRIVE_MODE_SELECTION_PURE",
-            displayName = "Pure",
+            displayName = "纯电",
             description = R.string.drive_mode_pure_desc
         ),
         DisplayDriveMode(
             id = 570491151,
             originalName = "DRIVE_MODE_SELECTION_SAVE",
-            displayName = "Save",
+            displayName = "节能",
             description = R.string.drive_mode_save_desc
         ),
         DisplayDriveMode(
             id = 570491152,
             originalName = "DRIVE_MODE_SELECTION_ECO_HEV_PHEV",
-            displayName = "Eco (HEV/PHEV)",
+            displayName = "经济(混动/插混)",
             description = R.string.drive_mode_eco_hev_phev_desc
         ),
         DisplayDriveMode(
             id = 570491148,
             originalName = "DRIVE_MODE_SELECTION_PHEV",
-            displayName = "PHEV",
+            displayName = "插电混动",
             description = R.string.drive_mode_phev_desc
         ),
         DisplayDriveMode(
             id = 570491154,
             originalName = "DRIVE_MODE_SELECTION_EAWD",
-            displayName = "EAWD",
+            displayName = "四驱",
             description = R.string.drive_mode_eawd_desc
         ),
 

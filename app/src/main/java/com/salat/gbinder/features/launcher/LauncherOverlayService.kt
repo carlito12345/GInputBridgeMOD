@@ -204,10 +204,10 @@ class LauncherOverlayService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
-                "App Launcher Overlay",
+                "应用启动器悬浮窗",
                 NotificationManager.IMPORTANCE_LOW
             ).apply {
-                description = "Show App Launcher menu"
+                description = "显示应用启动器菜单"
             }
             (getSystemService(NOTIFICATION_SERVICE) as NotificationManager)
                 .createNotificationChannel(channel)
@@ -215,15 +215,15 @@ class LauncherOverlayService : Service() {
     }
 
     private fun buildNotification() = NotificationCompat.Builder(this, CHANNEL_ID)
-        .setContentTitle("App Launcher Overlay")
-        .setContentText("Show App Launcher menu")
+        .setContentTitle("应用启动器悬浮窗")
+        .setContentText("显示应用启动器菜单")
         .setSmallIcon(R.drawable.ic_launcher_logo) // your existing icon
         .setPriority(NotificationCompat.PRIORITY_MIN)
         .setOngoing(true) // Foreground service best practice
         .build()
 
     private fun buildMinimalNotification() = NotificationCompat.Builder(this, CHANNEL_ID)
-        .setContentTitle("App Launcher Overlay")
+        .setContentTitle("应用启动器悬浮窗")
         .setSmallIcon(R.drawable.ic_launcher_logo)
         .setPriority(NotificationCompat.PRIORITY_MIN)
         .setOngoing(true)
@@ -1383,7 +1383,7 @@ class LauncherOverlayService : Service() {
                 Icon(
                     painter = painterResource(R.drawable.ic_open_window),
                     tint = color,
-                    contentDescription = "menu icon",
+                    contentDescription = "菜单图标",
                     modifier = Modifier
                         .alpha(.9f)
                         .size(20.dp)
@@ -1428,7 +1428,7 @@ class LauncherOverlayService : Service() {
                     Icon(
                         painter = painterResource(R.drawable.ic_delete),
                         tint = color,
-                        contentDescription = "menu icon",
+                        contentDescription = "菜单图标",
                         modifier = Modifier
                             .alpha(.9f)
                             .size(22.dp)
@@ -1496,7 +1496,7 @@ class LauncherOverlayService : Service() {
                             }
                         ),
                         tint = color,
-                        contentDescription = "menu icon",
+                        contentDescription = "菜单图标",
                         modifier = Modifier
                             .offset(y = 1.dp)
                             .alpha(.9f)

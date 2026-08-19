@@ -261,3 +261,34 @@ fun Context.activeMediaControllerFlow(): Flow<MediaController?> = callbackFlow {
         thread.quitSafely()
     }
 }.buffer(capacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+
+// =======================
+// GMH HUD Integration
+// =======================
+
+/**
+ * Broadcast current media info to GMH dashboard
+ */
+fun Context.broadcastToGMH(
+    title: String,
+    artist: String = "",
+    album: String = "",
+    coverUrl: String? = null,
+    durationMs: Long,
+    positionMs: Long,
+    isPlaying: Boolean
+) {
+    try {
+        val intent = android.content.Intent("com.salat.gmediahud.SHOW").apply {
+            putExtra("title", title)
+            putExtra("subtitle", artist)
+            putExtra("art", coverUrl ?: "")
+            putExtra("duration", (durationMs / 1000).toInt())
+            putExtra("params", "source=6,progress=$positionMs,max_progress=$durationMs,queue=1,warning=0,pause=${if (!isPlaying) 1 else 0},toast=0")
+        }
+        sendBroadcast(intent)
+        android.util.Log.d("GMH", "Sent to dashboard: $title - $artist")
+    } catch (e: Exception) {
+        android.util.Log.e("GMH", "Failed to broadcast", e)
+    }
+}

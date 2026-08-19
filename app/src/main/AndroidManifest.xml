@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission
         android:name="android.permission.QUERY_ALL_PACKAGES"
@@ -256,6 +257,48 @@
             <grant-uri-permission android:pathPrefix="/public_downloads/" />
             <grant-uri-permission android:pathPrefix="/shared_gibb/" />
         </provider>
+        <!-- GMH Dashboard Receiver -->
+        <receiver
+            android:name=".receiver.GMediaHudReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.salat.gmediahud.SHOW"/>
+                <action android:name="com.salat.gmediahud.HIDE"/>
+                <action android:name="com.salat.gmediahud.UPDATE_AUDIO_SOURCE"/>
+            </intent-filter>
+        </receiver>
+
+        <!-- GMP Online Music Service - 车机通过 IMusicManager 控制播放 -->
+        <service
+            android:name=".gmp.OnlineMusicService"
+            android:exported="true"
+            android:label="Online Music Service">
+            <intent-filter>
+                <action android:name="com.geely.service.ONLINE_MUSIC" />
+            </intent-filter>
+        </service>
+
+        <!-- GMP 开机自启 -->
+        <receiver
+            android:name=".gmp.GmpBootReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- GMP 通知监听服务(捕获第三方App播放) -->
+        <service
+            android:name=".gmp.MediaSessionNotificationListenerService"
+            android:exported="true"
+            android:label="GMP Media Listener"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+
     </application>
 
     <queries>

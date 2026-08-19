@@ -38,18 +38,18 @@ fun FuncCustomDialog(
     val customActions = remember {
         mapOf(
             // "DVR (Custom)" to CarPropertyValue.CUSTOM_KEY_TYPE_DVR,
-            "Navigate To Home (Custom)" to CarPropertyValue.CUSTOM_KEY_TYPE_NAVIGATION,
+            "导航回家(自定义)" to CarPropertyValue.CUSTOM_KEY_TYPE_NAVIGATION,
 
-            "360 Cameras" to CarPropertyValue.CUSTOM_KEY_TYPE_360_PANORAMA,
-            "Toggle Audio" to CarPropertyValue.CUSTOM_KEY_TYPE_SOUND_SWITCH,
-            "Adjust Mirror" to CarPropertyValue.CUSTOM_KEY_TYPE_REAR_MIRROR_ADJUST,
-            "Open Trunk" to CarPropertyValue.CUSTOM_KEY_TYPE_UNLCKTRUNK,
-            "Change Drive Mode" to CarPropertyValue.CUSTOM_KEY_TYPE_DRIVING_MODE,
+            "360度全景摄像头" to CarPropertyValue.CUSTOM_KEY_TYPE_360_PANORAMA,
+            "切换音频" to CarPropertyValue.CUSTOM_KEY_TYPE_SOUND_SWITCH,
+            "调节后视镜" to CarPropertyValue.CUSTOM_KEY_TYPE_REAR_MIRROR_ADJUST,
+            "打开后备箱" to CarPropertyValue.CUSTOM_KEY_TYPE_UNLCKTRUNK,
+            "切换驾驶模式" to CarPropertyValue.CUSTOM_KEY_TYPE_DRIVING_MODE,
 
             // "Speaker Volume" to CarPropertyValue.CUSTOM_KEY_TYPE_LOUD_SPEAKER,
             // "Auto Parking" to CarPropertyValue.CUSTOM_KEY_TYPE_AUTO_PARK,
-            "Collect Fav" to CarPropertyValue.CUSTOM_KEY_TYPE_COLLECT_FAV,
-            "Dim Full Screen Map" to CarPropertyValue.CUSTOM_KEY_TYPE_DIM_FULL_SCREEN_MAP
+            "收藏" to CarPropertyValue.CUSTOM_KEY_TYPE_COLLECT_FAV,
+            "全屏地图变暗" to CarPropertyValue.CUSTOM_KEY_TYPE_DIM_FULL_SCREEN_MAP
         )
     }
 

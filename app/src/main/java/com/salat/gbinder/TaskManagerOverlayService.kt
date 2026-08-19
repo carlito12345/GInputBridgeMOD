@@ -90,10 +90,10 @@ class TaskManagerOverlayService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
-                "Task Manager Overlay",
+                "任务管理器悬浮窗",
                 NotificationManager.IMPORTANCE_LOW
             ).apply {
-                description = "Show Task manager"
+                description = "显示任务管理器"
             }
             (getSystemService(NOTIFICATION_SERVICE) as NotificationManager)
                 .createNotificationChannel(channel)
@@ -103,8 +103,8 @@ class TaskManagerOverlayService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int) = START_STICKY
 
     private fun buildNotification() = NotificationCompat.Builder(this, CHANNEL_ID)
-        .setContentTitle("Task manager Overlay")
-        .setContentText("Show Task manager")
+        .setContentTitle("任务管理器悬浮窗")
+        .setContentText("显示任务管理器")
         .setSmallIcon(R.drawable.ic_launcher_logo) // your existing icon
         .setPriority(NotificationCompat.PRIORITY_MIN)
         .setOngoing(true) // Foreground service best practice

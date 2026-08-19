@@ -102,10 +102,10 @@ class LampModeOverlayService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
-                "Lamp Mode Overlay",
+                "氛围灯模式悬浮窗",
                 NotificationManager.IMPORTANCE_LOW
             ).apply {
-                description = "Show Lamp mode changes"
+                description = "显示氛围灯模式变化"
             }
             (getSystemService(NOTIFICATION_SERVICE) as NotificationManager)
                 .createNotificationChannel(channel)
@@ -115,8 +115,8 @@ class LampModeOverlayService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int) = START_STICKY
 
     private fun buildNotification() = NotificationCompat.Builder(this, CHANNEL_ID)
-        .setContentTitle("Lamp Mode Overlay")
-        .setContentText("Show Lamp Mode changes")
+        .setContentTitle("氛围灯模式悬浮窗")
+        .setContentText("显示氛围灯模式变化")
         .setSmallIcon(R.drawable.ic_launcher_logo) // your existing icon
         .setPriority(NotificationCompat.PRIORITY_MIN)
         .setOngoing(true) // Foreground service best practice

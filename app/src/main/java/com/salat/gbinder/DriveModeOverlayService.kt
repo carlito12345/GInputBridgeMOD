@@ -117,10 +117,10 @@ class DriveModeOverlayService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
-                "Drive Mode Overlay",
+                "驾驶模式悬浮窗",
                 NotificationManager.IMPORTANCE_LOW
             ).apply {
-                description = "Show drive mode changes"
+                description = "显示驾驶模式变化"
             }
             (getSystemService(NOTIFICATION_SERVICE) as NotificationManager)
                 .createNotificationChannel(channel)
@@ -130,8 +130,8 @@ class DriveModeOverlayService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int) = START_STICKY
 
     private fun buildNotification() = NotificationCompat.Builder(this, CHANNEL_ID)
-        .setContentTitle("Drive Mode Overlay")
-        .setContentText("Show Drive Mode changes")
+        .setContentTitle("驾驶模式悬浮窗")
+        .setContentText("显示驾驶模式变化")
         .setSmallIcon(R.drawable.ic_launcher_logo) // your existing icon
         .setPriority(NotificationCompat.PRIORITY_MIN)
         .setOngoing(true) // Foreground service best practice
