@@ -1483,15 +1483,6 @@ class App : Application(), ImageLoaderFactory {
         }
     }
 
-    private fun CoroutineScope.backupVisiblePackageCollector() = launch {
-        GlobalState.backupVisiblePackageFlow.collect { pkg ->
-            // Set backup source visible app, if accessibility not available
-            if (!stateKeeper.canAccessibility.value) {
-                stateKeeper.setVisibleApp(pkg, this@App.packageName == pkg)
-            }
-        }
-    }
-
     // GMH 仪表盘广播(始终活跃,不依赖媒体控制开关)
     private fun CoroutineScope.initGMHBroadcast() = launch {
         android.util.Log.i("GMH", "initGMHBroadcast coroutine STARTED")

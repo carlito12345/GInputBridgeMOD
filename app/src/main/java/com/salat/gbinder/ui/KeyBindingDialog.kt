@@ -104,6 +104,7 @@ import com.salat.gbinder.entity.KeyBindPattern
 import com.salat.gbinder.entity.parseAppCarouselValueSegment
 import com.salat.gbinder.features.launcher.NAVI_PKGS
 import com.salat.gbinder.mappers.resolveKeyCodeLabel
+import com.salat.gbinder.mappers.keyCodeMap
 import com.salat.gbinder.mappers.toAllDisplay
 import com.salat.gbinder.ui.reordable.ReorderableItem
 import com.salat.gbinder.ui.reordable.rememberReorderableLazyListState

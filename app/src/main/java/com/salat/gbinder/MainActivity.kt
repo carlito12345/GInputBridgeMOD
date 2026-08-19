@@ -112,6 +112,7 @@ import com.salat.gbinder.features.configurator.RenderConfigurator
 import com.salat.gbinder.features.configurator.RenderSystemParams
 import com.salat.gbinder.features.geelyLauncher.RenderGeelyLauncherSettings
 import com.salat.gbinder.features.gmh.RenderGMHSettings
+import com.salat.gbinder.features.clusterBackground.RenderClusterBackgroundScreen
 import com.salat.gbinder.features.gmp.RenderGMPSettings
 import com.salat.gbinder.features.launcher.BACKUP_DIVIDER
 import com.salat.gbinder.features.launcher.backupIconsToString
