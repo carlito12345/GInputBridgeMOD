@@ -54,7 +54,6 @@ fun RenderSystemParams(
     onAdbDimAutoStopChanged: (Boolean) -> Unit,
     onNavigateToGeelyLauncherSettings: () -> Unit,
     onNavigateToClusterBackground: () -> Unit,
-    onNavigateToGMHSettings: () -> Unit,
     onClose: () -> Unit
 ) {
     val viewModel: ConfiguratorPresetsViewModel = hiltViewModel()
@@ -73,7 +72,6 @@ fun RenderSystemParams(
             onAdbDimAutoStopChanged = onAdbDimAutoStopChanged,
             onNavigateToGeelyLauncherSettings = onNavigateToGeelyLauncherSettings,
             onNavigateToClusterBackground = onNavigateToClusterBackground,
-            onNavigateToGMHSettings = onNavigateToGMHSettings,
             viewModel = viewModel
         )
     }
@@ -123,7 +121,6 @@ private fun ColumnScope.RenderConfiguratorPresetsContent(
     onAdbDimAutoStopChanged: (Boolean) -> Unit,
     onNavigateToGeelyLauncherSettings: () -> Unit,
     onNavigateToClusterBackground: () -> Unit,
-    onNavigateToGMHSettings: () -> Unit,
     viewModel: ConfiguratorPresetsViewModel
 ) {
     val isAtlas by viewModel.isAtlas.collectAsStateWithLifecycle()
@@ -188,16 +185,6 @@ private fun ColumnScope.RenderConfiguratorPresetsContent(
                     title = "[Telnet + QNX] ${stringResource(R.string.cluster_bg_title)}",
                     subtitle = stringResource(R.string.cluster_bg_subtitle),
                     onClick = onNavigateToClusterBackground
-                )
-
-                Spacer(Modifier.height(12.dp))
-
-                RenderListButton(
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                    enable = true,
-                    title = "[GMH] 仪表盘",
-                    subtitle = "查看当前歌曲信息与仪表盘状态",
-                    onClick = onNavigateToGMHSettings
                 )
 
                 Spacer(Modifier.height(90.dp))

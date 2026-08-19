@@ -111,7 +111,6 @@ import com.salat.gbinder.entity.UiDownloadState
 import com.salat.gbinder.features.configurator.RenderConfigurator
 import com.salat.gbinder.features.configurator.RenderSystemParams
 import com.salat.gbinder.features.geelyLauncher.RenderGeelyLauncherSettings
-import com.salat.gbinder.features.gmh.RenderGMHSettings
 import com.salat.gbinder.features.clusterBackground.RenderClusterBackgroundScreen
 import com.salat.gbinder.features.launcher.BACKUP_DIVIDER
 import com.salat.gbinder.features.launcher.backupIconsToString
@@ -246,7 +245,6 @@ class MainActivity : ComponentActivity() {
             var showSystemParams by remember { mutableStateOf(false) }
             var showGeelyLauncherSettings by remember { mutableStateOf(false) }
             var showClusterBackground by remember { mutableStateOf(false) }
-            var showGMHSettings by remember { mutableStateOf(false) }
 
             var mainScreenState by rememberSaveable(
                 stateSaver = MainScreenState.saver
@@ -497,10 +495,6 @@ class MainActivity : ComponentActivity() {
                                 uiScaleState = uiScale,
                                 onClose = { showClusterBackground = false }
                             )
-                        } else if (showGMHSettings) {
-                            RenderGMHSettings(
-                                onClose = { showGMHSettings = false }
-                            )
                         } else if (showSystemParams) {
                             RenderSystemParams(
                                 uiScaleState = uiScale,
@@ -517,9 +511,6 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onNavigateToClusterBackground = {
                                     showClusterBackground = true
-                                },
-                                onNavigateToGMHSettings = {
-                                    showGMHSettings = true
                                 },
                                 onClose = { showSystemParams = false }
                             )
