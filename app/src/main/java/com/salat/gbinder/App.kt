@@ -88,7 +88,6 @@ import com.salat.gbinder.statekeeper.domain.repository.StateKeeperRepository
 import com.salat.gbinder.util.HeadrestNotifier
 import com.salat.gbinder.util.SimpleTimer
 import com.salat.gbinder.util.SystemAppsLightRepository
-import com.salat.gbinder.util.SystemAppsLightRepositoryImpl.Companion.GMP_PACKAGE
 import com.salat.gbinder.util.activeMediaControllerFlow
 import com.salat.gbinder.util.broadcastToGMH
 import com.salat.gbinder.util.activeMediaSessionControllerFlow
@@ -457,7 +456,6 @@ class App : Application(), ImageLoaderFactory {
 
         appScope.launch {
             initialLoggerState()
-            detectGMPApp().join() // Detect GMP contract
 
             initLogCollector()
             initAppScalesCollector()
@@ -471,42 +469,6 @@ class App : Application(), ImageLoaderFactory {
             initOneOSApiManager()
             carManager.create()
 
-            // GMP: 自动启动在线音乐服务 + 初始化 OneOS (后台线程,避免阻塞主线程)
-            try {
-                val appCtx = this@App
-                // OneOS init 放后台线程
-                appScope.launch(Dispatchers.IO) {
-                    runCatching { com.salat.gbinder.gmp.OneOsApiBootstrap.initialize(appCtx) }
-                }
-                // 服务启动必须在主线程
-                appScope.launch(Dispatchers.Main) {
-                    runCatching {
-                        val gmpIntent = Intent(appCtx, com.salat.gbinder.gmp.OnlineMusicService::class.java)
-                        // 使用普通 startService(OnlineMusicService 是后台绑定服务,无需前台通知)
-                        startService(gmpIntent)
-                        Timber.d("[GMP] OnlineMusicService auto-started")
-                    }
-                }
-            } catch (e: Exception) {
-                Timber.e(e, "[GMP] auto-start failed")
-            }
-
-            // GMP: 自动引导通知监听权限(捕获第三方App播放的前提)
-            try {
-                val ctx = this@App
-                if (!com.salat.gbinder.gmp.GmpPermissionHelper.isNotificationAccessGranted(ctx)) {
-                    Timber.d("[GMP] notification access not granted, guiding user")
-                    // 延迟跳转,避免启动时抢占焦点
-                    appScope.launch(Dispatchers.Main) {
-                        delay(3000)
-                        com.salat.gbinder.gmp.GmpPermissionHelper.openNotificationAccessSettings(ctx)
-                    }
-                } else {
-                    Timber.d("[GMP] notification access already granted")
-                }
-            } catch (e: Exception) {
-                Timber.e(e, "[GMP] permission guide failed")
-            }
         }
 
         // GMH: 仪表盘广播(不依赖OneOS,随时可用)
@@ -3872,38 +3834,18 @@ class App : Application(), ImageLoaderFactory {
         get() = this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_CPAA
 
     private val MediaCenterConstant.AudioSource.isMusicAdapterBaseControl
-        get() = if (GlobalState.isGMPInstalled.value) {
-            this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_ONLINE ||
-                    this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_BT ||
-                    this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_USB
-        } else {
-            this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_BT ||
-                    this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_USB
-        }
+        get() = this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_BT ||
+                this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_USB
 
     private val MediaCenterConstant.AudioSource.isMusicAdapterFullControl
-        get() = if (GlobalState.isGMPInstalled.value) {
-            this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_ONLINE ||
-                    this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_BT ||
-                    this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_USB ||
-                    this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_CPAA
-        } else {
-            this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_BT ||
-                    this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_USB ||
-                    this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_CPAA
-        }
+        get() = this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_BT ||
+                this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_USB ||
+                this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_CPAA
 
     private val MediaCenterConstant.AudioSource?.isKaraokeControl
-        get() = if (GlobalState.isGMPInstalled.value) {
-            this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_ONLINE ||
-                    this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_BT ||
-                    this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_RADIO ||
-                    this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_USB
-        } else {
-            this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_BT ||
-                    this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_RADIO ||
-                    this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_USB
-        }
+        get() = this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_BT ||
+                this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_RADIO ||
+                this == MediaCenterConstant.AudioSource.AUDIO_SOURCE_USB
 
     // -----------------------------------
     // Classes
@@ -4059,7 +4001,6 @@ class App : Application(), ImageLoaderFactory {
                             )
                         }
                         detectVpnApp(packageName)
-                        detectGMPApp(packageName)
                     }
                 }
 
@@ -4072,7 +4013,6 @@ class App : Application(), ImageLoaderFactory {
                                 PackagesChangedEvent.Removed(packageName)
                             )
                         }
-                        detectGMPApp(packageName)
                     }
                 }
 
@@ -4094,7 +4034,6 @@ class App : Application(), ImageLoaderFactory {
                     user: android.os.UserHandle?,
                     replacing: Boolean
                 ) {
-                    packageNames?.forEach { detectGMPApp(it) }
                 }
 
                 // Optional: when packages become unavailable
@@ -4103,7 +4042,6 @@ class App : Application(), ImageLoaderFactory {
                     user: android.os.UserHandle?,
                     replacing: Boolean
                 ) {
-                    packageNames?.forEach { detectGMPApp(it) }
                 }
             }
 
@@ -4126,12 +4064,6 @@ class App : Application(), ImageLoaderFactory {
             }
     }
 
-    private fun detectGMPApp(packageName: String? = null) = appScope.launch(Dispatchers.IO) {
-        if (GMP_PACKAGE != packageName && packageName != null) return@launch
-        val isGMPInstalled = systemApps.isGMPInstalled()
-        GlobalState.isGMPInstalled.value = isGMPInstalled
-        debugLog("GMP " + if (isGMPInstalled) "detected" else "not detected")
-    }
 
     override fun newImageLoader(): ImageLoader {
         return ImageLoader.Builder(this)

@@ -25,5 +25,4 @@ object GlobalState {
     val keyBindingMode = MutableStateFlow(false)
     val keyBindingFlow = MutableSharedFlow<KeyBindPattern>()
 
-    val isGMPInstalled = MutableStateFlow(false)
 }

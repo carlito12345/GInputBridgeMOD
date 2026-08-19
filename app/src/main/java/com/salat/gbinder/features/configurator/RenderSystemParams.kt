@@ -55,7 +55,6 @@ fun RenderSystemParams(
     onNavigateToGeelyLauncherSettings: () -> Unit,
     onNavigateToClusterBackground: () -> Unit,
     onNavigateToGMHSettings: () -> Unit,
-    onNavigateToGMPSettings: () -> Unit,
     onClose: () -> Unit
 ) {
     val viewModel: ConfiguratorPresetsViewModel = hiltViewModel()
@@ -75,7 +74,6 @@ fun RenderSystemParams(
             onNavigateToGeelyLauncherSettings = onNavigateToGeelyLauncherSettings,
             onNavigateToClusterBackground = onNavigateToClusterBackground,
             onNavigateToGMHSettings = onNavigateToGMHSettings,
-            onNavigateToGMPSettings = onNavigateToGMPSettings,
             viewModel = viewModel
         )
     }
@@ -126,7 +124,6 @@ private fun ColumnScope.RenderConfiguratorPresetsContent(
     onNavigateToGeelyLauncherSettings: () -> Unit,
     onNavigateToClusterBackground: () -> Unit,
     onNavigateToGMHSettings: () -> Unit,
-    onNavigateToGMPSettings: () -> Unit,
     viewModel: ConfiguratorPresetsViewModel
 ) {
     val isAtlas by viewModel.isAtlas.collectAsStateWithLifecycle()
@@ -201,16 +198,6 @@ private fun ColumnScope.RenderConfiguratorPresetsContent(
                     title = "[GMH] 仪表盘",
                     subtitle = "查看当前歌曲信息与仪表盘状态",
                     onClick = onNavigateToGMHSettings
-                )
-
-                Spacer(Modifier.height(12.dp))
-
-                RenderListButton(
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                    enable = true,
-                    title = "[GMP] 在线音乐",
-                    subtitle = "在线音乐服务设置与权限引导",
-                    onClick = onNavigateToGMPSettings
                 )
 
                 Spacer(Modifier.height(90.dp))

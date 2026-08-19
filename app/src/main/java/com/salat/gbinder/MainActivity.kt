@@ -113,7 +113,6 @@ import com.salat.gbinder.features.configurator.RenderSystemParams
 import com.salat.gbinder.features.geelyLauncher.RenderGeelyLauncherSettings
 import com.salat.gbinder.features.gmh.RenderGMHSettings
 import com.salat.gbinder.features.clusterBackground.RenderClusterBackgroundScreen
-import com.salat.gbinder.features.gmp.RenderGMPSettings
 import com.salat.gbinder.features.launcher.BACKUP_DIVIDER
 import com.salat.gbinder.features.launcher.backupIconsToString
 import com.salat.gbinder.features.launcher.restoreIconsFromString
@@ -248,7 +247,6 @@ class MainActivity : ComponentActivity() {
             var showGeelyLauncherSettings by remember { mutableStateOf(false) }
             var showClusterBackground by remember { mutableStateOf(false) }
             var showGMHSettings by remember { mutableStateOf(false) }
-            var showGMPSettings by remember { mutableStateOf(false) }
 
             var mainScreenState by rememberSaveable(
                 stateSaver = MainScreenState.saver
@@ -503,10 +501,6 @@ class MainActivity : ComponentActivity() {
                             RenderGMHSettings(
                                 onClose = { showGMHSettings = false }
                             )
-                        } else if (showGMPSettings) {
-                            RenderGMPSettings(
-                                onClose = { showGMPSettings = false }
-                            )
                         } else if (showSystemParams) {
                             RenderSystemParams(
                                 uiScaleState = uiScale,
@@ -526,9 +520,6 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onNavigateToGMHSettings = {
                                     showGMHSettings = true
-                                },
-                                onNavigateToGMPSettings = {
-                                    showGMPSettings = true
                                 },
                                 onClose = { showSystemParams = false }
                             )
@@ -615,18 +606,6 @@ class MainActivity : ComponentActivity() {
                 AppTheme.colors.sliderPassive
             }
         )
-
-        val gmpIntegration by GlobalState.isGMPInstalled.collectAsStateWithLifecycle()
-        if (gmpIntegration) {
-            Spacer(Modifier.height(6.dp))
-
-            Text(
-                modifier = Modifier,
-                text = stringResource(R.string.gmediaproxy_found),
-                style = AppTheme.typography.surfaceSubtitle,
-                color = AppTheme.colors.contentPrimary.copy(.9f)
-            )
-        }
 
         Spacer(Modifier.height(48.dp))
 
