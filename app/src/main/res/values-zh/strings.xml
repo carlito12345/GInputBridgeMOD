@@ -19,7 +19,6 @@
     <string name="filter">筛选</string>
     <string name="sort_by_recent_changes">按最近更改排序</string>
     <string name="show_the_unknowns">显示未知项</string>
-    <string name="gmediaproxy_found">已找到 GMediaProxy</string>
     <string name="enable_accessibility">要使用此应用，请启用无障碍功能</string>
     <string name="grant_notification_access">为正常使用,请授予应用"通知访问"权限</string>
     <string name="accessibility_features">无障碍功能</string>

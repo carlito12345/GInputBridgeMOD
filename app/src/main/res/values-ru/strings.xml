@@ -17,7 +17,6 @@
     <string name="filter">Фильтры</string>
     <string name="sort_by_recent_changes">Сортировать по последним изменениям</string>
     <string name="show_the_unknowns">Показвать неизвестные</string>
-    <string name="gmediaproxy_found">Интеграция с GMediaProxy</string>
 
     <string name="enable_accessibility">Для работы приложения активируйте специальные возможности</string>
     <string name="grant_notification_access">Для корректной работы предоставьте приложению «доступ к уведомлениям»</string>

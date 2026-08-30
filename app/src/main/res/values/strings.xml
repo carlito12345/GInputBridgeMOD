@@ -26,7 +26,6 @@
     <string name="filter">Filter</string>
     <string name="sort_by_recent_changes">Sort by recent changes</string>
     <string name="show_the_unknowns">Show the unknowns</string>
-    <string name="gmediaproxy_found">GMediaProxy found</string>
 
     <string name="enable_accessibility">To use the app, enable accessibility features</string>
     <string name="grant_notification_access">For proper operation, grant the app \"notification access\"</string>
