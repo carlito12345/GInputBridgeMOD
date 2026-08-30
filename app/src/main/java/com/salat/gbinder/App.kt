@@ -248,6 +248,8 @@ class App : Application(), ImageLoaderFactory {
         }
     @Volatile
     private var climateTempStep = CarFunction.DEFAULT_CLIMATE_TEMP_STEP
+    @Volatile
+    private var gmhEnabled = true
 
     private val runtimeTimer = SimpleTimer()
 
@@ -1076,6 +1078,11 @@ class App : Application(), ImageLoaderFactory {
                 climateTempStep = if (step >= 1.0f) 1.0f else 0.5f
             }
         }
+        launch {
+            dataStore.getValueFlow(GeneralPrefs.GMH_ENABLED, true).collect { enabled ->
+                gmhEnabled = enabled
+            }
+        }
     }
 
     private fun releaseActiveMediaSessionFlow() {
@@ -1470,6 +1477,7 @@ class App : Application(), ImageLoaderFactory {
         android.util.Log.i("GMH", "initGMHBroadcast coroutine STARTED")
         applicationContext.activeMediaControllerFlow().collect { controller ->
             android.util.Log.i("GMH", "controller received: pkg=${controller?.packageName} hasMetadata=${controller?.metadata != null}")
+            if (!gmhEnabled) return@collect
             try {
                 val meta = controller?.metadata ?: run {
                     android.util.Log.i("GMH", "skip: no metadata for ${controller?.packageName}")

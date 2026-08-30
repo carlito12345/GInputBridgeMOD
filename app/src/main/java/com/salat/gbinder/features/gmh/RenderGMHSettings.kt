@@ -24,10 +24,11 @@ import kotlinx.coroutines.flow.collectLatest
  */
 @Composable
 fun RenderGMHSettings(
+    gmhEnabled: Boolean,
+    onGMHEnabledChanged: (Boolean) -> Unit,
     onClose: () -> Unit
 ) {
     var currentTrack by remember { mutableStateOf<HudTrackInfo?>(null) }
-    var isEnabled by remember { mutableStateOf(true) }
 
     // 订阅 GMH 广播的歌曲信息
     LaunchedEffect(Unit) {
@@ -71,8 +72,8 @@ fun RenderGMHSettings(
             ) {
                 Text("仪表盘显示", color = AppTheme.colors.contentPrimary, fontSize = 16.sp)
                 Switch(
-                    checked = isEnabled,
-                    onCheckedChange = { isEnabled = it }
+                    checked = gmhEnabled,
+                    onCheckedChange = onGMHEnabledChanged
                 )
             }
 
